@@ -1,6 +1,73 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-    <h1>Home</h1>
+    <main role="main" class="container-md">
+        <div class="headline">
+            <h1>
+                With <span class="brand-text">SoakYourBrain</span> you can manage the learning and teaching process
+                easily
+            </h1>
+            <hr>
+            <div class="brand-small-text">We provide you a custom e-learning platform where you can engage your students
+                with quality learning experience.
+            </div>
+        </div>
+        <br><br><br><br>
+        <div class="feature-image-container">
+            <img class="feature-image img-fluid" src="{% static 'images/student_1.jpg' %}">
+        </div>
+        <br><br><br><br>
+        <div class="features">
+            <h2><strong>Features</strong></h2>
+            <br>
+            <div class="row">
+                <div class="col-6 feature-image-container">
+                    <img class="feature-image img-fluid" src="{% static 'images/laptop.jpg' %}">
+                </div>
+                <div class="col-6">
+                    <h4>Make teaching more productive and meaningful</h4>
+                    <p>We have worked with educators and understood what were the major challenges the teachers
+                        as well as students were facing and cae up with this platform.
+                        SoakYourBrain lets teachers create classes, subjects/topics, upload recorded video lectures,
+                        share notes, assign work to students, grade and send feedback, all of this at one place.</p>
+                </div>
+            </div>
+        </div>
+        <br><br><br><br>
+        <div id="pricing">
+            <h2><strong>Pricing</strong></h2>
+            <br>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th></th>
+                    <th>Monthly</th>
+                    <th>Semi-yearly</th>
+                    <th>Yearly</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="row-desc">Price</td>
+                    <td>399₹/month</td>
+                    <td>2199₹/six months</td>
+                    <td>4499₹/year</td>
+                </tr>
+                <tr>
+                    <td class="row-desc">Storage</td>
+                    <td>100GB</td>
+                    <td>500GB</td>
+                    <td>1000GB</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><a class="btn btn-warning buy-btns" href="#">Buy</a></td>
+                    <td><a class="btn btn-warning buy-btns" href="#">Buy</a></td>
+                    <td><a class="btn btn-warning buy-btns" href="#">Buy</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <br><br>
 {% endblock content %}
-

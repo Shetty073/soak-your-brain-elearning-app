@@ -45,16 +45,16 @@
                 <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link 1</a>
+                <a class="nav-link" href="#pricing">Pricing</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link 2</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <a class="btn btn-outline-danger my-2 my-sm-0" href="#">Sign up</a>
+            {#            <a class="btn btn-outline-warning my-2 my-sm-0" href="{% url 'signup' %}">Sign up</a>#}
             &nbsp;&nbsp;
-            <a class="btn btn-danger my-2 my-sm-0" href="#">Sign in</a>
+            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
         </form>
     </div>
 </nav>
@@ -64,8 +64,19 @@
 
 {% endblock content %}
 
-
 {# Footer #}
+<footer class="footer">
+    <div class="container">
+        <ul class="footer-content">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Licenses</a></li>
+        </ul>
+        <ul class="footer-content">
+            <li><a href="#">Join Us</a></li>
+            <li><a href="#">Technology</a></li>
+        </ul>
+    </div>
+</footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
