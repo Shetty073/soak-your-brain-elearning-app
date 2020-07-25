@@ -1,6 +1,78 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Sign Up</h1>
-
+    <main role="main" class="container">
+        <div class="signup-header">
+            <h1>Sign up for your plan</h1>
+        </div>
+        <br>
+        <div class="container signup-form">
+            <form name="signup" id="signupform">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstname">Your name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                               aria-describedby="nameHelp"
+                               placeholder="First name" required>
+                        &nbsp;
+                        <input type="text" class="form-control" id="lastname" name="lastname"
+                               aria-describedby="nameHelp"
+                               placeholder="Last name" required>
+                    </div>
+                    <small id="nameHelp" class="form-text text-muted">Please enter your name</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                           placeholder="Enter email" required>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                        else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Re-enter password</label>
+                    <input type="password" class="form-control" id="password2" name="password2"
+                           placeholder="Re-enter password" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneno">Phone no.</label>
+                    <input type="tel" class="form-control" id="phoneno" name="phoneno"
+                           aria-describedby="phonenoHelp"
+                           placeholder="+910123456789" required>
+                    <small id="phonenoHelp" class="form-text text-muted"><strong>Please use this format [country code]
+                        [phone number]</strong>
+                        <br>We'll never share your phone number with anyone
+                        else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="cardnumber">Enter debit/credit card no.</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control col-10" id="cardnumber" name="cardnumber"
+                               aria-describedby="cardHelp" maxlength="19"
+                               placeholder="XXXX XXXX XXXX XXXX" required>
+                        &nbsp;
+                        <input type="text" class="form-control col-2" id="cardcvv" name="cardcvv"
+                               aria-describedby="cardHelp"
+                               maxlength="4"
+                               placeholder="CVV" required>
+                    </div>
+                    <small id="cardHelp" class="form-text text-muted">Your payment details will be stored securely
+                        for fast checkout in the future.</small>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                    <strong id="alertmessage"></strong>
+                    <button type="button" class="close" id="alertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-success" onclick="validateAndSubmit()">Pay and signup</button>
+            </form>
+        </div>
+    </main>
+    <br>
 {% endblock content %}

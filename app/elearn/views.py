@@ -1,13 +1,21 @@
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+from .decorators import unauthenticated_user, allowed_users
+from .models import *
 
 
-# Create your views here.
+# Views and endpoints
 def home(request):
     context_dict = {}
     return render(request, template_name='home.html', context=context_dict)
 
 
 def sign_up(request):
+    if request.method == "POST":
+        print(request.POST.get("name"))
+        return HttpResponse("Do something")
     context_dict = {}
     return render(request, template_name='sign_up.html', context=context_dict)
 

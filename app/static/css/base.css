@@ -24,6 +24,10 @@ footer {
     background-color: #c6c6c6;
 }
 
+main {
+    padding-top: 180px;
+}
+
 .footer-content a {
     display: inline;
     text-decoration: none !important;
@@ -62,7 +66,6 @@ footer {
 }
 
 .headline {
-    padding-top: 180px;
     text-align: center;
 }
 
@@ -107,3 +110,29 @@ td {
     font-weight: bold;
 }
 
+.btn-success {
+    background-color: var(--dark-pastel-green);
+}
+
+/* Specific to signup.html */
+.signup-header h1 {
+    font-weight: bold;
+    font-size: 3vw;
+    padding-bottom: 20px;
+}
+
+.signup-form {
+    padding-bottom: 50px;
+}
+
+#cardnumber {
+    display: inline!important;
+}
+
+#cardcvv {
+    display: inline!important;
+}
+
+#formerror {
+    display: none;
+}
