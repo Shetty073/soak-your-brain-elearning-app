@@ -1,12 +1,14 @@
 function validateAndSubmit() {
     let first_name = document.getElementById('firstname').value.trim().split(' ').join('');
     let last_name = document.getElementById('lastname').value.trim().split(' ').join('');
+    let college_name = document.getElementById('collegename').value.trim();
     let email_id = document.getElementById('email').value.trim().split(' ').join('');
     let password1 = document.getElementById('password1').value.trim().split(' ').join('');
     let password2 = document.getElementById('password2').value.trim().split(' ').join('');
     let phone_no = document.getElementById('phoneno').value.trim().split(' ').join('');
     let card_no = document.getElementById('cardnumber').value.trim().split(' ').join('');
     let card_cvv = document.getElementById('cardcvv').value.trim().split(' ').join('');
+    let plan_subscribed = document.getElementById('plan').innerText.trim();
 
     if (first_name === '') {
         displayFormErrorMessage('First name can not be empty. Please enter a valid first name.');
@@ -40,15 +42,32 @@ function validateAndSubmit() {
         displayFormErrorMessage('The CVV number that you have entered is invalid.');
     } else {
         // all the form data is submittable
-        console.log(first_name);
-        console.log(last_name);
-        console.log(email_id);
-        console.log(password1);
-        console.log(password2);
-        console.log(phone_no);
-        console.log(card_no);
-        console.log(card_cvv);
-        // TODO: Submit data using AJAX call to signup/
+        // so we do an AJAX call to 'signup/<str:plan_subscribed>'
+        let url = '/signup/' + plan_subscribed;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                'first_name': first_name,
+                'last_name': last_name,
+                'college_name': college_name,
+                'email_id': email_id,
+                'password': password1,
+                'phone_no': phone_no,
+                'card_no': card_no,
+                'card_cvv': card_cvv,
+                'plan_subscribed': plan_subscribed,
+            })
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data['process'] === 'failed') {
+                displayFormErrorMessage('Server error!' + data['error']);
+            }
+        });
     }
 
 }
@@ -74,10 +93,10 @@ function checkEmailInvalid(email_id) {
 }
 
 function checkPhoneInvalid(phone_num) {
-    if (phone_num.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{5})[-. ]?([0-9]{5})$/)) {
+    if (phone_num.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{5})[-. ]?([0-9]{5})$/) && phone_num.length <= 13) {
         return false;
     }
-    return false;
+    return true;
 }
 
 function checkCardInvalid(card_num) {

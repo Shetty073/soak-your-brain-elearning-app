@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-
+{% block title %}Sign up - SoakYourBrain{% endblock title %}
 {% block content %}
     <main role="main" class="container">
         <div class="signup-header">
-            <h1>Sign up for your plan</h1>
+            <h1 class="colorbluesapphire">Sign up for your <span id="plan">{{ plan_selected }}</span>
+                plan at {{ plan_cost }}</h1>
         </div>
         <br>
         <div class="container signup-form">
@@ -23,11 +24,19 @@
                     <small id="nameHelp" class="form-text text-muted">Please enter your name</small>
                 </div>
                 <div class="form-group">
+                    <label for="collegename">College name</label>
+                    <input type="text" class="form-control" id="collegename" name="collegename"
+                           aria-describedby="collegenameHelp"
+                           placeholder="Your college name" required>
+                </div>
+                <div class="form-group">
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
                            placeholder="Enter email" required>
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                        else.</small>
+                        else. <br>
+                        <strong>Your email address will also be your username </strong>
+                    </small>
                 </div>
                 <div class="form-group">
                     <label for="password1">Password</label>
@@ -50,7 +59,7 @@
                         else.</small>
                 </div>
                 <div class="form-group">
-                    <label for="cardnumber">Enter debit/credit card no.</label>
+                    <label for="cardnumber">Enter credit card no.</label>
                     <div class="input-group">
                         <input type="text" class="form-control col-10" id="cardnumber" name="cardnumber"
                                aria-describedby="cardHelp" maxlength="19"
@@ -61,8 +70,10 @@
                                maxlength="4"
                                placeholder="CVV" required>
                     </div>
-                    <small id="cardHelp" class="form-text text-muted">Your payment details will be stored securely
-                        for fast checkout in the future.</small>
+                    <small id="cardHelp" class="form-text text-muted"><strong>You card will be automatically charged for
+                        renewal
+                        at the end of every month. You can cancel your subscription at any time before 24 hours
+                        of the last date.</strong></small>
                 </div>
                 <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
                     <strong id="alertmessage"></strong>

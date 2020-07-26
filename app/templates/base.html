@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>{% block title %}SoakYourBrain - e-learning management platform{% endblock title %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -47,14 +47,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'home' %}#pricing">Pricing</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link 2</a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'college_page' %}">College</a>
+                </li>
+            {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            {#            <a class="btn btn-outline-warning my-2 my-sm-0" href="{% url 'signup' %}">Sign up</a>#}
-            &nbsp;&nbsp;
-            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
+            {% block signinup %}
+                {% if user.is_authenticated %}
+                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign out</a>
+                {% else %}
+                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
+                {% endif %}
+            {% endblock signinup %}
         </form>
     </div>
 </nav>
