@@ -1,0 +1,19 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Admin: {{ user.college.collegename|slice:':20' }} {% endblock title %}
+{% block admin-content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Dashboard</h1>
+        {% if new_user %}
+            <div class="alert alert-warning" role="alert">
+                Nothing to show. <br> Please add <a href="{% url 'college_add_classes' %}">classes</a> and
+                <a href="{% url 'college_add_teachers' %}">teachers</a> first.
+            </div>
+        {% endif %}
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("home-link").classList.contains('active')) {
+            document.getElementById("home-link").classList.add('active');
+        }
+    </script>
+{% endblock admin-content %}

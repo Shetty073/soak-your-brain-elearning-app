@@ -1,0 +1,14 @@
+{% extends 'sybadmin/sybadmin_base.html' %}
+{% load static %}
+{% block title %}SYB - Admin dashboard {% endblock title %}
+{% block content %}
+    <main role="main" class="container-md">
+        <h1>Dashboard</h1>
+
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("home-link").classList.contains('active')) {
+            document.getElementById("home-link").classList.add('active');
+        }
+    </script>
+{% endblock content %}

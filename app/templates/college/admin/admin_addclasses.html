@@ -1,0 +1,63 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Admin: College Name{% endblock title %}
+{% block admin-content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Add new departments</h1>
+        <form name="addclass" id="addclassform">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="deptname">Department name</label>
+                <input type="text" class="form-control" id="deptname" name="deptname"
+                       aria-describedby="deptnameHelp"
+                       placeholder="Department name eg. CS, IT, Physics,..etc" required>
+                <small id="nameHelp" class="form-text text-muted">Please enter the department name</small>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                <strong id="alertmessage"></strong>
+                <button type="button" class="close" id="alertclose" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <button type="button" class="btn btn-warning" onclick="validateAndAddClass(true)">Save and add more</button>
+            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddClass(false)">Save and go back
+            </button>
+        </form>
+        <br><br>
+        <h1 class="colorbluesapphire">Add new classes</h1>
+        <form name="addclass" id="addclassform">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="classname">Enter class name</label>
+                <input type="text" class="form-control" id="classname" name="classname"
+                       aria-describedby="classnameHelp"
+                       placeholder="Class name eg. TYIT, FBA, etc" required>
+                <small id="nameHelp" class="form-text text-muted">Please enter the class name</small>
+            </div>
+            <div class="form-group">
+                <label for="selectdepartment">Select department</label>
+                <select class="form-control" id="selectdepartment" name="selectdepartment">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                <strong id="alertmessage"></strong>
+                <button type="button" class="close" id="alertclose" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <button type="button" class="btn btn-warning" onclick="validateAndAddClass(true)">Save and add more</button>
+            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddClass(false)">Save and go back
+            </button>
+        </form>
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("add-classes-link").classList.contains('active')) {
+            document.getElementById("add-classes-link").classList.add('active');
+        }
+    </script>
+{% endblock admin-content %}

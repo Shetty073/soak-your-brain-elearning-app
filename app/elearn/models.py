@@ -53,9 +53,27 @@ class Customer(models.Model):
         return self.college_name
 
 
+class Department(models.Model):
+    college = models.ForeignKey(College, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class CollegeClass(models.Model):
+    college = models.ForeignKey(College, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
+    college_class = models.ForeignKey(CollegeClass, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
@@ -64,19 +82,10 @@ class Teacher(models.Model):
         return self.first_name
 
 
-class ClassName(models.Model):
-    college = models.ForeignKey(College, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    department = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    class_name = models.ForeignKey(ClassName, on_delete=models.SET_NULL, null=True, blank=True)
+    class_name = models.ForeignKey(CollegeClass, on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
@@ -86,7 +95,7 @@ class Student(models.Model):
 
 
 class Subject(models.Model):
-    class_name = models.ForeignKey(ClassName, on_delete=models.CASCADE)
+    class_name = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
 
     def __str__(self):
@@ -94,7 +103,7 @@ class Subject(models.Model):
 
 
 class ClassWork(models.Model):
-    class_name = models.ForeignKey(ClassName, on_delete=models.CASCADE)
+    class_name = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     body = models.CharField(max_length=500, null=True, blank=True)

@@ -126,3 +126,5 @@ STATICFILES_DIRS = [
 # Media root gives django location to save product images
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = '/signin/'

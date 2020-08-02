@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -134,15 +135,46 @@ def checkout_page(request):
     return render(request, template_name='checkout/checkbout.html', context=context_dict)
 
 
-def admin_page(request):
+@login_required
+@allowed_users(allowed_roles=['sybadmin'])
+def syb_admin_page(request):
     context_dict = {}
-    return render(request, template_name='sybadmin/sybadmin.html', context=context_dict)
+    return render(request, template_name='sybadmin/dashboard/dashboard.html', context=context_dict)
 
 
-@allowed_users(['collegeadmin'])
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
 def college_page(request):
+    context_dict = {'new_user': True}
+    return render(request, template_name='college/admin/college_admin.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def college_add_teachers(request):
     context_dict = {}
-    return render(request, template_name='college/admin/admin.html', context=context_dict)
+    return render(request, template_name='college/admin/admin_addteachers.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def college_add_classes(request):
+    context_dict = {}
+    return render(request, template_name='college/admin/admin_addclasses.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher(request):
+    context_dict = {}
+    return render(request, template_name='college/teacher/teacher.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student(request):
+    context_dict = {}
+    return render(request, template_name='college/student/student.html', context=context_dict)
 
 
 def payment_failed(request):

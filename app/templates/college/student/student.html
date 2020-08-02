@@ -1,8 +1,8 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
-
-{% block content %}
+{% block title %}Student: {{ user.college.collegename|slice:':20' }} {% endblock title %}
+{% block student-content %}
     <main role="main" class="container-md">
 
     </main>
-{% endblock content %}
+{% endblock student-content %}

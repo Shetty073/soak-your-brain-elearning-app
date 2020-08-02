@@ -1,0 +1,70 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Admin: College Name{% endblock title %}
+{% block admin-content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Add new teachers</h1>
+        <form name="addteacher" id="addteacherform">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="firstname">Teacher's name</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="firstname" name="firstname"
+                           aria-describedby="nameHelp"
+                           placeholder="First name" required>
+                    &nbsp;
+                    <input type="text" class="form-control" id="lastname" name="lastname"
+                           aria-describedby="nameHelp"
+                           placeholder="Last name" required>
+                </div>
+                <small id="nameHelp" class="form-text text-muted">Please enter your name</small>
+            </div>
+            <div class="form-group">
+                <label for="selectclasses">Select the class(es) that you want this teacher to be a part of</label>
+                <select multiple class="form-control" id="selectclasses" name="selectclasses">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <small id="selectclassesHelp" class="form-text text-muted">You can select multiple classes by holding
+                    control key (command key on mac) and pressing the left mouse button.</small>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                       placeholder="Enter email" required>
+                <small id="emailHelp" class="form-text text-muted">
+                    <strong>This email address will also be this teacher's username </strong>
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Re-enter password</label>
+                <input type="password" class="form-control" id="password2" name="password2"
+                       placeholder="Re-enter password" required>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                <strong id="alertmessage"></strong>
+                <button type="button" class="close" id="alertclose" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <button type="button" class="btn btn-warning" onclick="validateAndAddTeacher(true)">Save and add more
+            </button>
+            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddTeacher(false)">Save and go
+                back
+            </button>
+        </form>
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("add-teachers-link").classList.contains('active')) {
+            document.getElementById("add-teachers-link").classList.add('active');
+        }
+    </script>
+{% endblock admin-content %}

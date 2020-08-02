@@ -48,9 +48,23 @@
                 <a class="nav-link" href="{% url 'home' %}#pricing">Pricing</a>
             </li>
             {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'college_page' %}">College</a>
-                </li>
+                {% if user.groups.all.0.name == 'sybadmin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'syb_admin_page' %}">Admin</a>
+                    </li>
+                {% elif user.groups.all.0.name == 'collegeadmin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'college_page' %}">College dashboard</a>
+                    </li>
+                {% elif user.groups.all.0.name == 'teacher' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'college_teacher' %}">Teacher dashboard</a>
+                    </li>
+                {% elif user.groups.all.0.name == 'student' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'college_student' %}">Student dashboard</a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
