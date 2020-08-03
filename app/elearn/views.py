@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -88,8 +89,10 @@ def sign_up(request, plan_subscribed=''):
                 return redirect(college_page)
             else:
                 return JsonResponse({'process': 'failed', 'error': 'User authentication system failed'})
-        except Exception as e:
-            return JsonResponse({'process': 'failed', 'error': str(e)})
+        except IntegrityError:
+            return JsonResponse({'process': 'failed', 'error': 'User already exists'})
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'error': f'{str(err)}'})
     plans = Plan.objects.all().values_list('name', flat=True)
     if plan_subscribed not in plans:
         return render(request, template_name='home.html')

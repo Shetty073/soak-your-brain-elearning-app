@@ -65,7 +65,7 @@ function validateAndSubmit() {
             return response.json();
         }).then((data) => {
             if (data['process'] === 'failed') {
-                displayFormErrorMessage('Server error!' + data['error']);
+                displayFormErrorMessage('Server error! ' + data['error']);
             }
         });
     }
@@ -115,6 +115,7 @@ function displayFormErrorMessage(errorMessage) {
 
 
 // jQuery codes
+// jQuery code for closing the bootstrap-alert when the 'x' button is clicked
 $('#alertclose').click(function () {
     $('#formerror').css('display', 'none');
 });

@@ -73,7 +73,7 @@ class CollegeClass(models.Model):
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    college_class = models.ForeignKey(CollegeClass, on_delete=models.CASCADE, null=True, blank=True)
+    college_class = models.ManyToManyField(CollegeClass, null=True, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
