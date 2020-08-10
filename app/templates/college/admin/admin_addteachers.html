@@ -1,6 +1,6 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
-{% block title %}Admin: College Name{% endblock title %}
+{% block title %} Admin: {{ request.user.college.college_name|slice:':20' }} {% endblock title %}
 {% block admin-content %}
     <main role="main" class="container-md">
         <h1 class="colorbluesapphire">Add new teachers</h1>

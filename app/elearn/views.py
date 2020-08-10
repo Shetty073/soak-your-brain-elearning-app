@@ -5,7 +5,6 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from .decorators import unauthenticated_user, allowed_users
 from .models import *
@@ -162,7 +161,32 @@ def college_add_teachers(request):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_add_classes(request):
-    context_dict = {}
+    departments_list = [department['name'] for department in Department.objects.all().values('name')]
+    if request.method == 'POST':
+        # process request
+        data = json.loads(request.body)
+        form_type = data['form_type']
+        if form_type == 'department':
+            # this means that the request came from add new department form
+            department_name = data['department_name']
+            college = request.user.college
+            try:
+                Department.objects.get_or_create(
+                    college=college,
+                    name=department_name,
+                )
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': f'Success! {department_name} department added to the database.',
+                    'departments_list': departments_list,
+                })
+            except IntegrityError:
+                return JsonResponse({'process': 'failed', 'msg': f'{department_name} already exists.'})
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+    context_dict = {
+        'departments_list': departments_list,
+    }
     return render(request, template_name='college/admin/admin_addclasses.html', context=context_dict)
 
 

@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}College Name{% endblock title %}</title>
+    <title>{% block title %} {{ request.user.college.college_name }} {% endblock title %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -34,7 +34,7 @@
 <body>
 {# Navigation bar #}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'college_page' %}">{{ user.college.college_name|slice:':20' }}</a>
+    <a class="navbar-brand" href="{% url 'college_page' %}">{{ request.user.college.college_name|slice:':20' }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -45,7 +45,7 @@
             <li class="nav-item" id="home-link">
                 <a class="nav-link" href="{% url 'college_page' %}">Home <span class="sr-only">(current)</span></a>
             </li>
-            {% if user.groups.all.0.name == 'collegeadmin' %}
+            {% if request.user.groups.all.0.name == 'collegeadmin' %}
                 {# If the user is a college admin #}
                 <li class="nav-item" id="add-classes-link">
                     <a class="nav-link" href="{% url 'college_add_classes' %}">Add classes</a>
@@ -54,7 +54,7 @@
                     <a class="nav-link" href="{% url 'college_add_teachers' %}">Add teachers</a>
                 </li>
 
-            {% elif user.groups.all.0.name == 'teacher' %}
+            {% elif request.user.groups.all.0.name == 'teacher' %}
                 {# If the user is a teacher #}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Add subjects</a>
@@ -63,7 +63,7 @@
                     <a class="nav-link" href="#">Add students</a>
                 </li>
 
-            {% elif user.groups.all.0.name == 'student' %}
+            {% elif request.user.groups.all.0.name == 'student' %}
                 {# If the user is a student #}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Assignments</a>
@@ -86,17 +86,17 @@
 </nav>
 
 {# Main content #}
-{% if user.groups.all.0.name == 'collegeadmin' %}
+{% if request.user.groups.all.0.name == 'collegeadmin' %}
     {# If the user is a college admin #}
     {% block admin-content %}
 
     {% endblock admin-content %}
-{% elif user.groups.all.0.name == 'teacher' %}
+{% elif request.user.groups.all.0.name == 'teacher' %}
     {# If the user is a teacher #}
     {% block teacher-content %}
 
     {% endblock teacher-content %}
-{% elif user.groups.all.0.name == 'student' %}
+{% elif request.user.groups.all.0.name == 'student' %}
     {# If the user is a student #}
     {% block student-content %}
 

@@ -1,6 +1,6 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
-{% block title %}Admin: College Name{% endblock title %}
+{% block title %} Admin: {{ request.user.college.college_name|slice:':20' }} {% endblock title %}
 {% block admin-content %}
     <main role="main" class="container-md">
         <h1 class="colorbluesapphire">Add new departments</h1>
@@ -13,14 +13,16 @@
                        placeholder="Department name eg. CS, IT, Physics,..etc" required>
                 <small id="nameHelp" class="form-text text-muted">Please enter the department name</small>
             </div>
-            <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
-                <strong id="alertmessage"></strong>
-                <button type="button" class="close" id="alertclose" aria-label="Close">
+            <div class="alert alert-warning alert-dismissible fade show" id="deptformerror" role="alert">
+                <strong id="deptalertmessage"></strong>
+                <button type="button" class="close" id="deptalertclose" aria-label="Close">
                     &times;
                 </button>
             </div>
-            <button type="button" class="btn btn-warning" onclick="validateAndAddClass(true)">Save and add more</button>
-            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddClass(false)">Save and go back
+            <button type="button" class="btn btn-warning" onclick="validateAndAddDepartment(true)">Save and add more
+            </button>
+            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddDepartment(false)">Save and go
+                back
             </button>
         </form>
         <br><br>
@@ -37,16 +39,14 @@
             <div class="form-group">
                 <label for="selectdepartment">Select department</label>
                 <select class="form-control" id="selectdepartment" name="selectdepartment">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    {% for department in departments_list %}
+                        <option value="{{ department }}">{{ department }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
-                <strong id="alertmessage"></strong>
-                <button type="button" class="close" id="alertclose" aria-label="Close">
+            <div class="alert alert-warning alert-dismissible fade show" id="clsformerror" role="alert">
+                <strong id="clsalertmessage"></strong>
+                <button type="button" class="close" id="clsalertclose" aria-label="Close">
                     &times;
                 </button>
             </div>

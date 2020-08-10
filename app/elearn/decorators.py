@@ -30,13 +30,16 @@ def unauthenticated_user(view_func):
     return wrapper_func
 
 
-def allowed_users(allowed_roles=[]):
+def allowed_users(allowed_roles=None):
     """
     This decorator function prevents an authenticated user from visiting any page that he is not meant to visit.
     The authorization is done with the help of built-in django groups.
     :param allowed_roles:
     :return:
     """
+
+    if allowed_roles is None:
+        allowed_roles = []
 
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):

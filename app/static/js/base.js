@@ -48,7 +48,7 @@ function validateAndSubmit() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
             },
             body: JSON.stringify({
                 'first_name': first_name,
@@ -77,30 +77,30 @@ function hasNumber(myString) {
     return /\d/.test(myString);
 }
 
-function checkEmailInvalid(email_id) {
+function checkEmailInvalid(emailId) {
     /*
     There are many criteria that need to be follow to validate the email id such as:
     * email id must contain the @ and . character
     * There must be at least one character before and after the @.
     * There must be at least two characters after . (dot).
      */
-    let atSymbolPosition = email_id.indexOf('@');
-    let dotSymbolPosition = email_id.indexOf('.');
-    if (atSymbolPosition < 1 || dotSymbolPosition < (atSymbolPosition + 2) || (dotSymbolPosition + 2) >= email_id.length) {
+    let atSymbolPosition = emailId.indexOf('@');
+    let dotSymbolPosition = emailId.indexOf('.');
+    if (atSymbolPosition < 1 || dotSymbolPosition < (atSymbolPosition + 2) || (dotSymbolPosition + 2) >= emailId.length) {
         return true;
     }
     return false;
 }
 
-function checkPhoneInvalid(phone_num) {
-    if (phone_num.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{5})[-. ]?([0-9]{5})$/) && phone_num.length <= 13) {
+function checkPhoneInvalid(phoneNum) {
+    if (phoneNum.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{5})[-. ]?([0-9]{5})$/) && phoneNum.length <= 13) {
         return false;
     }
     return true;
 }
 
-function checkCardInvalid(card_num) {
-    if (card_num.match(/^[0-9]+$/)) {
+function checkCardInvalid(cardNum) {
+    if (cardNum.match(/^[0-9]+$/)) {
         return false;
     }
     return true;
@@ -116,8 +116,10 @@ function displayFormErrorMessage(errorMessage) {
 
 // jQuery codes
 // jQuery code for closing the bootstrap-alert when the 'x' button is clicked
-$('#alertclose').click(function () {
-    $('#formerror').css('display', 'none');
+$(document).ready(function () {
+    $('#alertclose').click(function () {
+        $('#formerror').css('display', 'none');
+    });
 });
 
 // jQuery for formatting card number field with spaces after every 4 digits.

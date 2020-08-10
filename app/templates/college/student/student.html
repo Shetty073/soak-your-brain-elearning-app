@@ -1,6 +1,6 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
-{% block title %}Student: {{ user.college.collegename|slice:':20' }} {% endblock title %}
+{% block title %}Student: {{ request.user.college.college_name|slice:':20' }} {% endblock title %}
 {% block student-content %}
     <main role="main" class="container-md">
 

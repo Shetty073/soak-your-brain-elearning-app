@@ -133,7 +133,7 @@ td {
     display: inline!important;
 }
 
-#formerror {
+.alert-dismissible {
     display: none;
 }
 

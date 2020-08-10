@@ -55,7 +55,7 @@ class Customer(models.Model):
 
 class Department(models.Model):
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
@@ -73,7 +73,7 @@ class CollegeClass(models.Model):
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    college_class = models.ManyToManyField(CollegeClass, null=True, blank=True)
+    college_class = models.ManyToManyField(CollegeClass, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
