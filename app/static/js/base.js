@@ -27,7 +27,7 @@ function validateAndSubmit() {
             'Please enter a valid password.');
     } else if (password1 !== password2) {
         displayFormErrorMessage('Password mismatch. Please make sure that both passwords are same.');
-    } else if (password1.length < 8 && password1.length > 16) {
+    } else if (password1.length < 8 || password1.length > 16) {
         displayFormErrorMessage('Password should be between 8 and 16 characters long');
     } else if (checkPhoneInvalid(phone_no.trim())) {
         displayFormErrorMessage('The phone number you have entered is invalid. ' +

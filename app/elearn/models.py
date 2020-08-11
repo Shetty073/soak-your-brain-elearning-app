@@ -63,7 +63,7 @@ class Department(models.Model):
 
 class CollegeClass(models.Model):
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):

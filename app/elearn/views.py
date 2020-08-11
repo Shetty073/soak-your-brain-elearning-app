@@ -154,7 +154,12 @@ def college_page(request):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_add_teachers(request):
-    context_dict = {}
+    classes_list = [classname['name'] for classname in CollegeClass.objects.all().values('name')]
+    if request.method == 'POST':
+        # for AJAX request
+        data = json.loads(request.body)
+
+    context_dict = {'classes_list': classes_list}
     return render(request, template_name='college/admin/admin_addteachers.html', context=context_dict)
 
 
@@ -163,11 +168,11 @@ def college_add_teachers(request):
 def college_add_classes(request):
     departments_list = [department['name'] for department in Department.objects.all().values('name')]
     if request.method == 'POST':
-        # process request
+        # for AJAX request
         data = json.loads(request.body)
         form_type = data['form_type']
         if form_type == 'department':
-            # this means that the request came from add new department form
+            # this means that the request came from 'add new department' form
             department_name = data['department_name']
             college = request.user.college
             try:
@@ -182,6 +187,27 @@ def college_add_classes(request):
                 })
             except IntegrityError:
                 return JsonResponse({'process': 'failed', 'msg': f'{department_name} already exists.'})
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+        elif form_type == 'class':
+            # this means that the request came from 'add new classes' form
+            class_name = data['class_name']
+            department = Department.objects.get(name=data['department_name'])
+            college = request.user.college
+            try:
+                CollegeClass.objects.create(
+                    college=college,
+                    name=class_name,
+                    department=department,
+                )
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': f'Success! {class_name} class added in {department.name}',
+                    'departments_list': departments_list,
+                })
+            except IntegrityError:
+                return JsonResponse({'process': 'failed',
+                                     'msg': f'{class_name} already exists in {department.name} department.'})
             except Exception as err:
                 return JsonResponse({'process': 'failed', 'msg': f'{err}'})
     context_dict = {

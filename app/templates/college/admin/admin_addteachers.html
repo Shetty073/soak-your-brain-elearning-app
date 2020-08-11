@@ -22,11 +22,9 @@
             <div class="form-group">
                 <label for="selectclasses">Select the class(es) that you want this teacher to be a part of</label>
                 <select multiple class="form-control" id="selectclasses" name="selectclasses">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    {% for class_name in classes_list %}
+                        <option>{{ class_name }}</option>
+                    {% endfor %}
                 </select>
                 <small id="selectclassesHelp" class="form-text text-muted">You can select multiple classes by holding
                     control key (command key on mac) and pressing the left mouse button.</small>

@@ -1,12 +1,20 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Shett">
     <words>
+      <w>alertclose</w>
+      <w>alertmessage</w>
       <w>clsalertclose</w>
+      <w>clsalertmessage</w>
       <w>clsformerror</w>
       <w>collegeadmin</w>
       <w>deptalertclose</w>
       <w>deptalertmessage</w>
       <w>deptformerror</w>
+      <w>firstname</w>
+      <w>formerror</w>
+      <w>lastname</w>
+      <w>selectclasses</w>
+      <w>selectdepartment</w>
     </words>
   </dictionary>
 </component>
