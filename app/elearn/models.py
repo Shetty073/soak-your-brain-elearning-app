@@ -73,29 +73,29 @@ class CollegeClass(models.Model):
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    college_class = models.ManyToManyField(CollegeClass, blank=True)
+    college_classes = models.ManyToManyField(CollegeClass, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
 
     def __str__(self):
-        return self.first_name
+        return f'{self.first_name} {self.last_name}'
 
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
-    class_name = models.ForeignKey(CollegeClass, on_delete=models.SET_NULL, null=True, blank=True)
+    college_class = models.ForeignKey(CollegeClass, on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
 
     def __str__(self):
-        return self.first_name
+        return f'{self.first_name} {self.last_name}'
 
 
 class Subject(models.Model):
-    class_name = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
+    college_class = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
 
     def __str__(self):
@@ -103,7 +103,7 @@ class Subject(models.Model):
 
 
 class ClassWork(models.Model):
-    class_name = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
+    college_class = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     body = models.CharField(max_length=500, null=True, blank=True)

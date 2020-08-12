@@ -15,6 +15,7 @@
       <w>lastname</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>
+      <w>sybadmin</w>
     </words>
   </dictionary>
 </component>

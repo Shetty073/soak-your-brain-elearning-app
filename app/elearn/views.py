@@ -110,7 +110,16 @@ def sign_in(request):
             auth_user = authenticate(request, username=username, password=password)
             if auth_user is not None:
                 login(request, auth_user)
-                return redirect(college_page)
+                # Now redirect based on what group user is a part of
+                login_user = User.objects.get(username=username)
+                login_user_group = login_user.groups.all()[0].name
+                redirect_dict = {
+                    'collegeadmin': college_page,
+                    'teacher': college_teacher,
+                    'student': college_student,
+                    'sybadmin': syb_admin_page,
+                }
+                return redirect(redirect_dict[login_user_group])
             else:
                 if User.objects.filter(username=username).exists():
                     context_dict = {'msg': 'Email id or password is wrong'}
@@ -147,7 +156,14 @@ def syb_admin_page(request):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_page(request):
-    context_dict = {'new_user': True}
+    teachers = Teacher.objects.all()
+    departments = Department.objects.all()
+    classes = CollegeClass.objects.all()
+    context_dict = {
+        'teachers': teachers,
+        'departments': departments,
+        'classes': classes,
+    }
     return render(request, template_name='college/admin/college_admin.html', context=context_dict)
 
 
@@ -158,6 +174,53 @@ def college_add_teachers(request):
     if request.method == 'POST':
         # for AJAX request
         data = json.loads(request.body)
+        first_name = data['first_name']
+        last_name = data['last_name']
+        classes_assigned = data['classes_assigned']
+        email_id = data['email_id']
+        password1 = data['password1']
+
+        try:
+            # register the User
+            new_user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                email=email_id,
+                username=email_id,
+            )
+            new_user.set_password(password1)
+            new_user.save()
+
+            # Add this user to teacher group
+            collegeadmin_group = Group.objects.get(name='teacher')
+            collegeadmin_group.user_set.add(new_user)
+
+            # Get the college of the current logged in user (collegeadmin user)
+            college = request.user.college
+
+            # create a teacher
+            clg_teacher = Teacher.objects.create(
+                user=new_user,
+                college=college,
+                first_name=first_name,
+                last_name=last_name,
+                email=email_id,
+            )
+
+            # add the assigned classes to this teacher
+            for cls in classes_assigned:
+                clg_cls = CollegeClass.objects.get(name=cls)
+                clg_teacher.college_classes.add(clg_cls)
+
+            return JsonResponse({
+                'process': 'success',
+                'msg': f'Success! Teacher {first_name} {last_name} has been added to the database.',
+            })
+        except IntegrityError:
+            return JsonResponse({'process': 'failed',
+                                 'msg': f'Teacher {first_name} {last_name} has already been added to the database.'})
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
 
     context_dict = {'classes_list': classes_list}
     return render(request, template_name='college/admin/admin_addteachers.html', context=context_dict)

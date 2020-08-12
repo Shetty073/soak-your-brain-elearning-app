@@ -82,6 +82,8 @@ function validateAndAddClass(addMore) {
 }
 
 function validateAndAddTeacher(addMore) {
+    let url = "/college/add_teachers";
+
     let first_name = document.getElementById('firstname').value.trim().split(' ').join('');
     let last_name = document.getElementById('lastname').value.trim().split(' ').join('');
     let email_id = document.getElementById('email').value.trim().split(' ').join('');
@@ -127,13 +129,43 @@ function validateAndAddTeacher(addMore) {
         displayFormErrorMessage(false,
             'You must assign this teacher to at least one class', 'alertmessage');
     } else {
-        // TODO: Implement AJAX call for adding a teacher
-        console.log(first_name);
-        console.log(last_name);
-        console.log(classes_assigned);
-        console.log(email_id);
-        console.log(password1);
-        console.log(password2);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'first_name': first_name,
+                'last_name': last_name,
+                'classes_assigned': classes_assigned,
+                'email_id': email_id,
+                'password1': password1,
+            })
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data['process'] === 'success') {
+                // Request successfully completed. Clear the input box
+                document.getElementById('firstname').value = '';
+                document.getElementById('lastname').value = '';
+                let multiSelectElement = document.getElementById('selectclasses');
+                for (let i = 0; i < multiSelectElement.options.length; i++) {
+                    multiSelectElement.options[i].selected = false;
+                }
+                document.getElementById('email').value = '';
+                document.getElementById('password1').value = '';
+                document.getElementById('password2').value = '';
+                displayFormErrorMessage(true, data['msg'], 'alertmessage');
+                if (addMore === false) {
+                    // Go to home page
+                    window.location.replace('/college/');
+                }
+            } else {
+                // The request failed. Display the appropriate error message sent back in response.
+                displayFormErrorMessage(false, data['msg'], 'alertmessage');
+            }
+        })
     }
 }
 

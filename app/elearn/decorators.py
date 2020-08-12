@@ -49,7 +49,7 @@ def allowed_users(allowed_roles=None):
             if group in allowed_roles:
                 return view_func(request, *args, **kwargs)
             else:
-                HttpResponse('You are not authorized to view this page')  # TODO: make a standalone page for this
+                return HttpResponse('You are not authorized to view this page')  # TODO: make a standalone page for this
 
         return wrapper_func
 
