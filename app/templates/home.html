@@ -5,7 +5,8 @@
     <main role="main" class="container-md">
         <div class="headline">
             <h1>
-                With <span class="brand-text colorbluesapphire">SoakYourBrain</span> you can manage the learning and teaching process
+                With <span class="brand-text colorbluesapphire">SoakYourBrain</span> you can manage the learning and
+                teaching process
                 easily
             </h1>
             <hr>
@@ -73,12 +74,15 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><a class="btn btn-warning buy-btns" href="{% url 'signup' plan_subscribed='Basic' %}">Buy</a></td>
-                    <td><a class="btn btn-warning buy-btns" href="{% url 'signup' plan_subscribed='Standard' %}">Buy</a></td>
+                    <td><a class="btn btn-warning buy-btns" href="{% url 'signup' plan_subscribed='Basic' %}">Buy</a>
+                    </td>
+                    <td><a class="btn btn-warning buy-btns" href="{% url 'signup' plan_subscribed='Standard' %}">Buy</a>
+                    </td>
                     <td><a class="btn btn-warning buy-btns" href="{% url 'signup' plan_subscribed='Pro' %}">Buy</a></td>
                 </tr>
                 </tbody>
             </table>
+            {# TODO: Add a request demo button for demo functionality #}
         </div>
     </main>
     <br><br>
