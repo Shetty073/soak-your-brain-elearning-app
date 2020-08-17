@@ -1,11 +1,12 @@
 import json
 
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
+
 from .decorators import unauthenticated_user, allowed_users
 from .models import *
 
@@ -228,51 +229,81 @@ def college_add_teachers(request):
 
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
-def college_add_classes(request):
+def college_add_classes(request, pk=None):
     departments_list = [department['name'] for department in Department.objects.all().values('name')]
     if request.method == 'POST':
         # for AJAX request
         data = json.loads(request.body)
         form_type = data['form_type']
         if form_type == 'department':
-            # this means that the request came from 'add new department' form
-            department_name = data['department_name']
-            college = request.user.college
-            try:
-                Department.objects.get_or_create(
-                    college=college,
-                    name=department_name,
-                )
-                return JsonResponse({
-                    'process': 'success',
-                    'msg': f'Success! {department_name} department added to the database.',
-                    'departments_list': departments_list,
-                })
-            except IntegrityError:
-                return JsonResponse({'process': 'failed', 'msg': f'{department_name} already exists.'})
-            except Exception as err:
-                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            if pk is None:
+                # this means that the request came from 'add new department' form
+                department_name = data['department_name']
+                college = request.user.college
+                try:
+                    Department.objects.get_or_create(
+                        college=college,
+                        name=department_name,
+                    )
+                    return JsonResponse({
+                        'process': 'success',
+                        'msg': f'Success! {department_name} department added to the database.',
+                        'departments_list': departments_list,
+                    })
+                except IntegrityError:
+                    return JsonResponse({'process': 'failed', 'msg': f'{department_name} already exists.'})
+                except Exception as err:
+                    return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            else:
+                # this request came for updating an existing department's fields
+                class_name = data['class_name']
+                department_name = data['department_name']
+                try:
+                    cls = CollegeClass.objects.get(pk=pk)
+                    cls.name = class_name
+                    cls.department = Department.objects.get(name=department_name)
+                    cls.save()
+
+                    return JsonResponse({
+                        'process': 'success',
+                        'class_name': f'{cls.name}',
+                        'department_name': f'{cls.department}',
+                    })
+                except IntegrityError:
+                    return JsonResponse({
+                        'process': 'failed',
+                        'msg': 'Duplicate value error',
+                    })
+                except Exception as err:
+                    return JsonResponse({
+                        'process': 'failed',
+                        'msg': f'{err}',
+                    })
         elif form_type == 'class':
-            # this means that the request came from 'add new classes' form
-            class_name = data['class_name']
-            department = Department.objects.get(name=data['department_name'])
-            college = request.user.college
-            try:
-                CollegeClass.objects.create(
-                    college=college,
-                    name=class_name,
-                    department=department,
-                )
-                return JsonResponse({
-                    'process': 'success',
-                    'msg': f'Success! {class_name} class added in {department.name}',
-                    'departments_list': departments_list,
-                })
-            except IntegrityError:
-                return JsonResponse({'process': 'failed',
-                                     'msg': f'{class_name} already exists in {department.name} department.'})
-            except Exception as err:
-                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            if pk is None:
+                # this means that the request came from 'add new classes' form
+                class_name = data['class_name']
+                department = Department.objects.get(name=data['department_name'])
+                college = request.user.college
+                try:
+                    CollegeClass.objects.create(
+                        college=college,
+                        name=class_name,
+                        department=department,
+                    )
+                    return JsonResponse({
+                        'process': 'success',
+                        'msg': f'Success! {class_name} class added in {department.name}',
+                        'departments_list': departments_list,
+                    })
+                except IntegrityError:
+                    return JsonResponse({'process': 'failed',
+                                         'msg': f'{class_name} already exists in {department.name} department.'})
+                except Exception as err:
+                    return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            else:
+                # this request came for updating an existing class's fields
+                print(pk)
     context_dict = {
         'departments_list': departments_list,
     }

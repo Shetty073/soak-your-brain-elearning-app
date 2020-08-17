@@ -4,56 +4,63 @@
 {% block admin-content %}
     <main role="main" class="container-md">
         <h1 class="colorbluesapphire">Add new departments</h1>
-        <form name="addclass" id="addclassform">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="deptname">Department name</label>
-                <input type="text" class="form-control" id="deptname" name="deptname"
-                       aria-describedby="deptnameHelp"
-                       placeholder="Department name eg. CS, IT, Physics,..etc" required>
-                <small id="nameHelp" class="form-text text-muted">Please enter the department name</small>
-            </div>
-            <div class="alert alert-warning alert-dismissible fade show" id="deptformerror" role="alert">
-                <strong id="deptalertmessage"></strong>
-                <button type="button" class="close" id="deptalertclose" aria-label="Close">
-                    &times;
+        <div class="card">
+            <form name="addclass" id="addclassform" class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="deptname">Department name</label>
+                    <input type="text" class="form-control" id="deptname" name="deptname"
+                           aria-describedby="deptnameHelp"
+                           placeholder="Department name eg. CS, IT, Physics,..etc" required>
+                    <small id="nameHelp" class="form-text text-muted">Please enter the department name</small>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" id="deptformerror" role="alert">
+                    <strong id="deptalertmessage"></strong>
+                    <button type="button" class="close" id="deptalertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="validateAndAddDepartment(true)">Save and add more
                 </button>
-            </div>
-            <button type="button" class="btn btn-warning" onclick="validateAndAddDepartment(true)">Save and add more
-            </button>
-            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddDepartment(false)">Save and go
-                back
-            </button>
-        </form>
+                <button type="button" class="btn btn-outline-warning" onclick="validateAndAddDepartment(false)">Save and
+                    go
+                    back
+                </button>
+            </form>
+        </div>
         <br><br>
         <h1 class="colorbluesapphire">Add new classes</h1>
-        <form name="addclass" id="addclassform">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="classname">Enter class name</label>
-                <input type="text" class="form-control" id="classname" name="classname"
-                       aria-describedby="classnameHelp"
-                       placeholder="Class name eg. TYIT, FBA, etc" required>
-                <small id="nameHelp" class="form-text text-muted">Please enter the class name</small>
-            </div>
-            <div class="form-group">
-                <label for="selectdepartment">Select department</label>
-                <select class="form-control" id="selectdepartment" name="selectdepartment">
-                    {% for department in departments_list %}
-                        <option value="{{ department }}">{{ department }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="alert alert-warning alert-dismissible fade show" id="clsformerror" role="alert">
-                <strong id="clsalertmessage"></strong>
-                <button type="button" class="close" id="clsalertclose" aria-label="Close">
-                    &times;
+        <div class="card">
+            <form name="addclass" id="addclassform" class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="classname">Enter class name</label>
+                    <input type="text" class="form-control" id="classname" name="classname"
+                           aria-describedby="classnameHelp"
+                           placeholder="Class name eg. TYIT, FBA, etc" required>
+                    <small id="nameHelp" class="form-text text-muted">Please enter the class name</small>
+                </div>
+                <div class="form-group">
+                    <label for="selectdepartment">Select department</label>
+                    <select class="form-control" id="selectdepartment" name="selectdepartment">
+                        {% for department in departments_list %}
+                            <option value="{{ department }}">{{ department }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" id="clsformerror" role="alert">
+                    <strong id="clsalertmessage"></strong>
+                    <button type="button" class="close" id="clsalertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="validateAndAddClass(true)">Save and add more
                 </button>
-            </div>
-            <button type="button" class="btn btn-warning" onclick="validateAndAddClass(true)">Save and add more</button>
-            <button type="button" class="btn btn-outline-warning" onclick="validateAndAddClass(false)">Save and go back
-            </button>
-        </form>
+                <button type="button" class="btn btn-outline-warning" onclick="validateAndAddClass(false)">Save and go
+                    back
+                </button>
+            </form>
+        </div>
     </main>
     <script type="text/javascript">
         if (!document.getElementById("add-classes-link").classList.contains('active')) {

@@ -1,4 +1,5 @@
-from django.urls import path, include
+from django.urls import path
+
 from .views import *
 
 urlpatterns = [
@@ -12,6 +13,7 @@ urlpatterns = [
     path('college/', college_page, name='college_page'),
     path('college/add_teachers', college_add_teachers, name='college_add_teachers'),
     path('college/add_classes', college_add_classes, name='college_add_classes'),
+    path('college/add_classes/<int:pk>', college_add_classes, name='college_add_classes'),
     path('college/teacher', college_teacher, name='college_teacher'),
     path('college/student', college_student, name='college_student'),
 ]

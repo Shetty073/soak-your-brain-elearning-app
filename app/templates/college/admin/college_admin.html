@@ -2,17 +2,311 @@
 {% load static %}
 {% block title %} Admin: {{ request.user.college.college_name|slice:':20' }} {% endblock title %}
 {% block admin-content %}
-    <main role="main" class="container-md">
-        <h1 class="colorbluesapphire">Dashboard</h1>
-{#        <div class="alert alert-warning" role="alert">#}
-{#            Nothing to show. <br> Please add <a href="{% url 'college_add_classes' %}">classes</a> and#}
-{#            <a href="{% url 'college_add_teachers' %}">teachers</a> first.#}
-{#        </div>#}
-{#    TODO: Implement this admin dashboard #}
+    <main role="main" class="container-md" id="main-dashboard">
+        {#        <div class="alert alert-warning" role="alert">#}
+        {#            Nothing to show. <br> Please add <a href="{% url 'college_add_classes' %}">classes</a> and#}
+        {#            <a href="{% url 'college_add_teachers' %}">teachers</a> first.#}
+        {#        </div>#}
+        <div id="dash-nav">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-warning disabled" id="button-dashboard">Dashboard</button>
+                <button type="button" class="btn btn-warning" id="button-classes">Classes</button>
+                <button type="button" class="btn btn-warning" id="button-teachers">Teachers</button>
+            </div>
+        </div>
+        <hr>
+        <div class="content" id="content-dashboard">
+            <h1 class="colorbluesapphire">Dashboard</h1>
+        </div>
+        <div class="content hidden" id="content-classes">
+            <div class="float-lg-left">
+                <h1 class="colorbluesapphire">Classes List</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <input type="text" class="search-box" id="classes-list-search" placeholder="Search class">
+                        <div class="table-responsive-sm">
+                            <table class="table" id="class-table">
+                                <thead class="thead-dark bgcolorbluesapphire">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Department</th>
+                                    <th scope="col">Edit</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for cls in classes %}
+                                    <tr>
+                                        <td>{{ cls.id }}</td>
+                                        <td>{{ cls.name }}</td>
+                                        <td>{{ cls.department.name }}</td>
+                                        <td>
+                                            <button class="btn btn-warning class-edit-btn">Edit</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="float-lg-right">
+                <h1 class="colorbluesapphire">Departments List</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <input type="text" class="search-box" id="departments-list-search"
+                               placeholder="Search department">
+                        <div class="table-responsive-sm">
+                            <table class="table" id="department-table">
+                                <thead class="thead-dark bgcolorbluesapphire">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Edit</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for department in departments %}
+                                    <tr>
+                                        <td>{{ department.id }}</td>
+                                        <td>{{ department.name }}</td>
+                                        <td>
+                                            <button class="btn btn-warning department-edit-btn">Edit</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content hidden" id="content-teachers">
+            <h1 class="colorbluesapphire">Teachers List</h1>
+            <div class="card">
+                <div class="card-body">
+                    <input type="text" class="search-box" id="teachers-list-search" placeholder="Search teacher">
+                    <div class="table-responsive-sm">
+                        <table class="table" id="teacher-table">
+                            <thead class="thead-dark bgcolorbluesapphire">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email Id</th>
+                                <th scope="col">Classes Assigned</th>
+                                <th scope="col">Edit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for teacher in teachers %}
+                                <tr>
+                                    <td>{{ teacher.id }}</td>
+                                    <td>{{ teacher.first_name }}</td>
+                                    <td>{{ teacher.last_name }}</td>
+                                    <td>{{ teacher.email }}</td>
+                                    <td>
+                                        {% for clg_cls in teacher.college_classes.all %}
+                                            {{ clg_cls.name }}&nbsp;
+                                        {% endfor %}
+                                    </td>
+                                    <td><a href="#" class="btn btn-warning">Edit</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <script type="text/javascript">
         if (!document.getElementById("home-link").classList.contains('active')) {
             document.getElementById("home-link").classList.add('active');
         }
+
+        {# Get the content blocks#}
+        let dashboardContent = document.getElementById("content-dashboard");
+        let classesContent = document.getElementById("content-classes");
+        let teachersContent = document.getElementById("content-teachers");
+
+        {# Get the buttons #}
+        let dashboardButton = document.getElementById("button-dashboard");
+        let classesButton = document.getElementById("button-classes");
+        let teachersButton = document.getElementById("button-teachers");
+
+        dashboardButton.addEventListener("click", function () {
+            {# Handle the buttons #}
+            if (!dashboardButton.classList.contains("disabled")) {
+                dashboardButton.classList.add("disabled");
+            }
+            if (classesButton.classList.contains("disabled")) {
+                classesButton.classList.remove("disabled");
+            }
+            if (teachersButton.classList.contains("disabled")) {
+                teachersButton.classList.remove("disabled");
+            }
+
+            {# Handle the contents #}
+            if (dashboardContent.classList.contains("hidden")) {
+                dashboardContent.classList.remove("hidden");
+            }
+            if (!classesContent.classList.contains("hidden")) {
+                classesContent.classList.add("hidden");
+            }
+            if (!teachersContent.classList.contains("hidden")) {
+                teachersContent.classList.add("hidden");
+            }
+        });
+        classesButton.addEventListener("click", function () {
+            {# Handle the buttons #}
+            if (!classesButton.classList.contains("disabled")) {
+                classesButton.classList.add("disabled");
+            }
+            if (dashboardButton.classList.contains("disabled")) {
+                dashboardButton.classList.remove("disabled");
+            }
+            if (teachersButton.classList.contains("disabled")) {
+                teachersButton.classList.remove("disabled");
+            }
+
+            {# Handle the contents #}
+            if (classesContent.classList.contains("hidden")) {
+                classesContent.classList.remove("hidden");
+            }
+            if (!dashboardContent.classList.contains("hidden")) {
+                dashboardContent.classList.add("hidden");
+            }
+            if (!teachersContent.classList.contains("hidden")) {
+                teachersContent.classList.add("hidden");
+            }
+        });
+        teachersButton.addEventListener("click", function () {
+            {# Handle the buttons #}
+            if (!teachersButton.classList.contains("disabled")) {
+                teachersButton.classList.add("disabled");
+            }
+            if (dashboardButton.classList.contains("disabled")) {
+                dashboardButton.classList.remove("disabled");
+            }
+            if (classesButton.classList.contains("disabled")) {
+                classesButton.classList.remove("disabled");
+            }
+
+            {# Handle the contents #}
+            if (teachersContent.classList.contains("hidden")) {
+                teachersContent.classList.remove("hidden");
+            }
+            if (!classesContent.classList.contains("hidden")) {
+                classesContent.classList.add("hidden");
+            }
+            if (!dashboardContent.classList.contains("hidden")) {
+                dashboardContent.classList.add("hidden");
+            }
+        });
     </script>
 {% endblock admin-content %}
+
+{% block college-admin-script %}
+    <script>
+        $(document).ready(function () {
+            {# Table search code in jQuery explanation #}
+            {# elements.filter(fn) will apply the fn (function) to all the elements in the elements i.e. list of elements #}
+            {# which in this case is all the <tr>s inside the <tbody> in their respective tables. #}
+            {# For each table row <tr> the function will check whether the text inside the row (any col) matches to the #}
+            {# string entered in the search box using the indexOf() function, which returns a number >= 0 if it finds an #}
+            {# match, otherwise it returns -1. This element is then passed to the .toggle() function which enables only those #}
+            {# elements. #}
+            $("#classes-list-search").on("keyup", function () {
+                let term = $(this).val().toLowerCase();
+                $("#class-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
+                });
+            });
+
+            $("#departments-list-search").on("keyup", function () {
+                let term = $(this).val().toLowerCase();
+                $("#department-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
+                });
+            });
+
+            $("#teachers-list-search").on("keyup", function () {
+                let term = $(this).val().toLowerCase();
+                $("#teacher-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
+                });
+            });
+
+
+            {# jQuery code for updating classes table items #}
+            $(".class-edit-btn").on("click", function () {
+                if ($(this).text() === 'Edit') {
+                    {# If the button's value is 'Edit' that means the row is not in edit mode #}
+                    let idElement = $(this).parent().siblings()[0];
+                    let nameElement = $(this).parent().siblings()[1];
+                    let departmentElement = $(this).parent().siblings()[2];
+                    let clsName = nameElement.innerHTML;
+                    let departmentName = departmentElement.innerHTML;
+
+                    nameElement.innerHTML = `<input type='text' id='clsnm' value='${clsName}' style='width: 100px'>`;
+                    departmentElement.innerHTML = `<select id='clsdpt' style='width: 100px'></select>`;
+
+                    let options = '';
+
+                    {% for department in departments %}
+                        options += `<option value="{{ department.name }}">{{ department.name }}</option>`
+                    {% endfor %}
+                    departmentElement.firstChild.innerHTML = options;
+                    $(this).text("Save");
+
+                } else {
+                    {# else the row is in edit mode #}
+                    {# Save the edit and reset the row to normal view (i.e. remove the <input> tags #}
+                    {# Send an AJAX request to the backend to update the value of this row in the database #}
+                    let idElement = $(this).parent().siblings()[0];
+                    let nameElement = $(this).parent().siblings()[1];
+                    let departmentElement = $(this).parent().siblings()[2];
+                    let clsName = nameElement.firstChild.value;
+                    let departmentName = departmentElement.firstChild.value;
+                    let url = `/college/add_classes/${idElement.innerHTML}`;
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            'form_type': 'department',
+                            'class_name': clsName,
+                            'department_name': departmentName,
+                        })
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        if (data['process'] === 'success') {
+                            let name = data['class_name'];
+                            let dept = data['department_name'];
+                            let nameElement = $(this).parent().siblings()[1];
+                            let departmentElement = $(this).parent().siblings()[2];
+                            nameElement.innerHTML = name;
+                            departmentElement.innerHTML = dept;
+                            $(this).text("Edit");
+                        } else {
+                            // TODO: Display a user friendly error message instead of window.alert()
+                            window.alert(data['msg']);
+                        }
+                    });
+                }
+            });
+
+            {#  jQuery code for updating departments table items #}
+            // TODO: Implement this
+        });
+
+    </script>
+{% endblock college-admin-script %}

@@ -3,10 +3,16 @@
     <words>
       <w>alertclose</w>
       <w>alertmessage</w>
+      <w>bgcolorbluesapphire</w>
+      <w>cardcvv</w>
+      <w>cardnumber</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
+      <w>clsdpt</w>
       <w>clsformerror</w>
+      <w>clsnm</w>
       <w>collegeadmin</w>
+      <w>colorbluesapphire</w>
       <w>deptalertclose</w>
       <w>deptalertmessage</w>
       <w>deptformerror</w>

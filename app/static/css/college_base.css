@@ -2,4 +2,21 @@ main {
     padding-top: 40px;
 }
 
+#main-dashboard {
+    padding-top: 18px;
+}
 
+#dash-nav {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.content {
+    position: absolute;
+    padding-top: 15px;
+}
+
+.hidden {
+    display: none;
+}

@@ -165,7 +165,7 @@ function validateAndAddTeacher(addMore) {
                 // The request failed. Display the appropriate error message sent back in response.
                 displayFormErrorMessage(false, data['msg'], 'alertmessage');
             }
-        })
+        });
     }
 }
 

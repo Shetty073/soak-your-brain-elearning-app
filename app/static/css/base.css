@@ -19,13 +19,13 @@ body {
 }
 
 footer {
+    background-color: #f5f5f5;
     padding-top: 35px;
     padding-bottom: 10px;
-    background-color: #c6c6c6;
 }
 
 main {
-    padding-top: 180px;
+    padding-top: 125px;
 }
 
 .footer-content a {
@@ -126,11 +126,11 @@ td {
 }
 
 #cardnumber {
-    display: inline!important;
+    display: inline !important;
 }
 
 #cardcvv {
-    display: inline!important;
+    display: inline !important;
 }
 
 .alert-dismissible {
@@ -139,4 +139,22 @@ td {
 
 .colorbluesapphire {
     color: var(--blue-sapphire);
+}
+
+.bgcolorbluesapphire {
+    background-color: var(--blue-sapphire);
+}
+
+.card {
+    padding: 25px;
+    border-radius: 6px;
+}
+
+.search-box {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.search-box:focus {
+    outline-color: var(--blue-sapphire);
 }

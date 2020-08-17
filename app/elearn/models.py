@@ -5,8 +5,8 @@ they are represented by their respective tables (College and Customer table if t
 if that User is a teacher).
 This is the most simple way to work with the django's built-in authentication system.
 """
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 # Create your models here.
