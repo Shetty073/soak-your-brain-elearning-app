@@ -256,18 +256,15 @@ def college_add_classes(request, pk=None):
                     return JsonResponse({'process': 'failed', 'msg': f'{err}'})
             else:
                 # this request came for updating an existing department's fields
-                class_name = data['class_name']
                 department_name = data['department_name']
                 try:
-                    cls = CollegeClass.objects.get(pk=pk)
-                    cls.name = class_name
-                    cls.department = Department.objects.get(name=department_name)
-                    cls.save()
+                    dep = Department.objects.get(pk=pk)
+                    dep.name = department_name
+                    dep.save()
 
                     return JsonResponse({
                         'process': 'success',
-                        'class_name': f'{cls.name}',
-                        'department_name': f'{cls.department}',
+                        'department_name': f'{dep.name}',
                     })
                 except IntegrityError:
                     return JsonResponse({
@@ -303,7 +300,29 @@ def college_add_classes(request, pk=None):
                     return JsonResponse({'process': 'failed', 'msg': f'{err}'})
             else:
                 # this request came for updating an existing class's fields
-                print(pk)
+                class_name = data['class_name']
+                department_name = data['department_name']
+                try:
+                    cls = CollegeClass.objects.get(pk=pk)
+                    cls.name = class_name
+                    cls.department = Department.objects.get(name=department_name)
+                    cls.save()
+
+                    return JsonResponse({
+                        'process': 'success',
+                        'class_name': f'{cls.name}',
+                        'department_name': f'{cls.department}',
+                    })
+                except IntegrityError:
+                    return JsonResponse({
+                        'process': 'failed',
+                        'msg': 'Duplicate value error',
+                    })
+                except Exception as err:
+                    return JsonResponse({
+                        'process': 'failed',
+                        'msg': f'{err}',
+                    })
     context_dict = {
         'departments_list': departments_list,
     }

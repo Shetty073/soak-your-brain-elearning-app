@@ -281,7 +281,7 @@
                             'X-CSRFToken': csrftoken,
                         },
                         body: JSON.stringify({
-                            'form_type': 'department',
+                            'form_type': 'class',
                             'class_name': clsName,
                             'department_name': departmentName,
                         })
@@ -305,7 +305,54 @@
             });
 
             {#  jQuery code for updating departments table items #}
-            // TODO: Implement this
+            let oldDeptName = '';
+            $(".department-edit-btn").on("click", function () {
+                if ($(this).text() === 'Edit') {
+                    {# If the button's value is 'Edit' that means the row is not in edit mode #}
+                    let departmentElement = $(this).parent().siblings()[1];
+                    let departmentName = departmentElement.innerHTML;
+                    oldDeptName = departmentName;
+                    departmentElement.innerHTML = `<input type=text id='clsdpt' value='${departmentName}' style='width: 100px'>`;
+
+                    $(this).text("Save");
+                } else {
+                    {# else the row is in edit mode #}
+                    {# Save the edit and reset the row to normal view (i.e. remove the <input> tags #}
+                    {# Send an AJAX request to the backend to update the value of this row in the database #}
+                    let idElement = $(this).parent().siblings()[0];
+                    let departmentElement = $(this).parent().siblings()[1];
+                    let departmentName = departmentElement.firstChild.value;
+                    let url = `/college/add_classes/${idElement.innerHTML}`;
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            'form_type': 'department',
+                            'department_name': departmentName,
+                        })
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        if (data['process'] === 'success') {
+                            let dept = data['department_name'];
+                            let departmentElement = $(this).parent().siblings()[1];
+                            departmentElement.innerHTML = dept;
+
+                            $("#class-table tbody tr").filter(function () {
+                                $(this).children()[2].innerHTML = ($(this).children()[2].innerHTML === oldDeptName) ? dept : $(this).children()[2].innerHTML;
+                            });
+
+                            $(this).text("Edit");
+                        } else {
+                            // TODO: Display a user friendly error message instead of window.alert()
+                            window.alert(data['msg']);
+                        }
+                    });
+                }
+            });
         });
 
     </script>
