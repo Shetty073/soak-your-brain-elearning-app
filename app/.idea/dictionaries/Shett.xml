@@ -21,6 +21,8 @@
       <w>lastname</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>
+      <w>signin</w>
+      <w>signout</w>
       <w>sybadmin</w>
     </words>
   </dictionary>
