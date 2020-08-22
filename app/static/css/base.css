@@ -158,3 +158,22 @@ td {
 .search-box:focus {
     outline-color: var(--blue-sapphire);
 }
+
+.cell-show-sm {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    .cell-hide-sm {
+        display: none;
+    }
+
+    .cell-show-sm {
+        display: block;
+    }
+
+    #content-teachers {
+        width: 95% !important;
+    }
+
+}

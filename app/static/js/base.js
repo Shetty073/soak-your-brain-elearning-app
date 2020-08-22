@@ -138,3 +138,8 @@ $(document).ready(function () {
         }
     });
 });
+
+// For bootstrap tooltip
+$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});

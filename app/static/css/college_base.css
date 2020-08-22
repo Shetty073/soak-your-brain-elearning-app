@@ -20,3 +20,7 @@ main {
 .hidden {
     display: none;
 }
+
+#department-table {
+    overflow: scroll !important;
+}

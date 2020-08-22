@@ -54,7 +54,8 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=256, unique=True)),
                 ('college', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.College')),
                 (
-                'user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                    'user',
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -76,7 +77,8 @@ class Migration(migrations.Migration):
                                                  to='elearn.ClassName')),
                 ('college', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.College')),
                 (
-                'user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                    'user',
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(

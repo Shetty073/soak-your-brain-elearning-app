@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %} SoakYourBrain - e-learning management platform {% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -44,24 +45,29 @@
                 <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}#pricing">Pricing</a>
+                <a data-toggle="tooltip" title="View plans and pricing" class="nav-link"
+                   href="{% url 'home' %}#pricing">Pricing</a>
             </li>
             {% if request.user.is_authenticated %}
                 {% if user.groups.all.0.name == 'sybadmin' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'syb_admin_page' %}">Admin</a>
+                        <a data-toggle="tooltip" title="Go to SYB admin dashboard" class="nav-link"
+                           href="{% url 'syb_admin_page' %}">Admin</a>
                     </li>
                 {% elif request.user.groups.all.0.name == 'collegeadmin' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'college_page' %}">College dashboard</a>
+                        <a data-toggle="tooltip" title="Go to college admin dashboard" class="nav-link"
+                           href="{% url 'college_page' %}">College dashboard</a>
                     </li>
                 {% elif request.user.groups.all.0.name == 'teacher' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'college_teacher' %}">Teacher dashboard</a>
+                        <a data-toggle="tooltip" title="Go to teacher dashboard" class="nav-link"
+                           href="{% url 'college_teacher' %}">Teacher dashboard</a>
                     </li>
                 {% elif request.user.groups.all.0.name == 'student' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'college_student' %}">Student dashboard</a>
+                        <a data-toggle="tooltip" title="Go to student dashboard" class="nav-link"
+                           href="{% url 'college_student' %}">Student dashboard</a>
                     </li>
                 {% endif %}
             {% endif %}

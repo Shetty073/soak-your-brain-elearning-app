@@ -170,58 +170,145 @@ def college_page(request):
 
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
-def college_add_teachers(request):
+def college_add_teachers(request, pk=None):
     classes_list = [classname['name'] for classname in CollegeClass.objects.all().values('name')]
     if request.method == 'POST':
         # for AJAX request
         data = json.loads(request.body)
+        mode = data['mode']
         first_name = data['first_name']
         last_name = data['last_name']
         classes_assigned = data['classes_assigned']
         email_id = data['email_id']
-        password1 = data['password1']
+        password1 = None if data['password1'] == '' else data['password1']
 
+        if mode == 'add':
+            # request is for adding new teacher
+            try:
+                # register the User
+                new_user = User.objects.create_user(
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email_id,
+                    username=email_id,
+                )
+                new_user.set_password(password1)
+                new_user.save()
+
+                # Add this user to teacher group
+                collegeadmin_group = Group.objects.get(name='teacher')
+                collegeadmin_group.user_set.add(new_user)
+
+                # Get the college of the current logged in user (collegeadmin user)
+                college = request.user.college
+
+                # create a teacher
+                clg_teacher = Teacher.objects.create(
+                    user=new_user,
+                    college=college,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email_id,
+                )
+
+                # add the assigned classes to this teacher
+                for cls in classes_assigned:
+                    clg_cls = CollegeClass.objects.get(name=cls)
+                    clg_teacher.college_classes.add(clg_cls)
+
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': f'Success! Teacher {first_name} {last_name} has been added to the database.',
+                })
+            except IntegrityError:
+                return JsonResponse({
+                    'process': 'failed',
+                    'msg': f'Teacher {first_name} {last_name} has already been added to the database.'
+                })
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+        else:
+            # this is an AJAX request for updating existing teacher
+            # This request also will contain password2 field data as password validation is
+            # not done on client side for this request's form
+            password2 = None if data['password2'] == '' else data['password2']
+            try:
+                # Get the teacher by pk (id) and update the data
+                clg_teacher_id = data['teacher_id']
+                clg_teacher = Teacher.objects.get(pk=clg_teacher_id)
+                clg_teacher.first_name = first_name
+                clg_teacher.last_name = last_name
+                clg_teacher.email = email_id
+
+                # Now update the User associated (OneToOne) with the Teacher
+                clg_teacher.user.email = email_id
+                clg_teacher.user.username = email_id
+                clg_teacher.user.first_name = first_name
+                clg_teacher.user.last_name = last_name
+
+                # Update the classes assigned to the teacher
+                # First clear existing classes data
+                clg_teacher.college_classes.clear()
+                # Now add newly selected/edited data
+                for cls in classes_assigned:
+                    clg_cls = CollegeClass.objects.get(name=cls)
+                    clg_teacher.college_classes.add(clg_cls)
+
+                # if the password provided is valid then update it too
+                if password1 is not None and password2 is not None:
+                    if password1 == password2:
+                        clg_teacher.user.set_password(password1)
+                    else:
+                        return JsonResponse({
+                            'process': 'failed',
+                            'msg': f'Error! passwords do not match',
+                        })
+
+                # Now save the data
+                clg_teacher.user.save()
+                clg_teacher.save()
+
+                # updated_teacher_data is for updating the html table in the frontend once
+                # request gets processed
+                updated_teacher_data = {
+                    'id': clg_teacher.id,
+                    'first_name': clg_teacher.first_name,
+                    'last_name': clg_teacher.last_name,
+                    'email_id': clg_teacher.email,
+                    'class_list': [cls_name.name for cls_name in clg_teacher.college_classes.all()],
+                }
+
+                # Return success message
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': f'{first_name} {last_name}\'s data has been successfully updated.',
+                    'updated_data': updated_teacher_data,
+                })
+            except Exception as err:
+                return JsonResponse({
+                    'process': 'failed',
+                    'msg': f'Error! {err}',
+                })
+    if pk is not None:
+        # it means that this is an AJAX GET request for getting a teacher's data using pk (id)
         try:
-            # register the User
-            new_user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
-                email=email_id,
-                username=email_id,
-            )
-            new_user.set_password(password1)
-            new_user.save()
-
-            # Add this user to teacher group
-            collegeadmin_group = Group.objects.get(name='teacher')
-            collegeadmin_group.user_set.add(new_user)
-
-            # Get the college of the current logged in user (collegeadmin user)
-            college = request.user.college
-
-            # create a teacher
-            clg_teacher = Teacher.objects.create(
-                user=new_user,
-                college=college,
-                first_name=first_name,
-                last_name=last_name,
-                email=email_id,
-            )
-
-            # add the assigned classes to this teacher
-            for cls in classes_assigned:
-                clg_cls = CollegeClass.objects.get(name=cls)
-                clg_teacher.college_classes.add(clg_cls)
-
+            teacher = Teacher.objects.get(pk=pk)
+            teacher_json_obj = {
+                'first_name': teacher.first_name,
+                'last_name': teacher.last_name,
+                'classes_assigned': [teach.name for teach in teacher.college_classes.all()],
+                'email_id': teacher.email,
+            }
             return JsonResponse({
                 'process': 'success',
-                'msg': f'Success! Teacher {first_name} {last_name} has been added to the database.',
+                'msg': 'Success',
+                'teacher_json_obj': teacher_json_obj,
             })
-        except IntegrityError:
-            return JsonResponse({'process': 'failed',
-                                 'msg': f'Teacher {first_name} {last_name} has already been added to the database.'})
         except Exception as err:
-            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            return JsonResponse({
+                'process': 'failed',
+                'msg': f'Error! {err}',
+            })
 
     context_dict = {'classes_list': classes_list}
     return render(request, template_name='college/admin/admin_addteachers.html', context=context_dict)

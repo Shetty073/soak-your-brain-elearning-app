@@ -24,7 +24,7 @@
                     <label for="selectclasses">Select the class(es) that you want this teacher to be a part of</label>
                     <select multiple class="form-control" id="selectclasses" name="selectclasses">
                         {% for class_name in classes_list %}
-                            <option>{{ class_name }}</option>
+                            <option value="{{ class_name }}">{{ class_name }}</option>
                         {% endfor %}
                     </select>
                     <small id="selectclassesHelp" class="form-text text-muted">You can select multiple classes by

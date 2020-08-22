@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %} {{ request.user.college.college_name }} {% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -35,14 +36,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     {% if request.user.groups.all.0.name == 'collegeadmin' %}
         {# If the user is a college admin #}
-        <a class="navbar-brand" href="{% url 'college_page' %}">{{ request.user.college.college_name|slice:':20' }}</a>
+        <a data-toggle="tooltip" title="College home page" class="navbar-brand"
+           href="{% url 'college_page' %}">{{ request.user.college.college_name|slice:':20' }}</a>
     {% elif request.user.groups.all.0.name == 'teacher' %}
         {# If the user is a teacher #}
-        <a class="navbar-brand"
+        <a data-toggle="tooltip" title="College home page" class="navbar-brand"
            href="{% url 'college_teacher' %}">{{ request.user.teacher.college.college_name|slice:':20' }}</a>
     {% elif request.user.groups.all.0.name == 'student' %}
         {# If the user is a student #}
-        <a class="navbar-brand"
+        <a data-toggle="tooltip" title="College home page" class="navbar-brand"
            href="{% url 'college_student' %}">{{ request.user.student.college.college_name|slice:':20' }}</a>
     {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -55,50 +57,56 @@
             {% if request.user.groups.all.0.name == 'collegeadmin' %}
                 {# If the user is a college admin #}
                 <li class="nav-item" id="home-link">
-                    <a class="nav-link" href="{% url 'college_page' %}">Home <span class="sr-only">(current)</span></a>
+                    <a data-toggle="tooltip" title="College home page" class="nav-link" href="{% url 'college_page' %}">Home
+                        <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" id="add-classes-link">
-                    <a class="nav-link" href="{% url 'college_add_classes' %}">Add classes</a>
+                    <a data-toggle="tooltip" title="Add departments and classes" class="nav-link"
+                       href="{% url 'college_add_classes' %}">Add classes</a>
                 </li>
                 <li class="nav-item" id="add-teachers-link">
-                    <a class="nav-link" href="{% url 'college_add_teachers' %}">Add teachers</a>
+                    <a data-toggle="tooltip" title="Add teachers" class="nav-link"
+                       href="{% url 'college_add_teachers' %}">Add teachers</a>
                 </li>
 
             {% elif request.user.groups.all.0.name == 'teacher' %}
                 {# If the user is a teacher #}
                 <li class="nav-item" id="home-link">
-                    <a class="nav-link" href="{% url 'college_teacher' %}">Home <span
+                    <a data-toggle="tooltip" title="College home page" class="nav-link"
+                       href="{% url 'college_teacher' %}">Home <span
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Add subjects</a>
+                    <a data-toggle="tooltip" title="Add subjects" class="nav-link" href="#">Add subjects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Add students</a>
+                    <a data-toggle="tooltip" title="Add students" class="nav-link" href="#">Add students</a>
                 </li>
 
             {% elif request.user.groups.all.0.name == 'student' %}
                 {# If the user is a student #}
                 <li class="nav-item" id="home-link">
-                    <a class="nav-link" href="{% url 'college_student' %}">Home <span
+                    <a data-toggle="tooltip" title="College home page" class="nav-link"
+                       href="{% url 'college_student' %}">Home <span
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Assignments</a>
+                    <a data-toggle="tooltip" title="Check assignments" class="nav-link" href="#">Assignments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Reading materials</a>
+                    <a data-toggle="tooltip" title="Books and documents" class="nav-link" href="#">Reading materials</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Videos</a>
+                    <a data-toggle="tooltip" title="Videos to watch" class="nav-link" href="#">Videos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Links</a>
+                    <a data-toggle="tooltip" title="Links to read" class="nav-link" href="#">Links</a>
                 </li>
             {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">&nbsp;&nbsp;
-            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign out</a>
+            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign
+                out</a>
         </form>
     </div>
 </nav>

@@ -136,6 +136,7 @@ function validateAndAddTeacher(addMore) {
                 'X-CSRFToken': csrftoken,
             },
             body: JSON.stringify({
+                'mode': 'add',
                 'first_name': first_name,
                 'last_name': last_name,
                 'classes_assigned': classes_assigned,
@@ -245,4 +246,9 @@ $(document).ready(function () {
     $('#alertclose').click(function () {
         $('#formerror').css('display', 'none');
     });
+});
+
+// For bootstrap tooltip
+$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
 });

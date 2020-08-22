@@ -12,6 +12,7 @@ urlpatterns = [
     path('sybadmin/', syb_admin_page, name='syb_admin_page'),
     path('college/', college_page, name='college_page'),
     path('college/add_teachers', college_add_teachers, name='college_add_teachers'),
+    path('college/add_teachers/<int:pk>', college_add_teachers, name='college_add_teachers'),
     path('college/add_classes', college_add_classes, name='college_add_classes'),
     path('college/add_classes/<int:pk>', college_add_classes, name='college_add_classes'),
     path('college/teacher', college_teacher, name='college_teacher'),

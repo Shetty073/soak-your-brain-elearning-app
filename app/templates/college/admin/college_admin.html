@@ -9,116 +9,214 @@
         {#        </div>#}
         <div id="dash-nav">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-warning disabled" id="button-dashboard">Dashboard</button>
-                <button type="button" class="btn btn-warning" id="button-classes">Classes</button>
-                <button type="button" class="btn btn-warning" id="button-teachers">Teachers</button>
+                <button data-toggle="tooltip" title="Main admin dashboard" type="button"
+                        class="btn btn-warning disabled" id="button-dashboard">Dashboard
+                </button>
+                <button data-toggle="tooltip" title="Manage existing departments and classes" type="button"
+                        class="btn btn-warning" id="button-classes">Classes
+                </button>
+                <button data-toggle="tooltip" title="Manage existing teachers" type="button" class="btn btn-warning"
+                        id="button-teachers">Teachers
+                </button>
             </div>
+            <hr>
         </div>
-        <hr>
         <div class="content" id="content-dashboard">
             <h1 class="colorbluesapphire">Dashboard</h1>
+            <!-- TODO: Add dashboard content here-->
         </div>
         <div class="content hidden" id="content-classes">
             <div class="float-lg-left">
                 <h1 class="colorbluesapphire">Classes List</h1>
-                <div class="card">
-                    <div class="card-body">
-                        <input type="text" class="search-box" id="classes-list-search" placeholder="Search class">
-                        <div class="table-responsive-sm">
-                            <table class="table" id="class-table">
-                                <thead class="thead-dark bgcolorbluesapphire">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Department</th>
-                                    <th scope="col">Edit</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for cls in classes %}
-                                    <tr>
-                                        <td>{{ cls.id }}</td>
-                                        <td>{{ cls.name }}</td>
-                                        <td>{{ cls.department.name }}</td>
-                                        <td>
-                                            <button class="btn btn-warning class-edit-btn">Edit</button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <input type="text" class="search-box" id="classes-list-search" placeholder="Search class">
+                <div class="table-responsive-md">
+                    <table class="table table-bordered" id="class-table">
+                        <thead class="thead-dark bgcolorbluesapphire">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cls in classes %}
+                            <tr>
+                                <td>{{ cls.id }}</td>
+                                <td>{{ cls.name }}</td>
+                                <td>{{ cls.department.name }}</td>
+                                <td>
+                                    <button class="btn btn-warning class-edit-btn">Edit</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div class="float-lg-right">
                 <h1 class="colorbluesapphire">Departments List</h1>
-                <div class="card">
-                    <div class="card-body">
-                        <input type="text" class="search-box" id="departments-list-search"
-                               placeholder="Search department">
-                        <div class="table-responsive-sm">
-                            <table class="table" id="department-table">
-                                <thead class="thead-dark bgcolorbluesapphire">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Edit</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for department in departments %}
-                                    <tr>
-                                        <td>{{ department.id }}</td>
-                                        <td>{{ department.name }}</td>
-                                        <td>
-                                            <button class="btn btn-warning department-edit-btn">Edit</button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <input type="text" class="search-box" id="departments-list-search"
+                       placeholder="Search department">
+                <div class="table-responsive-md">
+                    <table class="table table-bordered" id="department-table">
+                        <thead class="thead-dark bgcolorbluesapphire">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for department in departments %}
+                            <tr>
+                                <td>{{ department.id }}</td>
+                                <td>{{ department.name }}</td>
+                                <td>
+                                    <button class="btn btn-warning department-edit-btn">Edit</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+
+        {# List existing teachers #}
         <div class="content hidden" id="content-teachers">
             <h1 class="colorbluesapphire">Teachers List</h1>
+            <div class="cell-show-sm">
+                <select id="col-to-show">
+                    <option>Show email-ids</option>
+                    <option>Show names</option>
+                </select>
+                <br><br>
+            </div>
+            <input type="text" class="search-box" id="teachers-list-search" placeholder="Search teacher">
+            <div class="table-responsive-md">
+                <table class="table table-bordered" id="teacher-table">
+                    <thead class="thead-dark bgcolorbluesapphire">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th class="cell-hide-sm name-col" scope="col">Name</th>
+                        <th class="email-col" scope="col">Email Id</th>
+                        <th class="cell-hide-sm" scope="col">Classes Assigned</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for teacher in teachers %}
+                        <tr>
+                            <td>{{ teacher.id }}</td>
+                            <td class="cell-hide-sm name-col">{{ teacher.first_name }}&nbsp;{{ teacher.last_name }}</td>
+                            <td class="email-col">{{ teacher.email }}</td>
+                            <td class="cell-hide-sm">
+                                {% for clg_cls in teacher.college_classes.all %}
+                                    {{ clg_cls.name }}&nbsp;
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <button id="edit{{ teacher.id }}" class="btn btn-warning teacher-edit-btn">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Edit a particular tecaher #}
+        <div class="content hidden" id="content-teachers-edit">
+            <button id="go-back-btn" class="btn btn-warning">Go back</button>
+            <hr>
+            <h1 class="colorbluesapphire">Update teacher info</h1>
+            <br>
             <div class="card">
-                <div class="card-body">
-                    <input type="text" class="search-box" id="teachers-list-search" placeholder="Search teacher">
-                    <div class="table-responsive-sm">
-                        <table class="table" id="teacher-table">
-                            <thead class="thead-dark bgcolorbluesapphire">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Email Id</th>
-                                <th scope="col">Classes Assigned</th>
-                                <th scope="col">Edit</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for teacher in teachers %}
-                                <tr>
-                                    <td>{{ teacher.id }}</td>
-                                    <td>{{ teacher.first_name }}</td>
-                                    <td>{{ teacher.last_name }}</td>
-                                    <td>{{ teacher.email }}</td>
-                                    <td>
-                                        {% for clg_cls in teacher.college_classes.all %}
-                                            {{ clg_cls.name }}&nbsp;
-                                        {% endfor %}
-                                    </td>
-                                    <td><a href="#" class="btn btn-warning">Edit</a></td>
-                                </tr>
+                <form name="addteacher" id="addteacherform" class="card-body">
+                    {% csrf_token %}
+                    <span id="id-teacher-edit" class="hidden"></span>
+                    <div class="form-group">
+                        <label for="firstname">Teacher's name</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="firstname" name="firstname"
+                                   aria-describedby="nameHelp"
+                                   placeholder="First name" required>
+                            &nbsp;
+                            <input type="text" class="form-control" id="lastname" name="lastname"
+                                   aria-describedby="nameHelp"
+                                   placeholder="Last name" required>
+                        </div>
+                        <small id="nameHelp" class="form-text text-muted">Please enter your name</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectclasses">Select the class(es) that you want this teacher to be a part
+                            of</label>
+                        <select multiple class="form-control" id="selectclasses" name="selectclasses">
+                            {% for class_name in classes %}
+                                <option>{{ class_name.name }}</option>
                             {% endfor %}
-                            </tbody>
-                        </table>
+                        </select>
+                        <small id="selectclassesHelp" class="form-text text-muted">
+                            <strong>
+                            Please hold the CTRL key on Windows/Linux or CMD key on Mac before clicking.
+                            </strong>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                               placeholder="Enter email" required>
+                        <small id="emailHelp" class="form-text text-muted">
+                            <strong>This email address will also be this teacher's username </strong>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <input type="password" class="form-control" id="password1" name="password1"
+                               placeholder="Password">
+                        <small id="password1Help" class="form-text text-muted">
+                            <strong>You cannot see the old password for this account because password's are
+                                never saved in the databases, only their hashes are saved.
+                                But you (admin) can overwrite the old password with this new one.</strong>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Re-enter password</label>
+                        <input type="password" class="form-control" id="password2" name="password2"
+                               placeholder="Re-enter password">
+                        <small id="password2Help" class="form-text text-muted">
+                            <strong>Whitespaces are not allowed in passwords and will be automatically removed before
+                                submission.</strong>
+                        </small>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                        <strong id="alertmessage"></strong>
+                        <button type="button" class="close" id="alertclose" aria-label="Close">
+                            &times;
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-warning" onclick="validateAndSave()">Save and go back
+                    </button>
+                </form>
+            </div>
+        </div>
+        <br><br>
+        {# Toast notification #}
+        <div id="toast-polite-div" class="hidden" aria-live="polite" aria-atomic="true"
+             style="position: relative; min-height: 200px;">
+            <!-- Position it -->
+            <div style="position: absolute; top: 0; right: 0;">
+                <div class="toast" data-autohide="false">
+                    <div class="toast-header">
+                        <strong class="mr-auto text-primary"></strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                    </div>
+                    <div class="toast-body">
                     </div>
                 </div>
             </div>
@@ -138,6 +236,7 @@
         let dashboardButton = document.getElementById("button-dashboard");
         let classesButton = document.getElementById("button-classes");
         let teachersButton = document.getElementById("button-teachers");
+
 
         dashboardButton.addEventListener("click", function () {
             {# Handle the buttons #}
@@ -297,8 +396,10 @@
                             departmentElement.innerHTML = dept;
                             $(this).text("Edit");
                         } else {
-                            // TODO: Display a user friendly error message instead of window.alert()
-                            window.alert(data['msg']);
+                            document.getElementById('toast-polite-div').classList.remove('hidden');
+                            $('.toast-header').children()[0].innerHTML = 'Error!';
+                            $('.toast-body').innerHTML = data['msg'];
+                            $('.toast').toast('show');
                         }
                     });
                 }
@@ -344,16 +445,206 @@
                             $("#class-table tbody tr").filter(function () {
                                 $(this).children()[2].innerHTML = ($(this).children()[2].innerHTML === oldDeptName) ? dept : $(this).children()[2].innerHTML;
                             });
-
                             $(this).text("Edit");
                         } else {
-                            // TODO: Display a user friendly error message instead of window.alert()
-                            window.alert(data['msg']);
+                            document.getElementById('toast-polite-div').classList.remove('hidden');
+                            $('.toast-header').children()[0].innerHTML = 'Error!';
+                            $('.toast-body').innerHTML = data['msg'];
+                            $('.toast').toast('show');
                         }
                     });
                 }
             });
+
+            // Toast: on hide add hidden class to the classList of #toast-polite-div
+            $('.toast').on('hidden.bs.toast', function () {
+                document.getElementById('toast-polite-div').classList.add('hidden');
+            });
+
+            // Column show/hide dropdown control for small devices
+            $('#col-to-show').on('change', function () {
+                if (this.selectedIndex === 0) {
+                    $('.name-col').filter(function () {
+                        if (!this.classList.contains('cell-hide-sm')) {
+                            this.classList.add('cell-hide-sm');
+                        }
+                    });
+                    $('.email-col').filter(function () {
+                        if (this.classList.contains('cell-hide-sm')) {
+                            this.classList.remove('cell-hide-sm');
+                        }
+                    });
+                } else if (this.selectedIndex === 1) {
+                    $('.email-col').filter(function () {
+                        if (!this.classList.contains('cell-hide-sm')) {
+                            this.classList.add('cell-hide-sm');
+                        }
+                    });
+                    $('.name-col').filter(function () {
+                        if (this.classList.contains('cell-hide-sm')) {
+                            this.classList.remove('cell-hide-sm');
+                        }
+                    });
+                }
+            })
+
+            // Teacher edit screen
+            $('.teacher-edit-btn').on('click', function () {
+                document.getElementById('dash-nav').style.display = 'none';
+                document.getElementById('content-teachers').classList.add('hidden');
+                document.getElementById('content-teachers-edit').classList.remove('hidden');
+                document.getElementById('id-teacher-edit').innerText = $(this).parent().siblings()[0].innerHTML;
+
+                // Pre-fill the form with the data of this particular teacher
+                let teacher_id = document.getElementById('id-teacher-edit').innerText;
+                let url = `/college/add_teachers/${teacher_id}`;
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // Request successfully completed.
+                        // Now fill
+                        document.getElementById('firstname').value = data['teacher_json_obj']['first_name'];
+                        document.getElementById('lastname').value = data['teacher_json_obj']['last_name'];
+                        document.getElementById('email').value = data['teacher_json_obj']['email_id'];
+
+                        // Get the multiple <select> values
+                        let classes_assigned = data['teacher_json_obj']['classes_assigned'];
+                        let multiSelectElement = document.getElementById('selectclasses');
+                        for (let i = 0; i < classes_assigned.length; i++) {
+                            for (let j = 0; j < multiSelectElement.options.length; j++) {
+                                if (multiSelectElement.options[j].value === classes_assigned[i]) {
+                                    multiSelectElement.options[j].selected = true;
+                                }
+                            }
+                        }
+
+
+                    } else {
+                        // The request failed. Display the appropriate error message sent back in response.
+                        document.getElementById('alertmessage').innerText = data['msg'];
+                        document.getElementById('formerror').style.display = 'block';
+                    }
+                });
+
+            });
+
+            // go back button event listener
+            $('#go-back-btn').on('click', function () {
+                goBack();
+            });
         });
+
+        function goBack() {
+            // Go back to teacher's list view from edit/update teacher view
+            document.getElementById('id-teacher-edit').innerText = '';
+            document.getElementById('content-teachers-edit').classList.add('hidden');
+            document.getElementById('dash-nav').style.display = 'block';
+            document.getElementById('content-teachers').classList.remove('hidden');
+        }
+
+        // Validate and save the updated teacher form data
+        function validateAndSave() {
+            // Get and validate data
+            let url = "/college/add_teachers";
+
+            let teacher_id = document.getElementById('id-teacher-edit').innerText.trim();
+            let first_name = document.getElementById('firstname').value.trim().split(' ').join('');
+            let last_name = document.getElementById('lastname').value.trim().split(' ').join('');
+            let email_id = document.getElementById('email').value.trim().split(' ').join('');
+            let password1 = document.getElementById('password1').value.trim().split(' ').join('');
+            let password2 = document.getElementById('password2').value.trim().split(' ').join('');
+
+            // Get the multiple <select> values
+            let selected_classes = document.getElementById('selectclasses');
+            let classes_assigned = [];
+            for (let i = 0; i < selected_classes.selectedOptions.length; i++) {
+                classes_assigned.push(selected_classes.selectedOptions[i].value);
+            }
+
+            if (first_name === '') {
+                document.getElementById('alertmessage').innerText = 'First name can not be empty. Please enter a valid first name.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (hasNumber(first_name)) {
+                document.getElementById('alertmessage').innerText = 'First name can not contain numbers. Please enter a valid first name.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (last_name === '') {
+                document.getElementById('alertmessage').innerText = 'Last name can can not be empty. Please enter a valid last name.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (hasNumber(last_name)) {
+                document.getElementById('alertmessage').innerText = 'Last name can not contain numbers. Please enter a valid last name.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (email_id === '') {
+                document.getElementById('alertmessage').innerText = 'Email id can not be empty. Please enter a valid email id.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (checkEmailInvalid(email_id)) {
+                document.getElementById('alertmessage').innerText = 'Email id is invalid. Please enter a valid email id.';
+                document.getElementById('formerror').style.display = 'block';
+            } else if (classes_assigned.length < 1) {
+                document.getElementById('alertmessage').innerText = 'You must assign this teacher to at least one class';
+                document.getElementById('formerror').style.display = 'block';
+            } else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        'mode': 'update',
+                        'teacher_id': teacher_id,
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'classes_assigned': classes_assigned,
+                        'email_id': email_id,
+                        'password1': password1,
+                        'password2': password2,
+                    })
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // Request successfully completed. Clear the input box
+                        document.getElementById('firstname').value = '';
+                        document.getElementById('lastname').value = '';
+                        let multiSelectElement = document.getElementById('selectclasses');
+                        for (let i = 0; i < multiSelectElement.options.length; i++) {
+                            multiSelectElement.options[i].selected = false;
+                        }
+                        document.getElementById('email').value = '';
+                        document.getElementById('password1').value = '';
+                        document.getElementById('password2').value = '';
+
+                        // Update the teacher's list table with the new data
+                        let updated_data = data['updated_data']
+                        $("#teacher-table tbody tr").filter(function () {
+                            if ($(this).children()[0].innerHTML === `${updated_data['id']}`) {
+                                $(this).children()[1].innerHTML = `${updated_data['first_name']} ${updated_data['last_name']}`;
+                                $(this).children()[2].innerHTML = updated_data['email_id'];
+                                let cls_lst = '';
+                                for (let i = 0; i < updated_data['class_list'].length; i++) {
+                                    cls_lst += `${updated_data['class_list'][i]} `;
+                                }
+                                $(this).children()[3].innerHTML = cls_lst;
+                            }
+                        });
+
+                        // Go back to previous page/view
+                        goBack();
+                    } else {
+                        // The request failed. Display the appropriate error message sent back in response.
+                        document.getElementById('alertmessage').innerText = data['msg'];
+                        document.getElementById('formerror').style.display = 'block';
+                    }
+                });
+            }
+        }
 
     </script>
 {% endblock college-admin-script %}
