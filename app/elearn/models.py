@@ -146,7 +146,7 @@ def user_document_directory_path(instance, filename):
 class DocumentPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    video_url = models.FileField(upload_to=user_document_directory_path)
+    document_url = models.FileField(upload_to=user_document_directory_path)
 
     def __str__(self):
         return self.post.title
@@ -161,7 +161,7 @@ def user_image_directory_path(instance, filename):
 class ImagePost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    video_url = models.ImageField(upload_to=user_image_directory_path)
+    image_url = models.ImageField(upload_to=user_image_directory_path)
 
     def __str__(self):
         return self.post.title
@@ -177,7 +177,7 @@ class YouTubePost(models.Model):
 
 class LinkPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
-    body = models.CharField(max_length=500, null=True, blank=True)
+    link = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.post.title

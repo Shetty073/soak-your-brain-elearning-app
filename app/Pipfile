@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 django = "*"
 pillow = "*"
+pymysql = "*"
+mysql-connector-python = "*"
+cryptography = "*"
 
 [requires]
 python_version = "3.8"
