@@ -372,7 +372,7 @@
                     let departmentElement = $(this).parent().siblings()[2];
                     let clsName = nameElement.firstChild.value;
                     let departmentName = departmentElement.firstChild.value;
-                    let url = `/college/add_classes/${idElement.innerHTML}`;
+                    let url = `/college/add_classes/${idElement.innerText}`;
                     fetch(url, {
                         method: 'POST',
                         headers: {
@@ -392,13 +392,13 @@
                             let dept = data['department_name'];
                             let nameElement = $(this).parent().siblings()[1];
                             let departmentElement = $(this).parent().siblings()[2];
-                            nameElement.innerHTML = name;
-                            departmentElement.innerHTML = dept;
+                            nameElement.innerText = name;
+                            departmentElement.innerText = dept;
                             $(this).text("Edit");
                         } else {
                             document.getElementById('toast-polite-div').classList.remove('hidden');
-                            $('.toast-header').children()[0].innerHTML = 'Error!';
-                            $('.toast-body').innerHTML = data['msg'];
+                            $('.toast-header').children()[0].innerText = 'Error!';
+                            $('.toast-body').innerText = data['msg'];
                             $('.toast').toast('show');
                         }
                     });
@@ -423,7 +423,7 @@
                     let idElement = $(this).parent().siblings()[0];
                     let departmentElement = $(this).parent().siblings()[1];
                     let departmentName = departmentElement.firstChild.value;
-                    let url = `/college/add_classes/${idElement.innerHTML}`;
+                    let url = `/college/add_classes/${idElement.innerText}`;
                     fetch(url, {
                         method: 'POST',
                         headers: {
@@ -440,16 +440,16 @@
                         if (data['process'] === 'success') {
                             let dept = data['department_name'];
                             let departmentElement = $(this).parent().siblings()[1];
-                            departmentElement.innerHTML = dept;
+                            departmentElement.innerText = dept;
 
                             $("#class-table tbody tr").filter(function () {
-                                $(this).children()[2].innerHTML = ($(this).children()[2].innerHTML === oldDeptName) ? dept : $(this).children()[2].innerHTML;
+                                $(this).children()[2].innerText = ($(this).children()[2].innerText === oldDeptName) ? dept : $(this).children()[2].innerText;
                             });
                             $(this).text("Edit");
                         } else {
                             document.getElementById('toast-polite-div').classList.remove('hidden');
-                            $('.toast-header').children()[0].innerHTML = 'Error!';
-                            $('.toast-body').innerHTML = data['msg'];
+                            $('.toast-header').children()[0].innerText = 'Error!';
+                            $('.toast-body').innerText = data['msg'];
                             $('.toast').toast('show');
                         }
                     });
@@ -493,7 +493,7 @@
                 document.getElementById('dash-nav').style.display = 'none';
                 document.getElementById('content-teachers').classList.add('hidden');
                 document.getElementById('content-teachers-edit').classList.remove('hidden');
-                document.getElementById('id-teacher-edit').innerText = $(this).parent().siblings()[0].innerHTML;
+                document.getElementById('id-teacher-edit').innerText = $(this).parent().siblings()[0].innerText;
 
                 // Pre-fill the form with the data of this particular teacher
                 let teacher_id = document.getElementById('id-teacher-edit').innerText;
@@ -624,14 +624,14 @@
                         // Update the teacher's list table with the new data
                         let updated_data = data['updated_data']
                         $("#teacher-table tbody tr").filter(function () {
-                            if ($(this).children()[0].innerHTML === `${updated_data['id']}`) {
-                                $(this).children()[1].innerHTML = `${updated_data['first_name']} ${updated_data['last_name']}`;
-                                $(this).children()[2].innerHTML = updated_data['email_id'];
+                            if ($(this).children()[0].innerText === `${updated_data['id']}`) {
+                                $(this).children()[1].innerText = `${updated_data['first_name']} ${updated_data['last_name']}`;
+                                $(this).children()[2].innerText = updated_data['email_id'];
                                 let cls_lst = '';
                                 for (let i = 0; i < updated_data['class_list'].length; i++) {
                                     cls_lst += `${updated_data['class_list'][i]} `;
                                 }
-                                $(this).children()[3].innerHTML = cls_lst;
+                                $(this).children()[3].innerText = cls_lst;
                             }
                         });
 

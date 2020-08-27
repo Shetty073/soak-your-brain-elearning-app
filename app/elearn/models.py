@@ -9,7 +9,14 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-# Create your models here.
+# Project models
+class SybAdmin(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=256)
+    last_name = models.CharField(max_length=256)
+    email = models.EmailField(max_length=256, unique=True)
+
+
 class Plan(models.Model):
     name = models.CharField(max_length=256)
     price_per_month = models.DecimalField(max_digits=6, decimal_places=2)
