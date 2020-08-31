@@ -192,7 +192,7 @@ class LinkPost(models.Model):
 
 class PostComment(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
-    comment = models.CharField(max_length=500, null=True, blank=True)
+    comment = models.CharField(max_length=500)
 
     def __str__(self):
         return self.post.title
