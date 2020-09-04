@@ -35,8 +35,9 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Department</th>
+                            <th scope="col">Dept.</th>
                             <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -47,6 +48,9 @@
                                 <td>{{ cls.department.name }}</td>
                                 <td>
                                     <button class="btn btn-warning class-edit-btn">Edit</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger class-delete-btn">Delete</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -67,6 +71,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
                             <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -76,6 +81,9 @@
                                 <td>{{ department.name }}</td>
                                 <td>
                                     <button class="btn btn-warning department-edit-btn">Edit</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger department-delete-btn">Delete</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -88,10 +96,10 @@
         {# List existing teachers #}
         <div class="content hidden" id="content-teachers">
             <h1 class="colorbluesapphire">Teachers List</h1>
-            <div class="cell-show-sm">
+            <div class="content-show-sm">
                 <select id="col-to-show">
-                    <option>Show email-ids</option>
                     <option>Show names</option>
+                    <option>Show email-ids</option>
                 </select>
                 <br><br>
             </div>
@@ -101,19 +109,20 @@
                     <thead class="thead-dark bgcolorbluesapphire">
                     <tr>
                         <th scope="col">#</th>
-                        <th class="cell-hide-sm name-col" scope="col">Name</th>
-                        <th class="email-col" scope="col">Email Id</th>
-                        <th class="cell-hide-sm" scope="col">Classes Assigned</th>
+                        <th class="name-col" scope="col">Name</th>
+                        <th class="content-hide-sm email-col" scope="col">Email Id</th>
+                        <th class="content-hide-sm" scope="col">Classes Assigned</th>
                         <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for teacher in teachers %}
                         <tr>
                             <td>{{ teacher.id }}</td>
-                            <td class="cell-hide-sm name-col">{{ teacher.first_name }}&nbsp;{{ teacher.last_name }}</td>
-                            <td class="email-col">{{ teacher.email }}</td>
-                            <td class="cell-hide-sm">
+                            <td class="name-col">{{ teacher.first_name }}&nbsp;{{ teacher.last_name }}</td>
+                            <td class="content-hide-sm email-col">{{ teacher.email }}</td>
+                            <td class="content-hide-sm">
                                 {% for clg_cls in teacher.college_classes.all %}
                                     {{ clg_cls.name }}&nbsp;
                                 {% endfor %}
@@ -121,6 +130,11 @@
                             <td>
                                 <button id="edit{{ teacher.id }}" class="btn btn-warning teacher-edit-btn">
                                     Edit
+                                </button>
+                            </td>
+                            <td>
+                                <button id="delete{{ teacher.id }}" class="btn btn-danger teacher-delete-btn">
+                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -206,7 +220,8 @@
             </div>
         </div>
         <br><br>
-        {# Toast notification #}
+
+        {# Toast notification markup #}
         <div id="toast-polite-div" class="hidden" aria-live="polite" aria-atomic="true"
              style="position: relative; min-height: 200px;">
             <!-- Position it -->
@@ -222,7 +237,10 @@
             </div>
         </div>
     </main>
-    <script type="text/javascript">
+{% endblock admin-content %}
+
+{% block college-admin-script %}
+    <script>
         if (!document.getElementById("home-link").classList.contains('active')) {
             document.getElementById("home-link").classList.add('active');
         }
@@ -307,11 +325,8 @@
                 dashboardContent.classList.add("hidden");
             }
         });
-    </script>
-{% endblock admin-content %}
 
-{% block college-admin-script %}
-    <script>
+
         $(document).ready(function () {
             {# Table search code in jQuery explanation #}
             {# elements.filter(fn) will apply the fn (function) to all the elements in the elements i.e. list of elements #}
@@ -398,11 +413,39 @@
                         } else {
                             document.getElementById('toast-polite-div').classList.remove('hidden');
                             $('.toast-header').children()[0].innerText = 'Error!';
-                            $('.toast-body').innerText = data['msg'];
+                            $('.toast-header').siblings()[0].innerText = data['msg'];
                             $('.toast').toast('show');
                         }
                     });
                 }
+            });
+
+            {# Class delete button #}
+            $(".class-delete-btn").on("click", function () {
+                let classId = $(this).parent().siblings()[0].innerText;
+                let url = `/college/del_classes/${classId}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        'form_type': 'class',
+                    })
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // remove this row from the table
+                        $(this).parent().parent().remove();
+                    } else {
+                        document.getElementById('toast-polite-div').classList.remove('hidden');
+                        $('.toast-header').children()[0].innerText = 'Error!';
+                        $('.toast-header').siblings()[0].innerText = data['msg'];
+                        $('.toast').toast('show');
+                    }
+                });
             });
 
             {#  jQuery code for updating departments table items #}
@@ -449,11 +492,39 @@
                         } else {
                             document.getElementById('toast-polite-div').classList.remove('hidden');
                             $('.toast-header').children()[0].innerText = 'Error!';
-                            $('.toast-body').innerText = data['msg'];
+                            $('.toast-header').siblings()[0].innerText = data['msg'];
                             $('.toast').toast('show');
                         }
                     });
                 }
+            });
+
+            {# Department delete button #}
+            $(".department-delete-btn").on("click", function () {
+                let departmentId = $(this).parent().siblings()[0].innerText;
+                let url = `/college/del_classes/${departmentId}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        'form_type': 'department',
+                    })
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // remove this row from the table
+                        $(this).parent().parent().remove();
+                    } else {
+                        document.getElementById('toast-polite-div').classList.remove('hidden');
+                        $('.toast-header').children()[0].innerText = 'Error!';
+                        $('.toast-header').siblings()[0].innerText = data['msg'];
+                        $('.toast').toast('show');
+                    }
+                });
             });
 
             // Toast: on hide add hidden class to the classList of #toast-polite-div
@@ -461,32 +532,6 @@
                 document.getElementById('toast-polite-div').classList.add('hidden');
             });
 
-            // Column show/hide dropdown control for small devices
-            $('#col-to-show').on('change', function () {
-                if (this.selectedIndex === 0) {
-                    $('.name-col').filter(function () {
-                        if (!this.classList.contains('cell-hide-sm')) {
-                            this.classList.add('cell-hide-sm');
-                        }
-                    });
-                    $('.email-col').filter(function () {
-                        if (this.classList.contains('cell-hide-sm')) {
-                            this.classList.remove('cell-hide-sm');
-                        }
-                    });
-                } else if (this.selectedIndex === 1) {
-                    $('.email-col').filter(function () {
-                        if (!this.classList.contains('cell-hide-sm')) {
-                            this.classList.add('cell-hide-sm');
-                        }
-                    });
-                    $('.name-col').filter(function () {
-                        if (this.classList.contains('cell-hide-sm')) {
-                            this.classList.remove('cell-hide-sm');
-                        }
-                    });
-                }
-            })
 
             // Teacher edit screen
             $('.teacher-edit-btn').on('click', function () {
@@ -534,6 +579,59 @@
                 });
 
             });
+
+            {# Teacher delete button #}
+            $(".teacher-delete-btn").on("click", function () {
+                let departmentId = $(this).parent().siblings()[0].innerText;
+                let url = `/college/del_teachers/${departmentId}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    console.log(data);
+                    if (data['process'] === 'success') {
+                        // remove this row from the table
+                        $(this).parent().parent().remove();
+                    } else {
+                        document.getElementById('toast-polite-div').classList.remove('hidden');
+                        $('.toast-header').children()[0].innerText = 'Error!';
+                        $('.toast-header').siblings()[0].innerText = data['msg'];
+                        $('.toast').toast('show');
+                    }
+                });
+            });
+
+            // Column show/hide dropdown control for small devices
+            $('#col-to-show').on('change', function () {
+                if (this.selectedIndex === 0) {
+                    $('.email-col').filter(function () {
+                        if (!this.classList.contains('content-hide-sm')) {
+                            this.classList.add('content-hide-sm');
+                        }
+                    });
+                    $('.name-col').filter(function () {
+                        if (this.classList.contains('content-hide-sm')) {
+                            this.classList.remove('content-hide-sm');
+                        }
+                    });
+                } else if (this.selectedIndex === 1) {
+                    $('.name-col').filter(function () {
+                        if (!this.classList.contains('content-hide-sm')) {
+                            this.classList.add('content-hide-sm');
+                        }
+                    });
+                    $('.email-col').filter(function () {
+                        if (this.classList.contains('content-hide-sm')) {
+                            this.classList.remove('content-hide-sm');
+                        }
+                    });
+                }
+            })
 
             // go back button event listener
             $('#go-back-btn').on('click', function () {

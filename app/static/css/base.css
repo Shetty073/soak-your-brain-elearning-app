@@ -159,16 +159,18 @@ td {
     outline-color: var(--blue-sapphire);
 }
 
-.cell-show-sm {
+.content-show-sm {
     display: none;
 }
 
+
+/* For mobile devices */
 @media screen and (max-width: 600px) {
-    .cell-hide-sm {
+    .content-hide-sm {
         display: none;
     }
 
-    .cell-show-sm {
+    .content-show-sm {
         display: block;
     }
 

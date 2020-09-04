@@ -316,6 +316,26 @@ def college_add_teachers(request, pk=None):
 
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
+def college_del_teachers(request, pk=None):
+    '''
+    This view is for handling AJAX requests only for deleting teachers.
+    :param request:
+    :param pk:
+    :return: JsonResponse()
+    '''
+    if request.method == 'POST':
+        try:
+            teacher = Teacher.objects.get(pk=pk)
+            teacher.delete()
+            return JsonResponse({'process': 'success'})
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+    return JsonResponse({'process': 'failed', 'msg': 'Error! invalid operation'})
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
 def college_add_classes(request, pk=None):
     departments_list = [department['name'] for department in Department.objects.all().values('name')]
     if request.method == 'POST':
@@ -414,6 +434,46 @@ def college_add_classes(request, pk=None):
         'departments_list': departments_list,
     }
     return render(request, template_name='college/admin/admin_addclasses.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def college_del_classes(request, pk=None):
+    '''
+    This view is for handling AJAX requests only for deleting classes.
+    :param request:
+    :param pk:
+    :return: JsonResponse()
+    '''
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        form_type = data['form_type']
+
+        if form_type == 'class':
+            try:
+                college = CollegeClass.objects.get(pk=pk)
+                college.delete()
+                return JsonResponse({'process': 'success'})
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+        elif form_type == 'department':
+            try:
+                department = Department.objects.get(pk=pk)
+                department_class_count = CollegeClass.objects.filter(department=department).count()
+                if department_class_count > 0:
+                    return JsonResponse({'process': 'failed',
+                                         'msg': f'{department_class_count} classes are part of the {department.name} '
+                                                'department. Please delete these classes first before deleting this '
+                                                'department.'})
+                department.delete()
+                return JsonResponse({'process': 'success'})
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+        return JsonResponse({'process': 'failed', 'msg': 'Error! invalid operation'})
+
+    return JsonResponse({'process': 'failed', 'msg': 'Error! invalid operation'})
 
 
 @login_required

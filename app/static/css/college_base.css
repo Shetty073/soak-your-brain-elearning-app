@@ -24,3 +24,15 @@ main {
 #department-table {
     overflow: scroll !important;
 }
+
+
+/* For mobile devices */
+@media screen and (max-width: 600px) {
+    #content-classes {
+        width: calc(0.95 * 100vw);
+    }
+
+    .btn-margin-top-sm {
+        margin-top: 0.8rem !important;
+    }
+}
