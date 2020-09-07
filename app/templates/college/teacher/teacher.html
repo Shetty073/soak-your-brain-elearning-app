@@ -3,6 +3,30 @@
 {% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md">
+        <h1 id="classroom-cards-page-heading" class="colorbluesapphire">Classrooms assigned to you</h1>
+        <br>
+        <div id="classroom-cards">
+            {% if not classes_list %}
+                <div class="alert alert-warning" role="alert">
+                    As of right now no classrooms have been assigned to you. Please refresh this page after some time to
+                    check or try contacting your college administrator.
+                </div>
+            {% else %}
+                <div class="row flex-row flex-wrap">
+                    {% for cls in classes_list %}
+                        <div class="card" id="class-card" style="width: 18rem;display: inline-block;">
+                            <img class="card-img-top" src="{% static 'images/illustrations/learning.png' %}"
+                                 alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title colorbluesapphire">{{ cls.name }}</h5>
+                                <p class="card-text">{{ cls.department }} department</p>
+                                <a href="teacher/classroom/{{ cls.id }}" class="btn btn-warning">Open classroom</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </main>
     <script type="text/javascript">
         if (!document.getElementById("home-link").classList.contains('active')) {

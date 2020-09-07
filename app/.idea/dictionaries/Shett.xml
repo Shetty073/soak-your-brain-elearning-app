@@ -1,8 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Shett">
     <words>
+      <w>addclass</w>
+      <w>addclassform</w>
       <w>alertclose</w>
       <w>alertmessage</w>
+      <w>assignsubjects</w>
+      <w>assignsubjectsform</w>
       <w>bgcolorbluesapphire</w>
       <w>btns</w>
       <w>cardcvv</w>
@@ -12,6 +16,9 @@
       <w>clsdpt</w>
       <w>clsformerror</w>
       <w>clsnm</w>
+      <w>clssubjectalertclose</w>
+      <w>clssubjectalertmessage</w>
+      <w>clssubjectformerror</w>
       <w>collegeadmin</w>
       <w>colorbluesapphire</w>
       <w>deptalertclose</w>
@@ -20,10 +27,15 @@
       <w>firstname</w>
       <w>formerror</w>
       <w>lastname</w>
+      <w>selectclass</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>
       <w>signin</w>
       <w>signout</w>
+      <w>subjectalertclose</w>
+      <w>subjectalertmessage</w>
+      <w>subjectformerror</w>
+      <w>subjectname</w>
       <w>sybadmin</w>
     </words>
   </dictionary>

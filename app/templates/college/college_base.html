@@ -76,11 +76,13 @@
                        href="{% url 'college_teacher' %}">Home <span
                             class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Add subjects" class="nav-link" href="#">Add subjects</a>
+                <li class="nav-item" id="add-subjects-link">
+                    <a data-toggle="tooltip" title="Add subjects" class="nav-link"
+                       href="{% url 'college_teacher_add_subjects' %}">Add subjects</a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Add students" class="nav-link" href="#">Add students</a>
+                <li class="nav-item" id="add-students-link">
+                    <a data-toggle="tooltip" title="Add students" class="nav-link"
+                       href="{% url 'college_teacher_add_students' %}">Add students</a>
                 </li>
 
             {% elif request.user.groups.all.0.name == 'student' %}
@@ -136,5 +138,10 @@
 {% block college-admin-script %}
 
 {% endblock college-admin-script %}
+
+{% block college-teacher-script %}
+
+{% endblock college-teacher-script %}
+
 </body>
 </html>

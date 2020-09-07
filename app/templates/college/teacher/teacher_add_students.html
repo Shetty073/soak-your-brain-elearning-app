@@ -1,0 +1,12 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("add-students-link").classList.contains('active')) {
+            document.getElementById("add-students-link").classList.add('active');
+        }
+    </script>
+{% endblock teacher-content %}

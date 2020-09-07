@@ -13,7 +13,10 @@ from .models import *
 
 # Views and endpoints
 def home(request):
-    context_dict = {}
+    plans = Plan.objects.all()
+    context_dict = {
+        'plans': plans,
+    }
     return render(request, template_name='home.html', context=context_dict)
 
 
@@ -86,13 +89,15 @@ def sign_up(request, plan_subscribed=''):
             auth_user = authenticate(request, username=email_id, password=password1)
             if auth_user is not None:
                 login(request, auth_user)
+                print("logged in")
                 return redirect(college_page)
             else:
-                return JsonResponse({'process': 'failed', 'error': 'User authentication system failed'})
+                return JsonResponse({'process': 'failed', 'msg': 'User authentication system failed'})
         except IntegrityError:
-            return JsonResponse({'process': 'failed', 'error': 'User already exists'})
+            return JsonResponse({'process': 'failed', 'msg': 'User already exists'})
         except Exception as err:
-            return JsonResponse({'process': 'failed', 'error': f'{str(err)}'})
+            return JsonResponse({'process': 'failed', 'msg': f'{str(err)}'})
+
     plans = Plan.objects.all().values_list('name', flat=True)
     if plan_subscribed not in plans:
         return render(request, template_name='home.html')
@@ -125,11 +130,12 @@ def sign_in(request):
                 if User.objects.filter(username=username).exists():
                     context_dict = {'msg': 'Email id or password is wrong'}
                     return render(request, template_name='sign_in.html', context=context_dict)
-                else:
-                    context_dict = {'msg': 'User does not exist please sign up first'}
-                    return render(request, template_name='sign_in.html', context=context_dict)
-        except Exception as e:
-            context_dict = {'msg': 'Email id or password is wrong'}
+
+                context_dict = {'msg': 'User does not exist please sign up first'}
+                print(1)
+                return render(request, template_name='sign_in.html', context=context_dict)
+        except Exception as err:
+            context_dict = {'msg': f'{err}'}
             return render(request, template_name='sign_in.html', context=context_dict)
     context_dict = {}
     return render(request, template_name='sign_in.html', context=context_dict)
@@ -157,9 +163,9 @@ def syb_admin_page(request):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_page(request):
-    teachers = Teacher.objects.all()
-    departments = Department.objects.all()
-    classes = CollegeClass.objects.all()
+    teachers = Teacher.objects.filter(college=request.user.college)
+    departments = Department.objects.filter(college=request.user.college)
+    classes = CollegeClass.objects.filter(college=request.user.college)
     context_dict = {
         'teachers': teachers,
         'departments': departments,
@@ -171,7 +177,8 @@ def college_page(request):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_add_teachers(request, pk=None):
-    classes_list = [classname['name'] for classname in CollegeClass.objects.all().values('name')]
+    classes_list = [classname['name'] for classname in
+                    CollegeClass.objects.filter(college=request.user.college).values('name')]
     if request.method == 'POST':
         # for AJAX request
         data = json.loads(request.body)
@@ -213,7 +220,7 @@ def college_add_teachers(request, pk=None):
 
                 # add the assigned classes to this teacher
                 for cls in classes_assigned:
-                    clg_cls = CollegeClass.objects.get(name=cls)
+                    clg_cls = CollegeClass.objects.get(name=cls, college=request.user.college)
                     clg_teacher.college_classes.add(clg_cls)
 
                 return JsonResponse({
@@ -235,7 +242,7 @@ def college_add_teachers(request, pk=None):
             try:
                 # Get the teacher by pk (id) and update the data
                 clg_teacher_id = data['teacher_id']
-                clg_teacher = Teacher.objects.get(pk=clg_teacher_id)
+                clg_teacher = Teacher.objects.get(pk=clg_teacher_id, college=request.user.college)
                 clg_teacher.first_name = first_name
                 clg_teacher.last_name = last_name
                 clg_teacher.email = email_id
@@ -251,7 +258,7 @@ def college_add_teachers(request, pk=None):
                 clg_teacher.college_classes.clear()
                 # Now add newly selected/edited data
                 for cls in classes_assigned:
-                    clg_cls = CollegeClass.objects.get(name=cls)
+                    clg_cls = CollegeClass.objects.get(name=cls, college=request.user.college)
                     clg_teacher.college_classes.add(clg_cls)
 
                 # if the password provided is valid then update it too
@@ -292,7 +299,7 @@ def college_add_teachers(request, pk=None):
     if pk is not None:
         # it means that this is an AJAX GET request for getting a teacher's data using pk (id)
         try:
-            teacher = Teacher.objects.get(pk=pk)
+            teacher = Teacher.objects.get(pk=pk, college=request.user.college)
             teacher_json_obj = {
                 'first_name': teacher.first_name,
                 'last_name': teacher.last_name,
@@ -325,7 +332,7 @@ def college_del_teachers(request, pk=None):
     '''
     if request.method == 'POST':
         try:
-            teacher = Teacher.objects.get(pk=pk)
+            teacher = Teacher.objects.get(pk=pk, college=request.user.college)
             teacher.delete()
             return JsonResponse({'process': 'success'})
         except Exception as err:
@@ -337,7 +344,8 @@ def college_del_teachers(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_add_classes(request, pk=None):
-    departments_list = [department['name'] for department in Department.objects.all().values('name')]
+    departments_list = [department['name'] for department in
+                        Department.objects.filter(college=request.user.college).values('name')]
     if request.method == 'POST':
         # for AJAX request
         data = json.loads(request.body)
@@ -348,10 +356,17 @@ def college_add_classes(request, pk=None):
                 department_name = data['department_name']
                 college = request.user.college
                 try:
-                    Department.objects.get_or_create(
+                    obj, created = Department.objects.get_or_create(
                         college=college,
                         name=department_name,
                     )
+
+                    if not created:
+                        return JsonResponse({
+                            'process': 'failed',
+                            'msg': f'{department_name} department already exists in the the database.',
+                        })
+
                     return JsonResponse({
                         'process': 'success',
                         'msg': f'Success! {department_name} department added to the database.',
@@ -365,7 +380,7 @@ def college_add_classes(request, pk=None):
                 # this request came for updating an existing department's fields
                 department_name = data['department_name']
                 try:
-                    dep = Department.objects.get(pk=pk)
+                    dep = Department.objects.get(pk=pk, college=request.user.college)
                     dep.name = department_name
                     dep.save()
 
@@ -387,22 +402,30 @@ def college_add_classes(request, pk=None):
             if pk is None:
                 # this means that the request came from 'add new classes' form
                 class_name = data['class_name']
-                department = Department.objects.get(name=data['department_name'])
+                department = Department.objects.get(name=data['department_name'], college=request.user.college)
                 college = request.user.college
                 try:
-                    CollegeClass.objects.create(
+                    obj, created = CollegeClass.objects.get_or_create(
                         college=college,
                         name=class_name,
                         department=department,
                     )
+
+                    if not created:
+                        return JsonResponse({
+                            'process': 'failed',
+                            'msg': f'{class_name} class already exists under {department.name} department',
+                            'departments_list': departments_list,
+                        })
+
                     return JsonResponse({
                         'process': 'success',
-                        'msg': f'Success! {class_name} class added in {department.name}',
+                        'msg': f'Success! {class_name} class added under {department.name}',
                         'departments_list': departments_list,
                     })
                 except IntegrityError:
                     return JsonResponse({'process': 'failed',
-                                         'msg': f'{class_name} already exists in {department.name} department.'})
+                                         'msg': f'{class_name} already exists under {department.name} department'})
                 except Exception as err:
                     return JsonResponse({'process': 'failed', 'msg': f'{err}'})
             else:
@@ -412,7 +435,7 @@ def college_add_classes(request, pk=None):
                 try:
                     cls = CollegeClass.objects.get(pk=pk)
                     cls.name = class_name
-                    cls.department = Department.objects.get(name=department_name)
+                    cls.department = Department.objects.get(name=department_name, college=request.user.college)
                     cls.save()
 
                     return JsonResponse({
@@ -451,7 +474,7 @@ def college_del_classes(request, pk=None):
 
         if form_type == 'class':
             try:
-                college = CollegeClass.objects.get(pk=pk)
+                college = CollegeClass.objects.get(pk=pk, college=request.user.college)
                 college.delete()
                 return JsonResponse({'process': 'success'})
             except Exception as err:
@@ -459,8 +482,9 @@ def college_del_classes(request, pk=None):
 
         elif form_type == 'department':
             try:
-                department = Department.objects.get(pk=pk)
-                department_class_count = CollegeClass.objects.filter(department=department).count()
+                department = Department.objects.get(pk=pk, college=request.user.college)
+                department_class_count = CollegeClass.objects.filter(college=request.user.college,
+                                                                     department=department).count()
                 if department_class_count > 0:
                     return JsonResponse({'process': 'failed',
                                          'msg': f'{department_class_count} classes are part of the {department.name} '
@@ -479,8 +503,71 @@ def college_del_classes(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['teacher'])
 def college_teacher(request):
-    context_dict = {}
+    try:
+        classes_list = [cls for cls in request.user.teacher.college_classes.all()]
+    except Exception as err:
+        context_dict = {
+            'classes_list': None,
+        }
+        return render(request, template_name='college/teacher/teacher.html', context=context_dict)
+    context_dict = {
+        'classes_list': classes_list,
+    }
     return render(request, template_name='college/teacher/teacher.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher_add_subjects(request, pk=None):
+    if request.method == 'POST':
+        if pk is None:
+            # This request is just for adding new subject
+            data = json.loads(request.body)
+            subject_name = data['subject_name']
+            try:
+                subject, created = Subject.objects.get_or_create(name=subject_name,
+                                                                 college=request.user.teacher.college)
+
+                if not created:
+                    return JsonResponse({'process': 'failed', 'msg': f'Subject {subject_name} already exists'})
+
+                return JsonResponse({'process': 'success', 'msg': f'Successfully added {subject.name} subject',
+                                     'subject_name': subject.name})
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+        else:
+            # This request is for assigning subjects to a class whose id is pk
+            pass
+    classes = request.user.teacher.college_classes.all()
+    subjects = Subject.objects.filter(college=request.user.teacher.college)
+    context_dict = {
+        'classes': classes,
+        'subjects': subjects,
+    }
+    return render(request, template_name='college/teacher/teacher_add_subjects.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher_add_students(request):
+    context_dict = {}
+    return render(request, template_name='college/teacher/teacher_add_students.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher_classroom(request, pk=None):
+    try:
+        college_class = CollegeClass.objects.get(pk=pk)
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+    context_dict = {
+        'college_class': college_class,
+    }
+    return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
 
 
 @login_required

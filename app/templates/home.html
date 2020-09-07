@@ -43,29 +43,29 @@
                 <thead class="thead-dark">
                 <tr>
                     <th></th>
-                    <th>Basic</th>
-                    <th>Standard</th>
-                    <th>Pro</th>
+                    {% for plan in plans %}
+                    <th>{{ plan.name }}</th>
+                    {% endfor %}
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td class="row-desc">Price per month</td>
-                    <td>₹129 / month<sup>*</sup></td>
-                    <td>₹299 / month<sup>*</sup></td>
-                    <td>₹649 / month<sup>*</sup></td>
+                    {% for plan in plans %}
+                    <td>₹{{ plan.price_per_month|floatformat }} / month<sup>*</sup></td>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <td class="row-desc">Price you will be paying per year</td>
-                    <td>₹1300 / year</td>
-                    <td>₹3100 / year</td>
-                    <td>₹6500 / year</td>
+                    {% for plan in plans %}
+                    <td>₹{{ plan.price_per_year|floatformat }} / year</td>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <td class="row-desc">Storage</td>
                     <td>100 GB</td>
                     <td>400 GB</td>
-                    <td>2 TB</td>
+                    <td>1 TB</td>
                 </tr>
                 <tr>
                     <td colspan="4">

@@ -30,7 +30,10 @@ function validateAndAddDepartment(addMore) {
                     // Go to home page
                     window.location.replace('/college/');
                 }
-                updateDepartmentsDropdown(data['departments_list']);
+
+                // Update departments dropdown list
+                $('#selectdepartment').append(new Option(departmentName, departmentName));
+
             } else {
                 // The request failed. Display the appropriate error message sent back in response.
                 displayFormErrorMessage(false, data['msg'], 'deptalertmessage');
@@ -202,6 +205,8 @@ function displayFormErrorMessage(success, errorMessage, msgFieldId) {
         'deptalertmessage': 'deptformerror',
         'clsalertmessage': 'clsformerror',
         'alertmessage': 'formerror',
+        'subjectalertmessage': 'subjectformerror',
+        'clssubjectalertmessage': 'clssubjectformerror',
     };
     if (success === true) {
         // This is a success message
@@ -224,14 +229,6 @@ function displayFormErrorMessage(success, errorMessage, msgFieldId) {
     errorBlock.innerText = errorMessage;
     let errorAlert = document.getElementById(msgFieldId);
     document.getElementById(dict[msgFieldId]).style.display = 'block';
-}
-
-function updateDepartmentsDropdown(departments_list) {
-    let optionsHtml = '';
-    for (let i = 0; i < departments_list.length; i++) {
-        optionsHtml += `<option value=${departments_list[i]}>${departments_list[i]}</option>`;
-    }
-    document.getElementById('selectdepartment').innerHTML = optionsHtml;
 }
 
 // jQuery section

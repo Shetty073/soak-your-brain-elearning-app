@@ -65,7 +65,7 @@ function validateAndSubmit() {
             return response.json();
         }).then((data) => {
             if (data['process'] === 'failed') {
-                displayFormErrorMessage('Server error! ' + data['error']);
+                displayFormErrorMessage('Server error! ' + data['msg']);
             }
         });
     }

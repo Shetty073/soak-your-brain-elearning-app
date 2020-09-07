@@ -1,0 +1,17 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="header-img-container">
+            <img id="classroom-header-img" src="{% static 'images/illustrations/books.png' %}" class="img-fluid"
+                 alt="Photo of stacked books">
+            <h1 class="img-text-top-left colorbluesapphire">{{ college_class.name }}</h1>
+        </div>
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("home-link").classList.contains('active')) {
+            document.getElementById("home-link").classList.add('active');
+        }
+    </script>
+{% endblock teacher-content %}
