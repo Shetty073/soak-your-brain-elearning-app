@@ -89,7 +89,7 @@ def sign_up(request, plan_subscribed=''):
             auth_user = authenticate(request, username=email_id, password=password1)
             if auth_user is not None:
                 login(request, auth_user)
-                print("logged in")
+                # NOTE: redirect() is not working after login() for some reason, need to look it up and fix it
                 return redirect(college_page)
             else:
                 return JsonResponse({'process': 'failed', 'msg': 'User authentication system failed'})
@@ -537,6 +537,7 @@ def college_teacher_add_subjects(request, pk=None):
                 return JsonResponse({'process': 'failed', 'msg': f'{err}'})
         else:
             # This request is for assigning subjects to a class whose id is pk
+            # TODO: Implement this
             pass
     classes = request.user.teacher.college_classes.all()
     subjects = Subject.objects.filter(college=request.user.teacher.college)

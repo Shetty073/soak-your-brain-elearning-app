@@ -61,6 +61,7 @@ class Customer(models.Model):
 
 
 class Department(models.Model):
+    # TODO: Cross check this model changes with UML digrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
@@ -69,6 +70,7 @@ class Department(models.Model):
 
 
 class Subject(models.Model):
+    # TODO: Cross check this model changes with UML digrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
 
@@ -77,6 +79,7 @@ class Subject(models.Model):
 
 
 class CollegeClass(models.Model):
+    # TODO: Cross check this model changes with UML digrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     subjects = models.ManyToManyField(Subject, blank=True)
