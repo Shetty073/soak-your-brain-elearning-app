@@ -65,6 +65,10 @@ main {
     color: var(--blue-sapphire);
 }
 
+.btn-warning:focus {
+    color: var(--blue-sapphire) !important;
+}
+
 .headline {
     text-align: center;
 }

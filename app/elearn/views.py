@@ -565,8 +565,18 @@ def college_teacher_classroom(request, pk=None):
             'college_class': None,
         }
         return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+
     context_dict = {
         'college_class': college_class,
+        'subjects': subjects,
     }
     return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
 

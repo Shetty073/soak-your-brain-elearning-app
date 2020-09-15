@@ -2,12 +2,38 @@
 {% load static %}
 {% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
 {% block teacher-content %}
-    <main role="main" class="container-md">
+    <main role="main" class="container-md" id="classroom-main">
         <div class="header-img-container">
             <img id="classroom-header-img" src="{% static 'images/illustrations/books.png' %}" class="img-fluid"
                  alt="Photo of stacked books">
             <h1 class="img-text-top-left colorbluesapphire">{{ college_class.name }}</h1>
         </div>
+        <br>
+        <div class="float-left">
+            <button class="btn btn-warning">+ Add new post</button>
+        </div>
+        <div class="input-group-prepend float-right">
+            <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">All subjects
+            </button>
+            <div class="dropdown-menu">
+                {% if subjects %}
+                    {% for subject in subjects %}
+                        <a class="dropdown-item subject-dropdown-item" href="#"
+                           id="{{ subject.id }}">{{ subject.name }}</a>
+                    {% endfor %}
+                {% else %}
+                    <a class="dropdown-item" href="#">no other subjects</a>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <br>
+        <hr>
+        <div class="container" id="teacher-feed">
+
+        </div>
+
     </main>
     <script type="text/javascript">
         if (!document.getElementById("home-link").classList.contains('active')) {

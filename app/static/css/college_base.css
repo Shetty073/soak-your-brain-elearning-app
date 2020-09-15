@@ -46,6 +46,12 @@ main {
     font-weight: 600;
 }
 
+.header-img-container {
+    height: 35vh;
+    overflow: hidden;
+}
+
+
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {
@@ -66,6 +72,10 @@ main {
         padding-left: 4rem;
     }
 
+    #classroom-main {
+        padding-top: 5px;
+    }
+
     #classroom-header-img {
         clip-path: polygon(0 1%, 100% 0, 100% 50%, 0 50%);
     }
@@ -74,5 +84,17 @@ main {
         top: 25px;
         left: 150px;
         font-size: 5vw;
+    }
+
+    .header-img-container {
+        height: 15vh;
+        overflow: hidden;
+    }
+}
+
+/* For iPads */
+@media screen and (max-width: 1024px) and (max-width: 1366px) {
+    .header-img-container {
+        height: 20vh !important;
     }
 }
