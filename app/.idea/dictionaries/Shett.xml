@@ -11,6 +11,7 @@
       <w>btns</w>
       <w>cardcvv</w>
       <w>cardnumber</w>
+      <w>classdropdown</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
       <w>clsdpt</w>
@@ -26,10 +27,12 @@
       <w>deptformerror</w>
       <w>firstname</w>
       <w>formerror</w>
+      <w>jquerify</w>
       <w>lastname</w>
       <w>selectclass</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>
+      <w>selectedsubjects</w>
       <w>selectsubjects</w>
       <w>signin</w>
       <w>signout</w>
@@ -37,6 +40,7 @@
       <w>subjectalertmessage</w>
       <w>subjectformerror</w>
       <w>subjectname</w>
+      <w>subjectsdropdown</w>
       <w>sybadmin</w>
     </words>
   </dictionary>

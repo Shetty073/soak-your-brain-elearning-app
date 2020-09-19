@@ -11,7 +11,7 @@
                     <label for="selectclass">Select class</label>
                     <select class="form-control" id="selectclass" name="selectclass">
                         {% for cls in classes %}
-                            <option value="{{ cls.name }}">{{ cls.name }}</option>
+                            <option value="{{ cls.id }}">{{ cls.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -19,7 +19,7 @@
                     <label for="selectsubjects">Select the subject(s) that you want to add to this class</label>
                     <select multiple class="form-control" id="selectsubjects" name="selectsubjects">
                         {% for subject in subjects %}
-                            <option value="{{ subject.name }}">{{ subject.name }}</option>
+                            <option value="{{ subject.id }}">{{ subject.name }}</option>
                         {% endfor %}
                     </select>
                     <small id="selectsubjectsHelp" class="form-text text-muted">You can select multiple subjects by
@@ -72,12 +72,50 @@
 
 {% block college-teacher-script %}
     <script type="text/javascript">
-        if (!document.getElementById("add-subjects-link").classList.contains('active')) {
-            document.getElementById("add-subjects-link").classList.add('active');
+        if (!document.getElementById('add-subjects-link').classList.contains('active')) {
+            document.getElementById('add-subjects-link').classList.add('active');
         }
 
         function validateAndAssignSubject(addMore) {
-            // TODO: Implement this
+            let selected_class = $('#selectclass').val();
+            let selected_subjects = $('#selectsubjects').val();
+
+            if (selected_class === undefined || selected_class === '') {
+                displayFormErrorMessage(false, 'Please select the class you want to assign the subjects to.', 'clssubjectalertmessage');
+            } else if (selected_subjects.length < 1) {
+                displayFormErrorMessage(false, 'Please select at least one subject to assign to this class', 'clssubjectalertmessage');
+            } else {
+                let url = `/college/teacher/add_subjects/${selected_class}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        'selected_subjects': selected_subjects,
+                    })
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // display success message
+                        displayFormErrorMessage(true, data['msg'], 'clssubjectalertmessage');
+
+                        // update the options list in the 'assignsubjects' form
+                        $('#selectsubjects').append(new Option(data['subject_name'], data['subject_name']));
+
+                        if (addMore === false) {
+                            // Go to home page
+                            window.location.replace('/college/teacher');
+                        }
+                    } else {
+                        // The request failed. Display the appropriate error message sent back in response.
+                        displayFormErrorMessage(false, data['msg'], 'clssubjectalertmessage');
+                    }
+                });
+            }
+
         }
 
         function validateAndAddSubject(addMore) {
@@ -86,7 +124,7 @@
             if (subjectName === '') {
                 displayFormErrorMessage(false, 'Error! Subject name should not be empty', 'subjectalertmessage');
             } else {
-                let url = "/college/teacher/add_subjects";
+                let url = '/college/teacher/add_subjects';
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -107,7 +145,7 @@
                         displayFormErrorMessage(true, data['msg'], 'subjectalertmessage');
 
                         // update the options list in the 'assignsubjects' form
-                        $('#selectclasses').append(new Option(data['subject_name'], data['subject_name']));
+                        $('#selectsubjects').append(new Option(data['subject_name'], data['subject_name']));
 
                         if (addMore === false) {
                             // Go to home page

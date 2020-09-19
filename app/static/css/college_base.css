@@ -51,6 +51,11 @@ main {
     overflow: hidden;
 }
 
+.subject-options {
+    background: #fff !important;
+    color: var(--chrome-yellow) !important;
+    outline: var(--chrome-yellow) !important;
+}
 
 
 /* For mobile devices */
@@ -91,6 +96,7 @@ main {
         overflow: hidden;
     }
 }
+
 
 /* For iPads */
 @media screen and (max-width: 1024px) and (max-width: 1366px) {

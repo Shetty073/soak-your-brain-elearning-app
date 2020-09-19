@@ -13,19 +13,14 @@
             <button class="btn btn-warning">+ Add new post</button>
         </div>
         <div class="input-group-prepend float-right">
-            <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">All subjects
-            </button>
-            <div class="dropdown-menu">
+            <select class="form-control btn-warning" id="exampleFormControlSelect1">
+                <option class="subject-options" value="All subjects">All subjects</option>
                 {% if subjects %}
                     {% for subject in subjects %}
-                        <a class="dropdown-item subject-dropdown-item" href="#"
-                           id="{{ subject.id }}">{{ subject.name }}</a>
+                        <option class="subject-options" value="{{ subject.name }}">{{ subject.name }}</option>
                     {% endfor %}
-                {% else %}
-                    <a class="dropdown-item" href="#">no other subjects</a>
                 {% endif %}
-            </div>
+            </select>
         </div>
         <br>
         <br>

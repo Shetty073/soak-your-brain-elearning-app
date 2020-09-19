@@ -520,9 +520,9 @@ def college_teacher(request):
 @allowed_users(allowed_roles=['teacher'])
 def college_teacher_add_subjects(request, pk=None):
     if request.method == 'POST':
+        data = json.loads(request.body)
         if pk is None:
             # This request is just for adding new subject
-            data = json.loads(request.body)
             subject_name = data['subject_name']
             try:
                 subject, created = Subject.objects.get_or_create(name=subject_name,
@@ -537,8 +537,31 @@ def college_teacher_add_subjects(request, pk=None):
                 return JsonResponse({'process': 'failed', 'msg': f'{err}'})
         else:
             # This request is for assigning subjects to a class whose id is pk
-            # TODO: Implement this
-            pass
+            try:
+                selected_subjects = [int(subject_id) for subject_id in data['selected_subjects']]
+
+                cls = CollegeClass.objects.get(pk=pk)
+                subjects = [subject for subject in Subject.objects.all() if subject.id in selected_subjects]
+
+                for subject in subjects:
+                    if subject not in cls.subjects.all():
+                        cls.subjects.add(subject)
+                    else:
+                        return JsonResponse({
+                            'process': 'success',
+                            'msg': f'This subject is already assigned to {cls.name}'
+                            if len(subjects) < 2 else f'These subjects are already assigned to {cls.name}'
+                        })
+
+                cls.save()
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+            return JsonResponse({
+                'process': 'success',
+                'msg': f'Successfully assigned {len(subjects)} subjects to {cls.name}'
+            })
+
     classes = request.user.teacher.college_classes.all()
     subjects = Subject.objects.filter(college=request.user.teacher.college)
     context_dict = {

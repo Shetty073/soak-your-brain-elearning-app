@@ -94,11 +94,8 @@ function validateAndAddTeacher(addMore) {
     let password2 = document.getElementById('password2').value.trim().split(' ').join('');
 
     // Get the multiple <select> values
-    let selected_classes = document.getElementById('selectclasses');
-    let classes_assigned = [];
-    for (let i = 0; i < selected_classes.selectedOptions.length; i++) {
-        classes_assigned.push(selected_classes.selectedOptions[i].value);
-    }
+    let classes_assigned = $('#selectclasses').val();
+    console.log(classes_assigned);
 
     if (first_name === '') {
         displayFormErrorMessage(false,
@@ -154,9 +151,7 @@ function validateAndAddTeacher(addMore) {
                 document.getElementById('firstname').value = '';
                 document.getElementById('lastname').value = '';
                 let multiSelectElement = document.getElementById('selectclasses');
-                for (let i = 0; i < multiSelectElement.options.length; i++) {
-                    multiSelectElement.options[i].selected = false;
-                }
+                $('#selectclasses').val('')
                 document.getElementById('email').value = '';
                 document.getElementById('password1').value = '';
                 document.getElementById('password2').value = '';
