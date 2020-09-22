@@ -35,8 +35,7 @@
                 <button type="button" class="btn btn-warning" onclick="validateAndAssignSubject(true)">Save and add more
                 </button>
                 <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
-                        onclick="validateAndAssignSubject(false)">Save and go
-                    back
+                        onclick="validateAndAssignSubject(false)">Save and go back
                 </button>
             </form>
         </div>
@@ -61,9 +60,7 @@
                 <button type="button" class="btn btn-warning" onclick="validateAndAddSubject(true)">Save and add more
                 </button>
                 <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
-                        onclick="validateAndAddSubject(false)">Save and
-                    go
-                    back
+                        onclick="validateAndAddSubject(false)">Save and go back
                 </button>
             </form>
         </div>
@@ -75,6 +72,47 @@
         if (!document.getElementById('add-subjects-link').classList.contains('active')) {
             document.getElementById('add-subjects-link').classList.add('active');
         }
+
+
+        // select already assigned subjects for particular selected class
+        $(document).ready(function () {
+            showPreassignedSubjects();
+
+            $('#selectclass').on('change', function () {
+                showPreassignedSubjects();
+            });
+
+        });
+
+        function showPreassignedSubjects() {
+            let selected_class = $('#selectclass').val();
+            let url = `/college/teacher/add_subjects/${selected_class}`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                // first clear the options list
+                $('#selectsubjects').val('');
+
+                // now update the options list
+                $('#selectsubjects').filter(function () {
+                    for (let i = 0; i < $(this)[0].options.length; i++) {
+                        for (let j = 0; j < data.subjects.length; j++) {
+                            if (parseInt($(this)[0].options[i].value) === data.subjects[j]) {
+                                $(this)[0].options[i].selected = true;
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
 
         function validateAndAssignSubject(addMore) {
             let selected_class = $('#selectclass').val();
@@ -101,9 +139,6 @@
                     if (data['process'] === 'success') {
                         // display success message
                         displayFormErrorMessage(true, data['msg'], 'clssubjectalertmessage');
-
-                        // update the options list in the 'assignsubjects' form
-                        $('#selectsubjects').append(new Option(data['subject_name'], data['subject_name']));
 
                         if (addMore === false) {
                             // Go to home page

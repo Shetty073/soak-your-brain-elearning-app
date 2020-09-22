@@ -95,7 +95,6 @@ function validateAndAddTeacher(addMore) {
 
     // Get the multiple <select> values
     let classes_assigned = $('#selectclasses').val();
-    console.log(classes_assigned);
 
     if (first_name === '') {
         displayFormErrorMessage(false,
@@ -150,7 +149,6 @@ function validateAndAddTeacher(addMore) {
                 // Request successfully completed. Clear the input box
                 document.getElementById('firstname').value = '';
                 document.getElementById('lastname').value = '';
-                let multiSelectElement = document.getElementById('selectclasses');
                 $('#selectclasses').val('')
                 document.getElementById('email').value = '';
                 document.getElementById('password1').value = '';

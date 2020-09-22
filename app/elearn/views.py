@@ -542,26 +542,69 @@ def college_teacher_add_subjects(request, pk=None):
 
                 cls = CollegeClass.objects.get(pk=pk)
                 subjects = [subject for subject in Subject.objects.all() if subject.id in selected_subjects]
+                prev_selected_subjects = [subject for subject in
+                                          Subject.objects.filter(college=request.user.teacher.college) if
+                                          subject in cls.subjects.all()]
 
+                removed = 0
+                # first remove freshly deselected subjects which were previously selected
+                for subject in prev_selected_subjects:
+                    if subject not in subjects:
+                        removed += 1
+                        cls.subjects.remove(subject)
+
+                # Flag for checking the total number of new subjects selected
+                added = 0
+
+                # assign new subjects
                 for subject in subjects:
                     if subject not in cls.subjects.all():
+                        added += 1
                         cls.subjects.add(subject)
-                    else:
-                        return JsonResponse({
-                            'process': 'success',
-                            'msg': f'This subject is already assigned to {cls.name}'
-                            if len(subjects) < 2 else f'These subjects are already assigned to {cls.name}'
-                        })
+
+                msg = f'This subject is already assigned to {cls.name}' if len(
+                    subjects) < 2 else f'These subjects are already assigned to {cls.name}'
+
+                if removed != 0:
+                    msg = f'{removed} subjects removed'
+
+                if added == 0:
+                    # No new subjects were selected
+                    return JsonResponse({
+                        'process': 'success',
+                        'msg': msg
+                    })
 
                 cls.save()
+
             except Exception as err:
                 return JsonResponse({'process': 'failed', 'msg': f'{err}'})
 
             return JsonResponse({
                 'process': 'success',
-                'msg': f'Successfully assigned {len(subjects)} subjects to {cls.name}'
+                'msg': f'Successfully assigned {added} subjects to {cls.name}'
             })
 
+    if request.method == 'GET' and pk is not None:
+        # This request is for getting the list of assigned subjects for a particular class
+        try:
+            cls = CollegeClass.objects.get(pk=pk)
+            subjects = [subject.id for subject in Subject.objects.filter(college=request.user.teacher.college) if
+                        subject in cls.subjects.all()]
+            json_response_body = {
+                'process': 'success',
+                'class': cls.id,
+                'subjects': subjects,
+            }
+        except Exception as err:
+            json_response_body = {
+                'process': 'failed',
+                'msg': f'{err}',
+            }
+            return JsonResponse(json_response_body)
+        return JsonResponse(json_response_body)
+
+    # This is a normal GET request for the page
     classes = request.user.teacher.college_classes.all()
     subjects = Subject.objects.filter(college=request.user.teacher.college)
     context_dict = {
@@ -573,8 +616,16 @@ def college_teacher_add_subjects(request, pk=None):
 
 @login_required
 @allowed_users(allowed_roles=['teacher'])
-def college_teacher_add_students(request):
-    context_dict = {}
+def college_teacher_add_students(request, pk=None):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        # TODO: Complete this
+        print(data)
+
+    classes_list = request.user.teacher.college_classes.all()
+    context_dict = {
+        'classes_list': classes_list,
+    }
     return render(request, template_name='college/teacher/teacher_add_students.html', context=context_dict)
 
 

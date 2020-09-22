@@ -3,10 +3,153 @@
 {% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Add new students</h1>
+        <div class="card">
+            <form name="addstudent" id="addstudentform" class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstname">Student's name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                               aria-describedby="nameHelp"
+                               placeholder="First name" required>
+                        &nbsp;
+                        <input type="text" class="form-control" id="lastname" name="lastname"
+                               aria-describedby="nameHelp"
+                               placeholder="Last name" required>
+                    </div>
+                    <small id="nameHelp" class="form-text text-muted">Please enter the student's name</small>
+                </div>
+                <div class="form-group">
+                    <label for="selectclasses">Select the class that you want this student to be in</label>
+                    <select class="form-control" id="selectclasses" name="selectclasses">
+                        {% for class_name in classes_list %}
+                            <option value="{{ class_name }}">{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small id="selectclassesHelp" class="form-text text-muted">One student can only be part of one class
+                        at a moment</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                           placeholder="Enter email" required>
+                    <small id="emailHelp" class="form-text text-muted">
+                        <strong>This email address will also be this student's username </strong>
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Re-enter password</label>
+                    <input type="password" class="form-control" id="password2" name="password2"
+                           placeholder="Re-enter password" required>
+                    <small id="password2Help" class="form-text text-muted">
+                        <strong>Whitespaces are not allowed in passwords and will be automatically removed before
+                            submission.</strong>
+                    </small>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                    <strong id="alertmessage"></strong>
+                    <button type="button" class="close" id="alertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="validateAndAddStudent(true)">Save and add more
+                </button>
+                <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
+                        onclick="validateAndAddStudent(false)">Save and go back
+                </button>
+            </form>
+        </div>
     </main>
     <script type="text/javascript">
         if (!document.getElementById("add-students-link").classList.contains('active')) {
             document.getElementById("add-students-link").classList.add('active');
         }
+
+        function validateAndAddStudent(addMore) {
+            let url = "/college/teacher/add_students";
+
+            let first_name = document.getElementById('firstname').value.trim().split(' ').join('');
+            let last_name = document.getElementById('lastname').value.trim().split(' ').join('');
+            let class_assigned = $('#selectclasses').val();
+            let email_id = document.getElementById('email').value.trim().split(' ').join('');
+            let password1 = document.getElementById('password1').value.trim().split(' ').join('');
+            let password2 = document.getElementById('password2').value.trim().split(' ').join('');
+
+            if (first_name === '') {
+                displayFormErrorMessage(false,
+                    'First name can not be empty. Please enter a valid first name.', 'alertmessage');
+            } else if (hasNumber(first_name)) {
+                displayFormErrorMessage(false,
+                    'First name can not contain numbers. Please enter a valid first name.', 'alertmessage');
+            } else if (last_name === '') {
+                displayFormErrorMessage(false,
+                    'Last name can can not be empty. Please enter a valid last name.', 'alertmessage');
+            } else if (hasNumber(last_name)) {
+                displayFormErrorMessage(false,
+                    'Last name can not contain numbers. Please enter a valid last name.', 'alertmessage');
+            } else if (email_id === '') {
+                displayFormErrorMessage(false,
+                    'Email id can not be empty. Please enter a valid email id.', 'alertmessage');
+            } else if (checkEmailInvalid(email_id)) {
+                displayFormErrorMessage(false,
+                    'Email id is invalid. Please enter a valid email id.', 'alertmessage');
+            } else if (password1 === '') {
+                displayFormErrorMessage(false,
+                    'The password that you have entered is invalid. Please enter a valid password.',
+                    'alertmessage');
+            } else if (password1 !== password2) {
+                displayFormErrorMessage(false,
+                    'Password mismatch. Please make sure that both passwords are same.', 'alertmessage');
+            } else if (password1.length < 8 || password1.length > 16) {
+                displayFormErrorMessage(false,
+                    'Password should be between 8 and 16 characters long', 'alertmessage');
+            } else if (class_assigned.val() === '' || class_assigned.val() === null) {
+                displayFormErrorMessage(false,
+                    'You must assign this teacher to at least one class', 'alertmessage');
+            } else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        'mode': 'add',
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'class_assigned': class_assigned,
+                        'email_id': email_id,
+                        'password1': password1,
+                    })
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    if (data['process'] === 'success') {
+                        // Request successfully completed. Clear the input box
+                        document.getElementById('firstname').value = '';
+                        document.getElementById('lastname').value = '';
+                        $('#selectclasses').val('')
+                        document.getElementById('email').value = '';
+                        document.getElementById('password1').value = '';
+                        document.getElementById('password2').value = '';
+                        displayFormErrorMessage(true, data['msg'], 'alertmessage');
+                        if (addMore === false) {
+                            // Go to home page
+                            window.location.replace('/college/');
+                        }
+                    } else {
+                        // The request failed. Display the appropriate error message sent back in response.
+                        displayFormErrorMessage(false, data['msg'], 'alertmessage');
+                    }
+                });
+            }
+        }
+
     </script>
 {% endblock teacher-content %}

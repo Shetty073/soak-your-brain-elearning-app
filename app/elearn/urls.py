@@ -21,6 +21,7 @@ urlpatterns = [
     path('college/teacher/add_subjects', college_teacher_add_subjects, name='college_teacher_add_subjects'),
     path('college/teacher/add_subjects/<int:pk>', college_teacher_add_subjects, name='college_teacher_add_subjects'),
     path('college/teacher/add_students', college_teacher_add_students, name='college_teacher_add_students'),
+    path('college/teacher/add_students/<int:pk>', college_teacher_add_students, name='college_teacher_add_students'),
     path('college/teacher/classroom/<int:pk>', college_teacher_classroom, name='college_teacher_classroom'),
     path('college/student', college_student, name='college_student'),
 ]
