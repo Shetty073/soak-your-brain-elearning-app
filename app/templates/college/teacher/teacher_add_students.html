@@ -24,7 +24,7 @@
                     <label for="selectclasses">Select the class that you want this student to be in</label>
                     <select class="form-control" id="selectclasses" name="selectclasses">
                         {% for class_name in classes_list %}
-                            <option value="{{ class_name }}">{{ class_name }}</option>
+                            <option value="{{ class_name.id }}">{{ class_name }}</option>
                         {% endfor %}
                     </select>
                     <small id="selectclassesHelp" class="form-text text-muted">One student can only be part of one class
@@ -109,7 +109,7 @@
             } else if (password1.length < 8 || password1.length > 16) {
                 displayFormErrorMessage(false,
                     'Password should be between 8 and 16 characters long', 'alertmessage');
-            } else if (class_assigned.val() === '' || class_assigned.val() === null) {
+            } else if (class_assigned === '' || class_assigned === null) {
                 displayFormErrorMessage(false,
                     'You must assign this teacher to at least one class', 'alertmessage');
             } else {
@@ -120,7 +120,6 @@
                         'X-CSRFToken': csrftoken,
                     },
                     body: JSON.stringify({
-                        'mode': 'add',
                         'first_name': first_name,
                         'last_name': last_name,
                         'class_assigned': class_assigned,

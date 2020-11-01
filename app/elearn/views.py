@@ -89,7 +89,7 @@ def sign_up(request, plan_subscribed=''):
             auth_user = authenticate(request, username=email_id, password=password1)
             if auth_user is not None:
                 login(request, auth_user)
-                # NOTE: redirect() is not working after login() for some reason, need to look it up and fix it
+                # TODO: redirect() is not working after login() for some reason, need to look it up and fix it
                 return redirect(college_page)
             else:
                 return JsonResponse({'process': 'failed', 'msg': 'User authentication system failed'})
@@ -324,12 +324,12 @@ def college_add_teachers(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_del_teachers(request, pk=None):
-    '''
+    """
     This view is for handling AJAX requests only for deleting teachers.
     :param request:
     :param pk:
     :return: JsonResponse()
-    '''
+    """
     if request.method == 'POST':
         try:
             teacher = Teacher.objects.get(pk=pk, college=request.user.college)
@@ -462,12 +462,12 @@ def college_add_classes(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_del_classes(request, pk=None):
-    '''
+    """
     This view is for handling AJAX requests only for deleting classes.
     :param request:
     :param pk:
     :return: JsonResponse()
-    '''
+    """
     if request.method == 'POST':
         data = json.loads(request.body)
         form_type = data['form_type']
@@ -510,6 +510,7 @@ def college_teacher(request):
             'classes_list': None,
         }
         return render(request, template_name='college/teacher/teacher.html', context=context_dict)
+
     context_dict = {
         'classes_list': classes_list,
     }
@@ -619,13 +620,70 @@ def college_teacher_add_subjects(request, pk=None):
 def college_teacher_add_students(request, pk=None):
     if request.method == 'POST':
         data = json.loads(request.body)
-        # TODO: Complete this
-        print(data)
+        if pk is None:
+            # This is the POST request for adding a new student
+            first_name = data['first_name']
+            last_name = data['last_name']
+            class_assigned = data['class_assigned']
+            email_id = data['email_id']
+            password1 = data['password1']
+
+            try:
+                # register the User
+                new_user = User.objects.create_user(
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email_id,
+                    username=email_id,
+                )
+                new_user.set_password(password1)
+                new_user.save()
+
+                # Add this user to the student group
+                collegeadmin_group = Group.objects.get(name='student')
+                collegeadmin_group.user_set.add(new_user)
+
+                # get the class object from the id provided
+                college_class = CollegeClass.objects.get(pk=class_assigned)
+
+                # create the student
+                Student.objects.create(
+                    user=new_user,
+                    college=request.user.college,
+                    college_class=college_class,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email_id
+                )
+
+            except IntegrityError:
+                return JsonResponse({
+                    'process': 'failed',
+                    'msg': f'Student {first_name} {last_name} has already been added to the database.'
+                })
+            except Exception as err:
+                return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+            # TODO: Complete this
+            return JsonResponse({'process': 'success', 'msg': 'Student successfully added to the database'})
+
+        if pk is not None:
+            # This is for the POST request for updating a student whose id is pk.
+            pass
 
     classes_list = request.user.teacher.college_classes.all()
     context_dict = {
         'classes_list': classes_list,
     }
+
+    if request.method == 'GET' and pk is not None:
+        # This is a GET request for this page along with the data for a particular student whose
+        # id is pk.
+        college_student = Student.objects.get(id=pk)
+        context_dict = {
+            'college_student': college_student
+        }
+        return render(request, template_name='college/teacher/teacher_add_students.html', context=context_dict)
+
     return render(request, template_name='college/teacher/teacher_add_students.html', context=context_dict)
 
 
