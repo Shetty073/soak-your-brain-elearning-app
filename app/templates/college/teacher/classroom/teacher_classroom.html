@@ -9,9 +9,38 @@
             <h1 class="img-text-top-left colorbluesapphire">{{ college_class.name }}</h1>
         </div>
         <br>
+
+        {# Button to toggle the add post form modal #}
         <div class="float-left">
-            <button class="btn btn-warning">+ Add new post</button>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new
+                post
+            </button>
         </div>
+
+        {# Add post form modal #}
+        <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPostModalLabel">Create New Post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            ...
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Create post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Filter posts dropdown menu #}
         <div class="input-group-prepend float-right">
             <select class="form-control btn-warning" id="exampleFormControlSelect1">
                 <option class="subject-options" value="All subjects">All subjects</option>
@@ -25,14 +54,21 @@
         <br>
         <br>
         <hr>
+
         <div class="container" id="teacher-feed">
 
         </div>
 
     </main>
     <script type="text/javascript">
-        if (!document.getElementById("home-link").classList.contains('active')) {
-            document.getElementById("home-link").classList.add('active');
+        if (!document.getElementById('home-link').classList.contains('active')) {
+            document.getElementById('home-link').classList.add('active');
         }
     </script>
 {% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript">
+        
+    </script>
+{% endblock college-teacher-script %}

@@ -120,6 +120,7 @@ class ClassWorkPost(models.Model):
     students = models.ManyToManyField(Student, blank=True)
     title = models.CharField(max_length=256)
     is_assignment = models.BooleanField(default=False)
+    is_classtest = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -203,12 +204,8 @@ class PostComment(models.Model):
 
 
 class ClassTestPost(models.Model):
-    college_class = models.ForeignKey(CollegeClass, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    students = models.ManyToManyField(Student, blank=True)
-    title = models.CharField(max_length=256)
-    description = models.CharField(max_length=500, null=True, blank=True)
+    post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
+    body = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.title

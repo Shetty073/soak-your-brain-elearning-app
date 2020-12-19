@@ -12,6 +12,7 @@
       <w>cardcvv</w>
       <w>cardnumber</w>
       <w>classdropdown</w>
+      <w>classtest</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
       <w>clsdpt</w>
@@ -25,6 +26,7 @@
       <w>deptalertclose</w>
       <w>deptalertmessage</w>
       <w>deptformerror</w>
+      <w>elearn</w>
       <w>firstname</w>
       <w>formerror</w>
       <w>jquerify</w>
