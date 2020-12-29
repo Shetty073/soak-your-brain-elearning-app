@@ -20,29 +20,186 @@
         {# Add post form modal #}
         <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addPostModalLabel">Create New Post</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            ...
+                <form action="#" enctype="multipart/form-data" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addPostModalLabel"><b>Create New Post</b></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group">
+                                    <label for="title">Post title:</label>
+                                    <input type="text" class="form-control form-control-sm" id="title" name="title"
+                                           placeholder="Notes for OS lecture" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject">Select subject:</label>
+                                    <select class="form-control form-control-sm" id="subject" name="subject" required>
+                                        {% for subject in subjects %}
+                                            <option value="{{ subject.pk }}">{{ subject.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="students">Select students (default is all students):</label>
+                                    <select multiple class="form-control form-control-sm" id="students"
+                                        name="students" required>
+                                        <option value="all" selected>All</option>
+                                        {% for student in students %}
+                                            <option value="{{ student.pk }}">{{ student.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="studentsHelp" class="form-text text-muted">
+                                        This post will only be visible to the selected students.
+                                        You can select multiple students by clicking on their names while holding the
+                                        'ctrl' key on the keyboard.
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postype">Post type:</label>
+                                    <div id="postype">
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype1" value="regular" checked required>
+                                            <label class="form-check-label" for="postype1">
+                                                Regular
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype2" value="assignment">
+                                            <label class="form-check-label" for="postype2">
+                                                Assignment
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype3" value="classtest">
+                                            <label class="form-check-label" for="postype3">
+                                                Classtest
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group postcategory">
+                                    <label for="postcategory">Select post category:</label>
+                                    <select class="form-control form-control-sm" id="postcategory" name="postcategory">
+                                        <option value="textpost" selected>TextPost</option>
+                                        <option value="videopost">VideoPost</option>
+                                        <option value="documentpost">DocumentPost</option>
+                                        <option value="imagepost">ImagePost</option>
+                                        <option value="youtubepost">YoutubePost</option>
+                                        <option value="articlepost">ArticlePost</option>
+                                    </select>
+                                </div>
+                                <div class="form-group textpostbody">
+                                    <label for="textpostbody">Text post description:</label>
+                                    <textarea class="form-control" id="textpostbody" name="textpostbody"
+                                              rows="4"></textarea>
+                                </div>
+                                <div class="videopostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="videopostbody">Video post description:</label>
+                                        <textarea class="form-control" id="videopostbody" name="videopostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="videopostfile">Video file:</label>
+                                        <input type="file" class="form-control-file" id="videopostfile" name="videopostfile"
+                                               accept="video/mp4, .flv">
+                                    </div>
+                                </div>
+                                <div class="documentpostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="documentpostbody">Document post description:</label>
+                                        <textarea class="form-control" id="documentpostbody" name="documentpostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="documentpostfile">Document file:</label>
+                                        <input type="file" class="form-control-file" id="documentpostfile" name="documentpostfile"
+                                        accept="application/pdf, .csv, text/plain, .doc, .docx, .rtf, .xls, .ppt, .pptx, .html, .htm">
+                                    </div>
+                                </div>
+                                <div class="imagepostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="imagepostbody">Image post description:</label>
+                                        <textarea class="form-control" id="imagepostbody" name="imagepostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="imagepostfile">Image file:</label>
+                                        <input type="file" class="form-control-file" id="imagepostfile" name="imagepostfile"
+                                        accept="image/jpeg, image/jpg, image/bmp, image/png, image/gif">
+                                    </div>
+                                </div>
+                                <div class="form-group youtubepostbody hidepost">
+                                    <label for="youtubepostbody">Youtube video URL:</label>
+                                    <input type="text" class="form-control form-control-sm" id="youtubepostbody"
+                                    name="youtubepostbody" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                </div>
+                                <div class="form-group articlepostbody hidepost">
+                                    <label for="articlepostbody">Article URL:</label>
+                                    <input type="text" class="form-control form-control-sm" id="articlepostbody" name="articlepostbody"
+                                    placeholder="https://medium.com/flutter-community/flutter-web-and-wasm-49217497b0ed">
+                                </div>
+                                <div class="classtestpostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="classtestpostbody">Description of classtest:</label>
+                                        <textarea class="form-control" id="classtestpostbody" name="classtestpostbody"
+                                        rows="4"></textarea>
+                                    </div>
+                                    <div class="classtestqna" id="classtestqna">
+                                        <div class="form-group">
+                                            <label for="q1">Question 1:</label>
+                                            <input type="text" class="form-control form-control-sm" name="q1"
+                                            id="q1" placeholder="What is the capital of India?">
+                                        </div>
+                                        <div class="form-group row opt">
+                                            <label for="q1o1" class="col-1 opt-label">1.</label>
+                                            <input type="text" class="form-control form-control-sm col-11 opt-input"
+                                                   name="q1o1" id="q1o1" placeholder="Option 1">
+                                        </div>
+                                        <div class="form-group row opt">
+                                            <label for="q1o2" class="col-1 opt-label">2.</label>
+                                            <input type="text" class="form-control form-control-sm col-11 opt-input"
+                                                   name="q1o2" id="q1o2" placeholder="Option 2">
+                                        </div>
+                                        <button type="button" class="btn btn-secondary" id="addoptionbtn">
+                                            + option
+                                        </button>
+                                        <div class="input-group-prepend float-right">
+                                            <label for="ans1">Answer:&nbsp;</label>
+                                            <select class="form-control btn-secondary" id="ans1">
+                                                <option value="q1o1">1</option>
+                                                <option value="q1o2">2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button type="button" class="btn btn-secondary" id="addquestionbtn">
+                                        + question
+                                    </button>
+                                    <input type="hidden" id="totalnoofquestions" value="1" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-warning" value="Create post" />
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Create post</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 
         {# Filter posts dropdown menu #}
         <div class="input-group-prepend float-right">
-            <select class="form-control btn-warning" id="exampleFormControlSelect1">
+            <label for="subjectfilter"></label>
+            <select class="form-control btn-warning" id="subjectfilter">
                 <option class="subject-options" value="All subjects">All subjects</option>
                 {% if subjects %}
                     {% for subject in subjects %}
@@ -68,7 +225,5 @@
 {% endblock teacher-content %}
 
 {% block college-teacher-script %}
-    <script type="text/javascript">
-        
-    </script>
+    <script type="text/javascript" src="{% static 'js/teacher_create_post.js' %}"></script>
 {% endblock college-teacher-script %}

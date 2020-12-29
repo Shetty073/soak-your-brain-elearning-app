@@ -57,6 +57,15 @@ main {
     outline: var(--chrome-yellow) !important;
 }
 
+/* For teacher_classroom */
+.hidepost {
+    display: none !important;
+}
+
+.opt-label {
+    padding-right: 0;
+}
+
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {

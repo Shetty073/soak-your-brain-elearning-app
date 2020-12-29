@@ -121,7 +121,7 @@
                     {% for teacher in teachers %}
                         <tr>
                             <td>{{ teacher.id }}</td>
-                            <td class="name-col">{{ teacher.first_name }}&nbsp;{{ teacher.last_name }}</td>
+                            <td class="name-col">{{ teacher.name }}</td>
                             <td class="content-hide-sm email-col">{{ teacher.email }}</td>
                             <td class="content-hide-sm">
                                 {% for clg_cls in teacher.college_classes.all %}

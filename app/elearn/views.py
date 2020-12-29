@@ -645,11 +645,12 @@ def college_teacher_add_students(request, pk=None):
 
                 # get the class object from the id provided
                 college_class = CollegeClass.objects.get(pk=class_assigned)
+                college = request.user.teacher.college
 
                 # create the student
                 Student.objects.create(
                     user=new_user,
-                    college=request.user.college,
+                    college=college,
                     college_class=college_class,
                     first_name=first_name,
                     last_name=last_name,
@@ -700,6 +701,7 @@ def college_teacher_classroom(request, pk=None):
 
     try:
         subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+        students = [student for student in Student.objects.all() if student.college_class == college_class]
     except Exception as err:
         context_dict = {
             'college_class': None,
@@ -709,6 +711,7 @@ def college_teacher_classroom(request, pk=None):
     context_dict = {
         'college_class': college_class,
         'subjects': subjects,
+        'students': students,
     }
     return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
 

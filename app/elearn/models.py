@@ -97,6 +97,9 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
 
+    def name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -108,6 +111,9 @@ class Student(models.Model):
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
+
+    def name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
@@ -187,9 +193,9 @@ class YouTubePost(models.Model):
         return self.post.title
 
 
-class LinkPost(models.Model):
+class ArticlePost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
-    link = models.CharField(max_length=500, null=True, blank=True)
+    article_link = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.post.title

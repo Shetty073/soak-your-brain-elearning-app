@@ -3,8 +3,12 @@
     <words>
       <w>addclass</w>
       <w>addclassform</w>
+      <w>addoptionbtn</w>
+      <w>addquestionbtn</w>
       <w>alertclose</w>
       <w>alertmessage</w>
+      <w>articlepost</w>
+      <w>articlepostbody</w>
       <w>assignsubjects</w>
       <w>assignsubjectsform</w>
       <w>bgcolorbluesapphire</w>
@@ -13,6 +17,11 @@
       <w>cardnumber</w>
       <w>classdropdown</w>
       <w>classtest</w>
+      <w>classtestpost</w>
+      <w>classtestpostbody</w>
+      <w>classtestpostquestions</w>
+      <w>classtestqna</w>
+      <w>classtestquestion</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
       <w>clsdpt</w>
@@ -23,14 +32,27 @@
       <w>clssubjectformerror</w>
       <w>collegeadmin</w>
       <w>colorbluesapphire</w>
+      <w>createpostbtn</w>
       <w>deptalertclose</w>
       <w>deptalertmessage</w>
       <w>deptformerror</w>
+      <w>documentpost</w>
+      <w>documentpostbody</w>
+      <w>documentpostfile</w>
       <w>elearn</w>
       <w>firstname</w>
       <w>formerror</w>
+      <w>hidepost</w>
+      <w>imagepost</w>
+      <w>imagepostbody</w>
+      <w>imagepostfile</w>
       <w>jquerify</w>
       <w>lastname</w>
+      <w>linkpost</w>
+      <w>linkpostbody</w>
+      <w>postcategory</w>
+      <w>posttype</w>
+      <w>postype</w>
       <w>selectclass</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>
@@ -40,10 +62,19 @@
       <w>signout</w>
       <w>subjectalertclose</w>
       <w>subjectalertmessage</w>
+      <w>subjectfilter</w>
       <w>subjectformerror</w>
       <w>subjectname</w>
       <w>subjectsdropdown</w>
       <w>sybadmin</w>
+      <w>textpost</w>
+      <w>textpostbody</w>
+      <w>totalnoofquestions</w>
+      <w>videopost</w>
+      <w>videopostbody</w>
+      <w>videopostfile</w>
+      <w>youtubepost</w>
+      <w>youtubepostbody</w>
     </words>
   </dictionary>
 </component>
