@@ -202,10 +202,10 @@
         <div class="input-group-prepend float-right">
             <label for="subjectfilter"></label>
             <select class="form-control btn-warning" id="subjectfilter">
-                <option class="subject-options" value="All subjects">All subjects</option>
+                <option class="subject-options" value="all">All subjects</option>
                 {% if subjects %}
                     {% for subject in subjects %}
-                        <option class="subject-options" value="{{ subject.pk }}">{{ subject.name }}</option>
+                        <option class="subject-options" value="{{ subject.name }}">{{ subject.name }}</option>
                     {% endfor %}
                 {% endif %}
             </select>
