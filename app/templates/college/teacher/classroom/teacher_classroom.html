@@ -205,7 +205,7 @@
                 <option class="subject-options" value="All subjects">All subjects</option>
                 {% if subjects %}
                     {% for subject in subjects %}
-                        <option class="subject-options" value="{{ subject.id }}">{{ subject.name }}</option>
+                        <option class="subject-options" value="{{ subject.pk }}">{{ subject.name }}</option>
                     {% endfor %}
                 {% endif %}
             </select>
@@ -217,8 +217,8 @@
         <div class="container" id="teacher-feed">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
-                        <strong>{{ message }}</strong>
+                    <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert" style="display: block;">
+                        <strong class="alertmessage">{{ message }}</strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             &times;
                         </button>
@@ -232,10 +232,13 @@
                     <div class="card-header">
                         <strong>Subject:</strong> {{ post.post.subject }}
                         <span style="float: right;">
-                            <strong>Date:</strong> {{ post.post.date }}
+                            <button type="button" class="btn btn-outline-warning post-delete-btn">
+                                &times;
+                            </button>
+                            <input type="hidden" value="{{ post.post.pk }}">
                         </span>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="padding-bottom: 0;">
                         <h5 class="card-title">{{ post.post.title }}</h5>
                         {% if post.body %}
                             <p class="card-text">{{ post.body }}</p>
@@ -251,8 +254,10 @@
                                     <img src={{ post.get_media_url }} alt={{ post.post.title }}
                                     style="width:auto;height:300px;max-width: 80vw" />
                                 </a>
+                            {% elif post.post.is_classtest %}
+                                <a class="btn btn-warning" href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
                             {% else %}
-                                <a class="btn btn-primary" href="#">Open post</a>
+                                <a class="btn btn-warning" href="#">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
                             <iframe width="320" height="215" allowfullscreen
@@ -261,6 +266,10 @@
                         {% elif post.article_link %}
                             <a class="btn btn-warning" href={{ post.article_link }} target="_blank">Read article</a>
                         {% endif %}
+
+                        <small style="display: block;margin-top: 15px;">
+                            Posted on: {{ post.post.date }}
+                        </small>
                     </div>
                 </div>
             {% endfor %}

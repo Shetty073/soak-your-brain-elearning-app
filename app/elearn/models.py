@@ -11,6 +11,9 @@ from django.db import models
 
 
 # Project models
+from django.utils import timezone
+
+
 class SybAdmin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=256)
@@ -220,6 +223,14 @@ class PostComment(models.Model):
         return self.post.title
 
 
+class CommentReply(models.Model):
+    postcomment = models.ForeignKey(PostComment, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.postcomment.post.title
+
+
 class ClassTestPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
@@ -243,3 +254,21 @@ class Choice(models.Model):
 
     def __str__(self):
         return f'{self.question.question} {self.choice}'
+
+
+class StudentChoice(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.CharField(max_length=256, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.question.question} {self.choice}'
+
+
+class ClassTestSolution(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    classtest = models.ForeignKey(ClassTestPost, on_delete=models.CASCADE)
+    score = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.student.name} {self.score}'

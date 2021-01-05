@@ -276,3 +276,27 @@ $('#addquestionbtn').on('click', function () {
     $('#totalnoofquestions').val(questionNo);
     questionNo++;
 });
+
+// For deleting a post
+$('.post-delete-btn').on('click', function () {
+    let post_id = $(this).siblings().val()
+    let url = `/college/teacher/classroom/delete_test/${post_id}`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({})
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        if (data['process'] === 'success') {
+            window.location.reload();
+        } else {
+            // The request failed. Display the appropriate error message sent back in response.
+            displayFormErrorMessage(false, data['msg'], 'alertmessage');
+        }
+    });
+});

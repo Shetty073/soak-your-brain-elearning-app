@@ -992,6 +992,36 @@ def college_teacher_classroom_add_post(request, pk=None):
 
 
 @login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher_classroom_view_test(request, pk=None):
+    classtestpost = ClassTestPost.objects.get(pk=pk)
+    questions = [question for question in Question.objects.all() if question.class_test_post == classtestpost]
+    choices = [choice for choice in Choice.objects.all() if choice.question in questions]
+
+    context_dict = {
+        'classtestpost': classtestpost,
+        'questions': questions,
+        'choices': choices,
+    }
+    return render(request, template_name='college/teacher/classroom/teacher_view_test.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def college_teacher_classroom_delete_test(request, pk=None):
+    if request.method == 'POST':
+        try:
+            post = ClassWorkPost.objects.get(pk=pk)
+            post.delete()
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+        return JsonResponse({'process': 'success', 'msg': 'Post successfully deleted'})
+
+    return JsonResponse({'process': 'failed', 'msg': 'GET not supported by this endpoint'})
+
+
+@login_required
 @allowed_users(allowed_roles=['student'])
 def college_student(request):
     context_dict = {}

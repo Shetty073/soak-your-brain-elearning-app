@@ -1,0 +1,38 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md" id="classroom-main">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+        <input type="hidden" value="{{ classtestpost.post.pk }}" id="post-id">
+        {% for question in questions %}
+            <div class="test-body">
+                <div class="card posts">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ forloop.counter }}. {{ question.question }}
+                        </h5>
+                        {% for choice in choices %}
+                            {% if choice.question == question %}
+                                <p class="card-text">
+                                	&diams;
+                                    {{ choice.choice }}
+                                    {% if choice.is_correct %}
+                                        &check;
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </main>
+{% endblock teacher-content %}
+
