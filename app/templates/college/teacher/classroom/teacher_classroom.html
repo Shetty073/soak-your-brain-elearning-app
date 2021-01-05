@@ -232,9 +232,11 @@
                     <div class="card-header">
                         <strong>Subject:</strong> {{ post.post.subject }}
                         <span style="float: right;">
-                            <button type="button" class="btn btn-outline-warning post-delete-btn">
-                                &times;
-                            </button>
+                            {% if post.post.teacher == request.user.teacher %}
+                                <button type="button" class="btn btn-outline-warning post-delete-btn">
+                                    &times;
+                                </button>
+                            {% endif %}
                             <input type="hidden" value="{{ post.post.pk }}">
                         </span>
                     </div>
