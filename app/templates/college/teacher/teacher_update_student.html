@@ -1,0 +1,74 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}student: {{ request.user.student.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Update student</h1>
+        <div class="card">
+            <form name="addstudent" id="addstudentform" class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstname">Student's name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                               aria-describedby="nameHelp"
+                               placeholder="First name" value="{{ student.first_name }}" required>
+                        &nbsp;
+                        <input type="text" class="form-control" id="lastname" name="lastname"
+                               aria-describedby="nameHelp"
+                               placeholder="Last name" value="{{ student.last_name }}" required>
+                    </div>
+                    <small id="nameHelp" class="form-text text-muted">Please enter the student's name</small>
+                </div>
+                <div class="form-group">
+                    <label for="selectclasses">Select the class that you want this student to be in</label>
+                    <select class="form-control" id="selectclasses" name="selectclasses">
+                        {% for class_name in classes_list %}
+                            {% if class_name == student.college_class %}
+                                <option value="{{ class_name.id }}" selected>{{ class_name }}</option>
+                            {% else %}
+                                <option value="{{ class_name.id }}">{{ class_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <small id="selectclassesHelp" class="form-text text-muted">One student can only be part of one class
+                        at a moment</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                           placeholder="Enter email" value="{{ student.email }}" required>
+                    <small id="emailHelp" class="form-text text-muted">
+                        <strong>This email address will also be this student's username </strong>
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Re-enter password</label>
+                    <input type="password" class="form-control" id="password2" name="password2"
+                           placeholder="Re-enter password">
+                    <small id="password2Help" class="form-text text-muted">
+                        <strong>Whitespaces are not allowed in passwords and will be automatically removed before
+                            submission.</strong>
+                    </small>
+                </div>
+                <input type="hidden" id="student-id" value="{{ student.id }}">
+                <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                    <strong id="alertmessage"></strong>
+                    <button type="button" class="close" id="alertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
+                        onclick="validateAndUpdateStudent()">Save and go back
+                </button>
+            </form>
+        </div>
+    </main>
+{% endblock teacher-content %}
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/teacher_update_student.js' %}"></script>
+{% endblock college-teacher-script %}

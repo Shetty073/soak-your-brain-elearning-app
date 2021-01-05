@@ -9,6 +9,7 @@
       <w>alertmessage</w>
       <w>articlepost</w>
       <w>articlepostbody</w>
+      <w>articleposts</w>
       <w>assignsubjects</w>
       <w>assignsubjectsform</w>
       <w>bgcolorbluesapphire</w>
@@ -19,9 +20,12 @@
       <w>classtest</w>
       <w>classtestpost</w>
       <w>classtestpostbody</w>
+      <w>classtestpostbodyinput</w>
       <w>classtestpostquestions</w>
+      <w>classtestposts</w>
       <w>classtestqna</w>
       <w>classtestquestion</w>
+      <w>classworkpost</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
       <w>clsdpt</w>
@@ -39,6 +43,7 @@
       <w>documentpost</w>
       <w>documentpostbody</w>
       <w>documentpostfile</w>
+      <w>documentposts</w>
       <w>elearn</w>
       <w>firstname</w>
       <w>formerror</w>
@@ -46,6 +51,7 @@
       <w>imagepost</w>
       <w>imagepostbody</w>
       <w>imagepostfile</w>
+      <w>imageposts</w>
       <w>jquerify</w>
       <w>lastname</w>
       <w>linkpost</w>
@@ -69,12 +75,15 @@
       <w>sybadmin</w>
       <w>textpost</w>
       <w>textpostbody</w>
+      <w>textposts</w>
       <w>totalnoofquestions</w>
       <w>videopost</w>
       <w>videopostbody</w>
       <w>videopostfile</w>
+      <w>videoposts</w>
       <w>youtubepost</w>
       <w>youtubepostbody</w>
+      <w>youtubeposts</w>
     </words>
   </dictionary>
 </component>

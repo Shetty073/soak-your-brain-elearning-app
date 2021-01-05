@@ -1,6 +1,10 @@
+// Display the alert message
+$('.alert').alert()
 
 // Utility functions for hiding and showing UI elements based on user selection
 function showClassTestPostBody() {
+    $('.classtestpostbodyinput').attr('required', true);
+    $('#classtestpostbody').attr('required', true);
     let classtestpostbody = $('.classtestpostbody')[0];
     if (classtestpostbody.classList.contains('hidepost')) {
         classtestpostbody.classList.remove('hidepost');
@@ -8,6 +12,7 @@ function showClassTestPostBody() {
 }
 
 function hideClassTestPostBody() {
+    $('.classtestpostbodyinput').attr('required', false);
     let classtestpostbody = $('.classtestpostbody')[0];
     if (!classtestpostbody.classList.contains('hidepost')) {
         classtestpostbody.classList.add('hidepost');
@@ -15,6 +20,7 @@ function hideClassTestPostBody() {
 }
 
 function showPostCategory() {
+    $('#postcategory').attr('required', true);
     let postcategory = $('.postcategory')[0];
     if (postcategory.classList.contains('hidepost')) {
         postcategory.classList.remove('hidepost');
@@ -22,6 +28,7 @@ function showPostCategory() {
 }
 
 function hidePostCategory() {
+    $('#postcategory').attr('required', false);
     let postcategory = $('.postcategory')[0];
     if (!postcategory.classList.contains('hidepost')) {
         postcategory.classList.add('hidepost');
@@ -29,6 +36,7 @@ function hidePostCategory() {
 }
 
 function showTextPostBody() {
+    $('#textpostbody').attr('required', true);
     let textpostbody = $('.textpostbody')[0];
     if (textpostbody.classList.contains('hidepost')) {
         textpostbody.classList.remove('hidepost');
@@ -36,6 +44,7 @@ function showTextPostBody() {
 }
 
 function hideTextPostBody() {
+    $('#textpostbody').attr('required', false);
     let textpostbody = $('.textpostbody')[0];
     if (!textpostbody.classList.contains('hidepost')) {
         textpostbody.classList.add('hidepost');
@@ -43,6 +52,8 @@ function hideTextPostBody() {
 }
 
 function showVideoPostBody() {
+    $('#videopostbody').attr('required', true);
+    $('#videopostfile').attr('required', true);
     let videopostbody = $('.videopostbody')[0];
     if (videopostbody.classList.contains('hidepost')) {
         videopostbody.classList.remove('hidepost');
@@ -50,6 +61,8 @@ function showVideoPostBody() {
 }
 
 function hideVideoPostBody() {
+    $('#videopostbody').attr('required', false);
+    $('#videopostfile').attr('required', false);
     let videopostbody = $('.videopostbody')[0];
     if (!videopostbody.classList.contains('hidepost')) {
         videopostbody.classList.add('hidepost');
@@ -57,6 +70,8 @@ function hideVideoPostBody() {
 }
 
 function showDocumentPostBody() {
+    $('#documentpostbody').attr('required', true);
+    $('#documentpostfile').attr('required', true);
     let documentpostbody = $('.documentpostbody')[0];
     if (documentpostbody.classList.contains('hidepost')) {
         documentpostbody.classList.remove('hidepost');
@@ -64,6 +79,8 @@ function showDocumentPostBody() {
 }
 
 function hideDocumentPostBody() {
+    $('#documentpostbody').attr('required', false);
+    $('#documentpostfile').attr('required', false);
     let documentpostbody = $('.documentpostbody')[0];
     if (!documentpostbody.classList.contains('hidepost')) {
         documentpostbody.classList.add('hidepost');
@@ -71,6 +88,8 @@ function hideDocumentPostBody() {
 }
 
 function showImagePostBody() {
+    $('#imagepostbody').attr('required', true);
+    $('#imagepostfile').attr('required', true);
     let imagepostbody = $('.imagepostbody')[0];
     if (imagepostbody.classList.contains('hidepost')) {
         imagepostbody.classList.remove('hidepost');
@@ -78,6 +97,8 @@ function showImagePostBody() {
 }
 
 function hideImagePostBody() {
+    $('#imagepostbody').attr('required', false);
+    $('#imagepostfile').attr('required', false);
     let imagepostbody = $('.imagepostbody')[0];
     if (!imagepostbody.classList.contains('hidepost')) {
         imagepostbody.classList.add('hidepost');
@@ -85,6 +106,7 @@ function hideImagePostBody() {
 }
 
 function showYoutubePostBody() {
+    $('#youtubepostbody').attr('required', true);
     let youtubepostbody = $('.youtubepostbody')[0];
     if (youtubepostbody.classList.contains('hidepost')) {
         youtubepostbody.classList.remove('hidepost');
@@ -92,6 +114,7 @@ function showYoutubePostBody() {
 }
 
 function hideYoutubePostBody() {
+    $('#youtubepostbody').attr('required', false);
     let youtubepostbody = $('.youtubepostbody')[0];
     if (!youtubepostbody.classList.contains('hidepost')) {
         youtubepostbody.classList.add('hidepost');
@@ -99,6 +122,7 @@ function hideYoutubePostBody() {
 }
 
 function showArticlePostBody() {
+    $('#articlepostbody').attr('required', true);
     let linkpostbody = $('.articlepostbody')[0];
     if (linkpostbody.classList.contains('hidepost')) {
         linkpostbody.classList.remove('hidepost');
@@ -106,6 +130,7 @@ function showArticlePostBody() {
 }
 
 function hideArticlePostBody() {
+    $('#articlepostbody').attr('required', false);
     let linkpostbody = $('.articlepostbody')[0];
     if (!linkpostbody.classList.contains('hidepost')) {
         linkpostbody.classList.add('hidepost');
@@ -197,8 +222,9 @@ $('body').on('click', '#addoptionbtn', function () {
     if (optionNo < 5) {
         let optionHtml = '<div class="form-group row opt">' +
             `<label for="q${(questionNo - 1)}o${optionNo}" class="col-1 opt-label">${optionNo}.</label>` +
-            '<input type="text" class="form-control form-control-sm col-11 opt-input"' +
-            `name="q${(questionNo - 1)}o${optionNo}" id="q${(questionNo - 1)}o${optionNo}" placeholder="Option ${optionNo}">` +
+            '<input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"' +
+            `name="q${(questionNo - 1)}o${optionNo}" id="q${(questionNo - 1)}o${optionNo}" ` +
+            `placeholder="Option ${optionNo}" required="required">` +
             '</div>';
 
         $(optionHtml).insertBefore($(this));
@@ -221,25 +247,25 @@ $('#addquestionbtn').on('click', function () {
     let questionHtml = '<br><br><div class="classtestqna">' +
         '<div class="form-group">' +
         `<label for="q${questionNo}">Question ${questionNo}:</label>` +
-        `<input type="text" class="form-control form-control-sm" name="q${questionNo}"` +
-        `id="q${questionNo}" placeholder="What is the capital of India?">` +
+        `<input type="text" class="form-control form-control-sm classtestpostbodyinput" name="q${questionNo}"` +
+        `id="q${questionNo}" placeholder="What is the capital of India?" required="required">` +
         '</div>' +
         '<div class="form-group row opt">' +
         `<label for="q${questionNo}o1" class="col-1 opt-label">1.</label>` +
-        '<input type="text" class="form-control form-control-sm col-11 opt-input"' +
-        `name="q${questionNo}o1" id="q${questionNo}o1" placeholder="Option 1">` +
+        '<input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"' +
+        `name="q${questionNo}o1" id="q${questionNo}o1" placeholder="Option 1" required="required">` +
         '</div>' +
         '<div class="form-group row opt">' +
         `<label for="q${questionNo}o2" class="col-1 opt-label">2.</label>` +
-        '<input type="text" class="form-control form-control-sm col-11 opt-input"' +
-        `name="q${questionNo}o2" id="q${questionNo}o2" placeholder="Option 2">` +
+        '<input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"' +
+        `name="q${questionNo}o2" id="q${questionNo}o2" placeholder="Option 2" required="required">` +
         '</div>' +
         '<button type="button" class="btn btn-secondary" id="addoptionbtn">' +
         '+ option' +
         '</button>' +
         '<div class="input-group-prepend float-right">' +
         `<label for="ans${questionNo}">Answer:&nbsp;</label>` +
-        `<select class="form-control btn-secondary" id="ans${questionNo}">` +
+        `<select class="form-control btn-secondary classtestpostbodyinput" id="ans${questionNo}" name="ans${questionNo}" required="required">` +
         `<option value="q${questionNo}o1">1</option>` +
         `<option value="q${questionNo}o2">2</option>` +
         '</select>' +

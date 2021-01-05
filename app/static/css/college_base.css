@@ -66,6 +66,10 @@ main {
     padding-right: 0;
 }
 
+.posts {
+    margin-bottom: 50px;
+}
+
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {

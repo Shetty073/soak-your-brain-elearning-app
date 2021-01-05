@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('body', models.CharField(blank=True, max_length=500, null=True)),
-                ('video_url', models.FileField(upload_to=elearn.models.user_video_directory_path)),
+                ('video_url', models.FileField(upload_to=elearn.models.video_directory_path)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.classworkpost')),
             ],
         ),
@@ -159,7 +159,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('body', models.CharField(blank=True, max_length=500, null=True)),
-                ('image_url', models.ImageField(upload_to=elearn.models.user_image_directory_path)),
+                ('image_url', models.ImageField(upload_to=elearn.models.image_directory_path)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.classworkpost')),
             ],
         ),
@@ -168,7 +168,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('body', models.CharField(blank=True, max_length=500, null=True)),
-                ('document_url', models.FileField(upload_to=elearn.models.user_document_directory_path)),
+                ('document_url', models.FileField(upload_to=elearn.models.document_directory_path)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.classworkpost')),
             ],
         ),

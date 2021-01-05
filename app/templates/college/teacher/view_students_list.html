@@ -1,0 +1,60 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}student: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+            <strong id="alertmessage"></strong>
+            <button type="button" class="close" id="alertclose" aria-label="Close">
+                &times;
+            </button>
+        </div>
+        {% for college_class, students in students_info.items %}
+            <h4>Class: {{ college_class.name }}</h4>
+            <div class="table-responsive-md">
+                <table class="table table-bordered" id="student-table">
+                    <thead class="thead-dark bgcolorbluesapphire">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th class="name-col" scope="col">Name</th>
+                        <th class="content-hide-sm email-col" scope="col">Email Id</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.id }}</td>
+                            <td class="name-col">{{ student.name }}</td>
+                            <td class="content-hide-sm email-col">{{ student.email }}</td>
+                            <td>
+                                <a href="{% url 'college_teacher_update_students' pk=student.id %}"
+                                   class="btn btn-warning student-edit-btn">
+                                    Edit
+                                </a>
+                            </td>
+                            <td>
+                                <button id="delete{{ student.id }}" class="btn btn-danger student-delete-btn">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+        {% endfor %}
+    </main>
+    <script type="text/javascript">
+        if (!document.getElementById("view-students-link").classList.contains('active')) {
+            document.getElementById("view-students-link").classList.add('active');
+        }
+
+    </script>
+{% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/view_students_list.js' %}"></script>
+{% endblock college-teacher-script %}

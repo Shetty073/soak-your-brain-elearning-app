@@ -84,6 +84,10 @@
                     <a data-toggle="tooltip" title="Add students" class="nav-link"
                        href="{% url 'college_teacher_add_students' %}">Add students</a>
                 </li>
+                <li class="nav-item" id="view-students-link">
+                    <a data-toggle="tooltip" title="Add teachers" class="nav-link"
+                       href="{% url 'view_student_lists' %}">Students' lists</a>
+                </li>
 
             {% elif request.user.groups.all.0.name == 'student' %}
                 {# If the user is a student #}

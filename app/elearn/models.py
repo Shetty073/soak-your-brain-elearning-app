@@ -5,6 +5,7 @@ they are represented by their respective tables (College and Customer table if t
 if that User is a teacher).
 This is the most simple way to work with the django's built-in authentication system.
 """
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -61,7 +62,6 @@ class Customer(models.Model):
 
 
 class Department(models.Model):
-    # TODO: Cross check this model changes with UML diagrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
@@ -70,7 +70,6 @@ class Department(models.Model):
 
 
 class Subject(models.Model):
-    # TODO: Cross check this model changes with UML diagrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
 
@@ -79,7 +78,6 @@ class Subject(models.Model):
 
 
 class CollegeClass(models.Model):
-    # TODO: Cross check this model changes with UML diagrams and update the diagrams
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     subjects = models.ManyToManyField(Subject, blank=True)
@@ -127,6 +125,7 @@ class ClassWorkPost(models.Model):
     title = models.CharField(max_length=256)
     is_assignment = models.BooleanField(default=False)
     is_classtest = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -140,49 +139,61 @@ class TextPost(models.Model):
         return self.post.title
 
 
-def user_video_directory_path(instance, filename):
+def video_directory_path(instance, filename):
     # this will return a file path that is unique for all the users
     # file will be uploaded to MEDIA_ROOT/user_id/videos/filename
-    return f'user_{instance.user.id}/videos/{instance.post.id}/{filename}'
+    return f'video_{instance.post.pk}/videos/{instance.post.pk}/{filename}'
 
 
 class VideoPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    video_url = models.FileField(upload_to=user_video_directory_path)
+    video_url = models.FileField(upload_to=video_directory_path)
 
     def __str__(self):
         return self.post.title
 
+    @property
+    def get_media_url(self):
+        return f'{settings.MEDIA_URL}{self.video_url}'
 
-def user_document_directory_path(instance, filename):
+
+def document_directory_path(instance, filename):
     # this will return a file path that is unique for all the users
     # file will be uploaded to MEDIA_ROOT/user_id/documents/filename
-    return f'user_{instance.user.id}/documents/{instance.post.id}/{filename}'
+    return f'document_{instance.post.pk}/videos/{instance.post.pk}/{filename}'
 
 
 class DocumentPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    document_url = models.FileField(upload_to=user_document_directory_path)
+    document_url = models.FileField(upload_to=document_directory_path)
 
     def __str__(self):
         return self.post.title
 
+    @property
+    def get_media_url(self):
+        return f'{settings.MEDIA_URL}{self.document_url}'
 
-def user_image_directory_path(instance, filename):
+
+def image_directory_path(instance, filename):
     # this will return a file path that is unique for all the users
     # file will be uploaded to MEDIA_ROOT/user_id/images/filename
-    return f'user_{instance.user.id}/images/{instance.post.id}/{filename}'
+    return f'image_{instance.post.pk}/videos/{instance.post.pk}/{filename}'
 
 
 class ImagePost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    image_url = models.ImageField(upload_to=user_image_directory_path)
+    image_url = models.ImageField(upload_to=image_directory_path)
 
     def __str__(self):
         return self.post.title
+
+    @property
+    def get_media_url(self):
+        return f'{settings.MEDIA_URL}{self.image_url}'
 
 
 class YouTubePost(models.Model):
@@ -214,7 +225,7 @@ class ClassTestPost(models.Model):
     body = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.post.title
 
 
 class Question(models.Model):

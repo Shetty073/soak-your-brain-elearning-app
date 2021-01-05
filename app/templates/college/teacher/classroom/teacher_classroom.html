@@ -20,7 +20,9 @@
         {# Add post form modal #}
         <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <form action="#" enctype="multipart/form-data" method="post">
+                <form action="{% url 'college_teacher_classroom_add_post' pk=college_class.pk %}"
+                      enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addPostModalLabel"><b>Create New Post</b></h5>
@@ -149,23 +151,23 @@
                                 <div class="classtestpostbody hidepost">
                                     <div class="form-group">
                                         <label for="classtestpostbody">Description of classtest:</label>
-                                        <textarea class="form-control" id="classtestpostbody" name="classtestpostbody"
+                                        <textarea class="form-control classtestpostbodyinput" id="classtestpostbody" name="classtestpostbody"
                                         rows="4"></textarea>
                                     </div>
                                     <div class="classtestqna" id="classtestqna">
                                         <div class="form-group">
                                             <label for="q1">Question 1:</label>
-                                            <input type="text" class="form-control form-control-sm" name="q1"
+                                            <input type="text" class="form-control form-control-sm classtestpostbodyinput" name="q1"
                                             id="q1" placeholder="What is the capital of India?">
                                         </div>
                                         <div class="form-group row opt">
                                             <label for="q1o1" class="col-1 opt-label">1.</label>
-                                            <input type="text" class="form-control form-control-sm col-11 opt-input"
+                                            <input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
                                                    name="q1o1" id="q1o1" placeholder="Option 1">
                                         </div>
                                         <div class="form-group row opt">
                                             <label for="q1o2" class="col-1 opt-label">2.</label>
-                                            <input type="text" class="form-control form-control-sm col-11 opt-input"
+                                            <input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
                                                    name="q1o2" id="q1o2" placeholder="Option 2">
                                         </div>
                                         <button type="button" class="btn btn-secondary" id="addoptionbtn">
@@ -173,7 +175,7 @@
                                         </button>
                                         <div class="input-group-prepend float-right">
                                             <label for="ans1">Answer:&nbsp;</label>
-                                            <select class="form-control btn-secondary" id="ans1">
+                                            <select class="form-control btn-secondary classtestpostbodyinput" id="ans1" name="ans1">
                                                 <option value="q1o1">1</option>
                                                 <option value="q1o2">2</option>
                                             </select>
@@ -183,7 +185,7 @@
                                     <button type="button" class="btn btn-secondary" id="addquestionbtn">
                                         + question
                                     </button>
-                                    <input type="hidden" id="totalnoofquestions" value="1" />
+                                    <input type="hidden" id="totalnoofquestions" name="totalnoofquestions" value="1" />
                                 </div>
                             </div>
                         </div>
@@ -213,7 +215,55 @@
         <hr>
 
         <div class="container" id="teacher-feed">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            &times;
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
 
+            {# Posts #}
+            {% for post in posts_display %}
+                <div class="card posts {{ post.post.subject }}">
+                    <div class="card-header">
+                        <strong>Subject:</strong> {{ post.post.subject }}
+                        <span style="float: right;">
+                            <strong>Date:</strong> {{ post.post.date }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.post.title }}</h5>
+                        {% if post.body %}
+                            <p class="card-text">{{ post.body }}</p>
+                            {% if post.video_url %}
+                                <video width="320" height="240" controls>
+                                    <source src={{ post.get_media_url }} type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% elif post.document_url %}
+                                <a class="btn btn-warning" href={{ post.get_media_url }}>Open document</a>
+                            {% elif post.image_url %}
+                                <a href={{ post.get_media_url }} target="_blank">
+                                    <img src={{ post.get_media_url }} alt={{ post.post.title }}
+                                    style="width:auto;height:300px;max-width: 80vw" />
+                                </a>
+                            {% else %}
+                                <a class="btn btn-primary" href="#">Open post</a>
+                            {% endif %}
+                        {% elif post.youtube_link %}
+                            <iframe width="320" height="215" allowfullscreen
+                                src={{ post.youtube_link }}>
+                            </iframe>
+                        {% elif post.article_link %}
+                            <a class="btn btn-warning" href={{ post.article_link }} target="_blank">Read article</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
 
     </main>
