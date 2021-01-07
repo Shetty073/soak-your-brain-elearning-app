@@ -96,17 +96,21 @@
                        href="{% url 'college_student' %}">Home <span
                             class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Check assignments" class="nav-link" href="#">Assignments</a>
+                <li class="nav-item" id="student-assignments-link">
+                    <a data-toggle="tooltip" title="Check assignments" class="nav-link"
+                       href="{% url 'college_student_assignments' %}">Assignments</a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Books and documents" class="nav-link" href="#">Reading materials</a>
+                <li class="nav-item" id="student-reading-materials-link">
+                    <a data-toggle="tooltip" title="Books and documents" class="nav-link"
+                       href="{% url 'college_student_reading_materials' %}">Reading materials</a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Videos to watch" class="nav-link" href="#">Videos</a>
+                <li class="nav-item" id="student-videos-link">
+                    <a data-toggle="tooltip" title="Videos to watch" class="nav-link"
+                       href="{% url 'college_student_videos' %}">Videos</a>
                 </li>
-                <li class="nav-item">
-                    <a data-toggle="tooltip" title="Links to read" class="nav-link" href="#">Links</a>
+                <li class="nav-item" id="student-articles-link">
+                    <a data-toggle="tooltip" title="Articles to read" class="nav-link"
+                       href="{% url 'college_student_articles' %}">Articles</a>
                 </li>
             {% endif %}
         </ul>
@@ -146,6 +150,10 @@
 {% block college-teacher-script %}
 
 {% endblock college-teacher-script %}
+
+{% block college-student-script %}
+
+{% endblock college-student-script %}
 
 </body>
 </html>

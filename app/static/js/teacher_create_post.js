@@ -319,4 +319,4 @@ $('#subjectfilter').on('change', function () {
             }
         }
     }
-})
+});

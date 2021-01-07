@@ -25,6 +25,8 @@
       <w>classtestposts</w>
       <w>classtestqna</w>
       <w>classtestquestion</w>
+      <w>classtestsolution</w>
+      <w>classtestsolutions</w>
       <w>classworkpost</w>
       <w>clsalertclose</w>
       <w>clsalertmessage</w>
@@ -56,10 +58,12 @@
       <w>lastname</w>
       <w>linkpost</w>
       <w>linkpostbody</w>
+      <w>mins</w>
       <w>postcategory</w>
       <w>postcomment</w>
       <w>posttype</w>
       <w>postype</w>
+      <w>qans</w>
       <w>selectclass</w>
       <w>selectclasses</w>
       <w>selectdepartment</w>

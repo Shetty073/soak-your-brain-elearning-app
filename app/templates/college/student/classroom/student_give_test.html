@@ -1,0 +1,62 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Student: {{ request.user.student.college.college_name|slice:':20' }} {% endblock title %}
+{% block student-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+        <input type="hidden" value="{{ classtestpost.pk }}" id="post-id">
+        {% for question in questions %}
+            <div class="test-body">
+                <div class="card posts">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ forloop.counter }}. {{ question.question }}
+                        </h5>
+                        <input type="hidden" class="question" value="{{ question.pk }}">
+                        {% for choice in choices %}
+                            {% if choice.question == question %}
+                                <p class="card-text">
+                                	<div class="form-check form-check-inline">
+                                        {% if forloop.first %}
+                                            <input class="form-check-input choice {{ question.pk }}" type="radio" name="{{ question.pk }}"
+                                               id="{{ question.pk }}{{ choice.pk }}" value="{{ choice.pk }}" required />
+                                        {% else %}
+                                            <input class="form-check-input choice {{ question.pk }}" type="radio" name="{{ question.pk }}"
+                                               id="{{ question.pk }}{{ choice.pk }}" value="{{ choice.pk }}" />
+                                        {% endif %}
+                                        <label class="form-check-label choice-label" for="{{ question.pk }}{{ choice.pk }}">
+                                            {{ choice.choice }}
+                                        </label>
+                                    </div>
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+            <strong id="alertmessage"></strong>
+            <button type="button" class="close" id="alertclose" aria-label="Close">
+                &times;
+            </button>
+        </div>
+        {% if classtestsolution %}
+            <div class="alert alert-warning fade show" role="alert">
+                <strong id="alertmessage">You have already answered this test</strong>
+            </div>
+        {% else %}
+            <button type="button" class="btn btn-warning" id="submit-test-btn">Submit</button>
+        {% endif %}
+    </main>
+{% endblock student-content %}
+
+{% block college-student-script %}
+    <script type="text/javascript" src="{% static 'js/student_give_test.js' %}"></script>
+{% endblock college-student-script %}

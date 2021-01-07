@@ -29,4 +29,9 @@ urlpatterns = [
     path('college/teacher/classroom/view_test/<int:pk>', college_teacher_classroom_view_test, name='college_teacher_classroom_view_test'),
     path('college/teacher/classroom/delete_test/<int:pk>', college_teacher_classroom_delete_test, name='college_teacher_classroom_delete_test'),
     path('college/student', college_student, name='college_student'),
+    path('college/student/classroom/college_student_assignments', college_student_assignments, name='college_student_assignments'),
+    path('college/student/classroom/college_student_reading_materials', college_student_reading_materials, name='college_student_reading_materials'),
+    path('college/student/classroom/college_student_videos', college_student_videos, name='college_student_videos'),
+    path('college/student/classroom/college_student_articles', college_student_articles, name='college_student_articles'),
+    path('college/student/classroom/give_test/<int:pk>', college_student_classroom_give_test, name='college_student_classroom_give_test'),
 ]

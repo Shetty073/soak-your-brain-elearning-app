@@ -43,6 +43,10 @@ class College(models.Model):
     card_info = models.CharField(max_length=16)
     signup_date = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
         return self.college_name
 
@@ -59,6 +63,10 @@ class Customer(models.Model):
     email = models.EmailField(max_length=256, unique=True)
     phone_no = models.CharField(max_length=13)
     signup_date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return self.college_name
@@ -98,6 +106,7 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
 
+    @property
     def name(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -113,6 +122,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=256)
     email = models.EmailField(max_length=256, unique=True)
 
+    @property
     def name(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -256,19 +266,25 @@ class Choice(models.Model):
         return f'{self.question.question} {self.choice}'
 
 
-class StudentChoice(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.CharField(max_length=256, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.question.question} {self.choice}'
-
-
 class ClassTestSolution(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     classtest = models.ForeignKey(ClassTestPost, on_delete=models.CASCADE)
     score = models.IntegerField(blank=True, null=True)
+    total_marks = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.student.name} {self.score}'
+
+
+class StudentChoice(models.Model):
+    classtestsolution = models.ForeignKey(ClassTestSolution, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+
+    @property
+    def is_correct(self):
+        return self.choice.is_correct
+
+    def __str__(self):
+        return f'{self.question.question} {self.choice}'

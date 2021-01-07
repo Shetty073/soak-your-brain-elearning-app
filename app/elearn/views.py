@@ -744,7 +744,8 @@ def view_student_lists(request):
     college_classes = request.user.teacher.college_classes.all()
 
     for college_class in college_classes:
-        students_info[college_class] = [student for student in Student.objects.all() if student.college_class == college_class]
+        students_info[college_class] = [student for student in Student.objects.all() if
+                                        student.college_class == college_class]
 
     context_dict = {
         'students_info': students_info,
@@ -1024,8 +1025,299 @@ def college_teacher_classroom_delete_test(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['student'])
 def college_student(request):
-    context_dict = {}
-    return render(request, template_name='college/student/student.html', context=context_dict)
+    college_class = request.user.student.college_class
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if post.college_class == college_class]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
+    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post in posts]
+
+    posts_display = []
+
+    for post in posts:
+        for textpost in textposts:
+            if textpost.post == post:
+                posts_display.insert(0, textpost)
+        for videopost in videoposts:
+            if videopost.post == post:
+                posts_display.insert(0, videopost)
+        for documentpost in documentposts:
+            if documentpost.post == post:
+                posts_display.insert(0, documentpost)
+        for imagepost in imageposts:
+            if imagepost.post == post:
+                posts_display.insert(0, imagepost)
+        for youtubepost in youtubeposts:
+            if youtubepost.post == post:
+                posts_display.insert(0, youtubepost)
+        for articlepost in articleposts:
+            if articlepost.post == post:
+                posts_display.insert(0, articlepost)
+        for classtestpost in classtestposts:
+            if classtestpost.post == post:
+                posts_display.insert(0, classtestpost)
+
+    context_dict = {
+        'college_class': college_class,
+        'subjects': subjects,
+        'posts_display': posts_display,
+    }
+
+    try:
+        classtestsolutions = [classtestsolution for classtestsolution in
+                              ClassTestSolution.objects.all() if
+                              classtestsolution.classtest in posts_display
+                              and classtestsolution.student == request.user.student]
+        context_dict['classtestsolutions'] = classtestsolutions
+    except Exception as err:
+        print(str(err))
+        context_dict['classtestsolutions'] = None
+
+    return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_assignments(request):
+    college_class = request.user.student.college_class
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if
+             post.college_class == college_class and post.is_assignment == True]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
+    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post in posts]
+
+    posts_display = []
+
+    for post in posts:
+        for textpost in textposts:
+            if textpost.post == post:
+                posts_display.insert(0, textpost)
+        for videopost in videoposts:
+            if videopost.post == post:
+                posts_display.insert(0, videopost)
+        for documentpost in documentposts:
+            if documentpost.post == post:
+                posts_display.insert(0, documentpost)
+        for imagepost in imageposts:
+            if imagepost.post == post:
+                posts_display.insert(0, imagepost)
+        for youtubepost in youtubeposts:
+            if youtubepost.post == post:
+                posts_display.insert(0, youtubepost)
+        for articlepost in articleposts:
+            if articlepost.post == post:
+                posts_display.insert(0, articlepost)
+        for classtestpost in classtestposts:
+            if classtestpost.post == post:
+                posts_display.insert(0, classtestpost)
+
+    context_dict = {
+        'college_class': college_class,
+        'subjects': subjects,
+        'posts_display': posts_display,
+    }
+
+    return render(request, template_name='college/student/classroom/college_student_assignments.html',
+                  context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_reading_materials(request):
+    college_class = request.user.student.college_class
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if
+             post.college_class == college_class and post.is_assignment == True]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
+
+    posts_display = []
+
+    for post in posts:
+        for textpost in textposts:
+            if textpost.post == post:
+                posts_display.insert(0, textpost)
+        for documentpost in documentposts:
+            if documentpost.post == post:
+                posts_display.insert(0, documentpost)
+
+    context_dict = {
+        'college_class': college_class,
+        'subjects': subjects,
+        'posts_display': posts_display,
+    }
+
+    return render(request, template_name='college/student/classroom/college_student_reading_materials.html',
+                  context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_videos(request):
+    college_class = request.user.student.college_class
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if
+             post.college_class == college_class and post.is_assignment == True]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
+
+    posts_display = []
+
+    for post in posts:
+        for videopost in videoposts:
+            if videopost.post == post:
+                posts_display.insert(0, videopost)
+        for youtubepost in youtubeposts:
+            if youtubepost.post == post:
+                posts_display.insert(0, youtubepost)
+
+    context_dict = {
+        'college_class': college_class,
+        'subjects': subjects,
+        'posts_display': posts_display,
+    }
+
+    return render(request, template_name='college/student/classroom/college_student_videos.html',
+                  context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_articles(request):
+    college_class = request.user.student.college_class
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject in college_class.subjects.all()]
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if
+             post.college_class == college_class and post.is_assignment == True]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
+
+    posts_display = []
+
+    for post in posts:
+        for articlepost in articleposts:
+            if articlepost.post == post:
+                posts_display.insert(0, articlepost)
+
+    context_dict = {
+        'college_class': college_class,
+        'subjects': subjects,
+        'posts_display': posts_display,
+    }
+
+    return render(request, template_name='college/student/classroom/college_student_articles.html',
+                  context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_classroom_give_test(request, pk=None):
+    if request.method == 'POST':
+        # This request is for submitting a classtest
+        data = json.loads(request.body)
+        classtestpost_id = data['classtestpost_id']
+        qans = data['qans']
+
+        score = 0
+        total_marks = len(qans)
+
+        try:
+            classtestpost = ClassTestPost.objects.get(pk=classtestpost_id)
+
+            classtestsolution = ClassTestSolution.objects.create(
+                student=request.user.student,
+                classtest=classtestpost,
+                score=score,
+                total_marks=total_marks
+            )
+
+            for key, value in qans.items():
+                student_choice = StudentChoice.objects.create(
+                    classtestsolution=classtestsolution,
+                    student=request.user.student,
+                    question=Question.objects.get(pk=key),
+                    choice=Choice.objects.get(pk=value)
+                )
+
+                if student_choice.is_correct:
+                    score += 1
+
+                print(student_choice.is_correct)
+
+            classtestsolution.score = score
+            classtestsolution.save()
+
+            return JsonResponse({'process': 'success', 'msg': 'Post successfully deleted'})
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+    classtestpost = ClassTestPost.objects.get(pk=pk)
+    questions = [question for question in Question.objects.all() if question.class_test_post == classtestpost]
+    choices = [choice for choice in Choice.objects.all() if choice.question in questions]
+
+    context_dict = {
+        'classtestpost': classtestpost,
+        'questions': questions,
+        'choices': choices,
+    }
+
+    try:
+        classtestsolution = ClassTestSolution.objects.get(
+            student=request.user.student,
+            classtest=classtestpost,
+        )
+        context_dict['classtestsolution'] = classtestsolution
+    except Exception as err:
+        context_dict['classtestsolution'] = None
+
+    return render(request, template_name='college/student/classroom/student_give_test.html', context=context_dict)
 
 
 def payment_failed(request):

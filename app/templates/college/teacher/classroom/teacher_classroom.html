@@ -250,23 +250,23 @@
                                     Your browser does not support the video tag.
                                 </video>
                             {% elif post.document_url %}
-                                <a class="btn btn-warning" href={{ post.get_media_url }}>Open document</a>
+                                <a class="btn btn-outline-warning" href={{ post.get_media_url }}>Open document</a>
                             {% elif post.image_url %}
                                 <a href={{ post.get_media_url }} target="_blank">
                                     <img src={{ post.get_media_url }} alt={{ post.post.title }}
                                     style="width:auto;height:300px;max-width: 80vw" />
                                 </a>
                             {% elif post.post.is_classtest %}
-                                <a class="btn btn-warning" href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
+                                <a class="btn btn-outline-warning" href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
                             {% else %}
-                                <a class="btn btn-warning" href="#">View post</a>
+                                <a class="btn btn-outline-warning" href="#">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
                             <iframe width="320" height="215" allowfullscreen
                                 src={{ post.youtube_link }}>
                             </iframe>
                         {% elif post.article_link %}
-                            <a class="btn btn-warning" href={{ post.article_link }} target="_blank">Read article</a>
+                            <a class="btn btn-outline-warning" href={{ post.article_link }} target="_blank">Read article</a>
                         {% endif %}
 
                         <small style="display: block;margin-top: 15px;">
