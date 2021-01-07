@@ -167,6 +167,13 @@ td {
     display: none;
 }
 
+.border-outline-text-chrome-yellow {
+    color: var(--chrome-yellow);
+    border: 1px solid var(--chrome-yellow);
+    padding: 5px 10px;
+    width: fit-content;
+    border-radius: 5px;
+}
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {

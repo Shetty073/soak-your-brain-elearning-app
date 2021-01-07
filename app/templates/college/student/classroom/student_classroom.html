@@ -57,9 +57,9 @@
                                 {% if classtestsolutions %}
                                     {% for classtestsolution in classtestsolutions %}
                                         {% if post == classtestsolution.classtest %}
-                                            <btn class="btn btn-warning" disabled>
+                                            <p class="border-outline-text-chrome-yellow" disabled>
                                                 You have already submitted the test
-                                            </btn>
+                                            </p>
                                         {% else %}
                                             <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
                                                 View test
