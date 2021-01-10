@@ -10,6 +10,11 @@
         </div>
         <br>
 
+        <div class="float-left">
+            <small><strong>&#9737;</strong> - Classtests</small> <br>
+            <small><strong>&starf;</strong> - Assignments</small>
+        </div>
+
         {# Filter posts dropdown menu #}
         <div class="input-group-prepend float-right">
             <label for="subjectfilter"></label>
@@ -34,52 +39,54 @@
                     <div class="card-header">
                         <strong>Subject:</strong> {{ post.post.subject }}
                         <span style="float: right;">
+                            {% if post.post.is_classtest %}
+                                <h5>&#9737;</h5>
+                            {% elif post.post.is_assignment %}
+                                <h5>&starf;</h5>
+                            {% endif %}
                             <input type="hidden" value="{{ post.post.pk }}">
                         </span>
                     </div>
                     <div class="card-body" style="padding-bottom: 0;">
-                        <h5 class="card-title">{{ post.post.title }}</h5>
+                        <h5 class="card-title">
+                            {{ post.post.title }}
+                        </h5>
                         {% if post.body %}
                             <p class="card-text">{{ post.body }}</p>
                             {% if post.video_url %}
-                                <video width="320" height="240" controls>
-                                    <source src={{ post.get_media_url }} type="video/mp4">
+                                <video class="post-media" width="320" height="240" controls>
+                                    <source src="{{ post.get_media_url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             {% elif post.document_url %}
-                                <a class="btn btn-outline-warning" href={{ post.get_media_url }}>Open document</a>
+                                <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
                             {% elif post.image_url %}
-                                <a href={{ post.get_media_url }} target="_blank">
-                                    <img src={{ post.get_media_url }} alt={{ post.post.title }}
-                                    style="width:auto;height:300px;max-width: 80vw" />
+                                <a href="{{ post.get_media_url }}" target="_blank">
+                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
                                 </a>
                             {% elif post.post.is_classtest %}
                                 {% if classtestsolutions %}
-                                    {% for classtestsolution in classtestsolutions %}
-                                        {% if post == classtestsolution.classtest %}
-                                            <p class="border-outline-text-chrome-yellow" disabled>
-                                                You have already submitted the test
-                                            </p>
-                                        {% else %}
-                                            <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
-                                                View test
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% if post in classtestsolutions %}
+                                        <p class="border-outline-text-chrome-yellow">
+                                            You have already submitted the test
+                                        </p>
+                                    {% else %}
+                                        <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
+                                            View test
+                                        </a>
+                                    {% endif %}
                                 {% else %}
                                     <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
                                         View test
                                     </a>
                                 {% endif %}
                             {% else %}
-                                <a class="btn btn-outline-warning" href="#">View post</a>
+                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
-                            <iframe width="320" height="215" allowfullscreen
-                                src={{ post.youtube_link }}>
-                            </iframe>
+                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
                         {% elif post.article_link %}
-                            <a class="btn btn-outline-warning" href={{ post.article_link }} target="_blank">Read article</a>
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
                         {% endif %}
 
                         <small style="display: block;margin-top: 15px;">

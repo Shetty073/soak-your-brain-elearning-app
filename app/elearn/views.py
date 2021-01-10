@@ -1076,7 +1076,7 @@ def college_student(request):
     }
 
     try:
-        classtestsolutions = [classtestsolution for classtestsolution in
+        classtestsolutions = [classtestsolution.classtest for classtestsolution in
                               ClassTestSolution.objects.all() if
                               classtestsolution.classtest in posts_display
                               and classtestsolution.student == request.user.student]
@@ -1160,7 +1160,7 @@ def college_student_reading_materials(request):
         return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
     posts = [post for post in ClassWorkPost.objects.all() if
-             post.college_class == college_class and post.is_assignment == True]
+             post.college_class == college_class]
     textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
     documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
 
@@ -1198,7 +1198,7 @@ def college_student_videos(request):
         return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
     posts = [post for post in ClassWorkPost.objects.all() if
-             post.college_class == college_class and post.is_assignment == True]
+             post.college_class == college_class]
     videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
     youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
 
@@ -1236,7 +1236,7 @@ def college_student_articles(request):
         return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
     posts = [post for post in ClassWorkPost.objects.all() if
-             post.college_class == college_class and post.is_assignment == True]
+             post.college_class == college_class]
     articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
 
     posts_display = []
@@ -1318,6 +1318,17 @@ def college_student_classroom_give_test(request, pk=None):
         context_dict['classtestsolution'] = None
 
     return render(request, template_name='college/student/classroom/student_give_test.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def college_student_classroom_view_post(request, pk=None):
+    textpost = TextPost.objects.get(pk=pk)
+
+    context_dict = {
+        'textpost': textpost,
+    }
+    return render(request, template_name='college/classroom_view_post.html', context=context_dict)
 
 
 def payment_failed(request):

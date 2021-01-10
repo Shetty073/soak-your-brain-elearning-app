@@ -70,6 +70,11 @@ main {
     margin-bottom: 50px;
 }
 
+.post-media {
+    height: 300px !important;
+    width: auto !important;
+}
+
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {
@@ -107,6 +112,12 @@ main {
     .header-img-container {
         height: 15vh;
         overflow: hidden;
+    }
+
+    /* for image, video and youtube posts */
+    .post-media {
+        width: 60vw !important;
+        height: auto !important;
     }
 }
 

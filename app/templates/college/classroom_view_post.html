@@ -1,0 +1,58 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+{% if request.user.student %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% elif request.user.teacher %}
+    Student: {{ request.user.teacher.college.college_name|slice:':20' }}
+{% endif %}
+{% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+        <div class="card posts {{ textpost.post.subject }}">
+            <div class="card-header">
+                <strong>Subject:</strong> {{ textpost.post.subject }}
+            </div>
+            <div class="card-body" style="padding-bottom: 0;">
+                <h5 class="card-title">{{ textpost.post.title }}</h5>
+                <p class="card-text">{{ textpost.body }}</p>
+                <small style="display: block;margin-top: 15px;">
+                    Posted on: {{ textpost.post.date }}
+                </small>
+            </div>
+        </div>
+    </main>
+{% endblock teacher-content %}
+
+{% block student-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+        <div class="card posts {{ textpost.post.subject }}">
+            <div class="card-header">
+                <strong>Subject:</strong> {{ textpost.post.subject }}
+            </div>
+            <div class="card-body" style="padding-bottom: 0;">
+                <h5 class="card-title">{{ textpost.post.title }}</h5>
+                <p class="card-text">{{ textpost.body }}</p>
+                <small style="display: block;margin-top: 15px;">
+                    Posted on: {{ textpost.post.date }}
+                </small>
+            </div>
+        </div>
+    </main>
+{% endblock student-content %}

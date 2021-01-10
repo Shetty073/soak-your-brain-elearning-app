@@ -3,6 +3,55 @@
 {% block title %}Student: {{ request.user.student.college.college_name|slice:':20' }} {% endblock title %}
 {% block student-content %}
     <main role="main" class="container-md">
+        <div class="header-img-container">
+            <img id="classroom-header-img" src="{% static 'images/illustrations/books.png' %}" class="img-fluid"
+                 alt="Photo of stacked books">
+            <h1 class="img-text-top-left colorbluesapphire">{{ college_class.name }} Articles</h1>
+        </div>
+        <br>
+
+        {# Filter posts dropdown menu #}
+        <div class="input-group-prepend float-right">
+            <label for="subjectfilter"></label>
+            <select class="form-control btn-warning" id="subjectfilter">
+                <option class="subject-options" value="all">All subjects</option>
+                {% if subjects %}
+                    {% for subject in subjects %}
+                        <option class="subject-options" value="{{ subject.name }}">{{ subject.name }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <br>
+        <br>
+        <hr>
+
+        <div class="container" id="teacher-feed">
+
+            {# Posts #}
+            {% for post in posts_display %}
+                <div class="card posts {{ post.post.subject }}">
+                    <div class="card-header">
+                        <strong>Subject:</strong> {{ post.post.subject }}
+                        <span style="float: right;">
+                            {% if post.post.is_classtest %}
+                                <h5>&#9737;</h5>
+                            {% elif post.post.is_assignment %}
+                                <h5>&starf;</h5>
+                            {% endif %}
+                            <input type="hidden" value="{{ post.post.pk }}">
+                        </span>
+                    </div>
+                    <div class="card-body" style="padding-bottom: 0;">
+                        <h5 class="card-title">{{ post.post.title }}</h5>
+                        <a class="btn btn-outline-warning" href={{ post.article_link }} target="_blank">Read article</a>
+                        <small style="display: block;margin-top: 15px;">
+                            Posted on: {{ post.post.date }}
+                        </small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </main>
 
     <script type="text/javascript">
@@ -13,5 +62,5 @@
 {% endblock student-content %}
 
 {% block college-student-script %}
-
+    <script type="text/javascript" src="{% static 'js/student_classroom.js' %}"></script>
 {% endblock college-student-script %}
