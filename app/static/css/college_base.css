@@ -75,6 +75,49 @@ main {
     width: auto !important;
 }
 
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid var(--chrome-yellow);
+    border-radius: 5px;
+    color: var(--chrome-yellow);
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.custom-file-upload:hover {
+    background: var(--chrome-yellow);
+    color: #FFF;
+}
+
+.file-download {
+    color: var(--blue-sapphire);
+    border: 1px solid var(--blue-sapphire);
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.file-download:hover {
+    text-decoration: none;
+    color: var(--blue-sapphire);
+}
+
+.mail-reply {
+    color: var(--blue-sapphire);
+    border: 1px solid var(--blue-sapphire);
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.mail-reply:hover {
+    text-decoration: none;
+    color: var(--blue-sapphire);
+}
 
 /* For mobile devices */
 @media screen and (max-width: 600px) {
@@ -119,6 +162,16 @@ main {
         width: 60vw !important;
         height: auto !important;
     }
+
+    #teacher-feed-hr {
+        margin-top: 5px !important;
+    }
+
+    .mob-btns {
+        display: block !important;
+        margin-bottom: 8px;
+        float: none !important;
+    }
 }
 
 
@@ -126,5 +179,15 @@ main {
 @media screen and (max-width: 1024px) and (max-width: 1366px) {
     .header-img-container {
         height: 20vh !important;
+    }
+
+    #teacher-feed-hr {
+        margin-top: 5px !important;
+    }
+
+    .mob-btns {
+        display: block !important;
+        margin-bottom: 8px;
+        float: none !important;
     }
 }

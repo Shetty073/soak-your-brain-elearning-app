@@ -271,6 +271,7 @@ class ClassTestSolution(models.Model):
     classtest = models.ForeignKey(ClassTestPost, on_delete=models.CASCADE)
     score = models.IntegerField(blank=True, null=True)
     total_marks = models.IntegerField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.student.name} {self.score}'
@@ -288,3 +289,23 @@ class StudentChoice(models.Model):
 
     def __str__(self):
         return f'{self.question.question} {self.choice}'
+
+
+def file_directory_path(instance, filename):
+    # this will return a file path that is unique for all the users
+    # file will be uploaded to MEDIA_ROOT/user_id/images/filename
+    return f'image_{instance.post.pk}/assignments/{instance.post.pk}/{filename}'
+
+
+class AssignmentSolution(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
+    file_url = models.ImageField(upload_to=file_directory_path)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.post.title}: {self.student.name} | Submitted @ {self.date}'
+
+    @property
+    def get_media_url(self):
+        return f'{settings.MEDIA_URL}{self.file_url}'

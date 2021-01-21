@@ -1009,6 +1009,28 @@ def college_teacher_classroom_view_test(request, pk=None):
 
 @login_required
 @allowed_users(allowed_roles=['teacher'])
+def view_tests_submissions(request, class_pk=None):
+
+    context_dict = {}
+    return render(request, template_name='college/teacher/classroom/view_tests_submissions.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def view_assignments_submissions(request, class_pk=None):
+    college_class = CollegeClass.objects.get(pk=class_pk)
+    classworkposts = ClassWorkPost.objects.filter(college_class=college_class)
+    assignment_posts = [post for post in classworkposts if post.is_assignment]
+    assignment_solutions = [post for post in AssignmentSolution.objects.all() if post.post in assignment_posts]
+
+    context_dict = {
+        'assignment_solutions': assignment_solutions,
+    }
+    return render(request, template_name='college/teacher/classroom/view_assignments_submissions.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
 def college_teacher_classroom_delete_test(request, pk=None):
     if request.method == 'POST':
         try:
@@ -1075,16 +1097,6 @@ def college_student(request):
         'posts_display': posts_display,
     }
 
-    try:
-        classtestsolutions = [classtestsolution.classtest for classtestsolution in
-                              ClassTestSolution.objects.all() if
-                              classtestsolution.classtest in posts_display
-                              and classtestsolution.student == request.user.student]
-        context_dict['classtestsolutions'] = classtestsolutions
-    except Exception as err:
-        print(str(err))
-        context_dict['classtestsolutions'] = None
-
     return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
 
@@ -1109,7 +1121,6 @@ def college_student_assignments(request):
     imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts]
     youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
     articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post in posts]
 
     posts_display = []
 
@@ -1132,9 +1143,6 @@ def college_student_assignments(request):
         for articlepost in articleposts:
             if articlepost.post == post:
                 posts_display.insert(0, articlepost)
-        for classtestpost in classtestposts:
-            if classtestpost.post == post:
-                posts_display.insert(0, classtestpost)
 
     context_dict = {
         'college_class': college_class,
@@ -1143,6 +1151,98 @@ def college_student_assignments(request):
     }
 
     return render(request, template_name='college/student/classroom/college_student_assignments.html',
+                  context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def college_student_submit_assignment(request, pk=None):
+    post = ClassWorkPost.objects.get(pk=pk)
+    assignment_solution = None
+    try:
+        assignment_solution = AssignmentSolution.objects.get(post=post, student=request.user.student)
+    except Exception as err:
+        pass
+
+    if request.method == 'POST':
+        AssignmentSolution.objects.create(
+            student=request.user.student,
+            post=post,
+            file_url=request.FILES['assignment_file']
+        )
+        return redirect(college_student)
+
+    try:
+        textpost = TextPost.objects.get(post=post)
+        context_dict = {
+            'post': textpost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    try:
+        videopost = VideoPost.objects.get(post=post)
+        context_dict = {
+            'post': videopost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    try:
+        documentpost = DocumentPost.objects.get(post=post)
+        context_dict = {
+            'post': documentpost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    try:
+        imagepost = ImagePost.objects.get(post=post)
+        context_dict = {
+            'post': imagepost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    try:
+        youtubepost = YouTubePost.objects.get(post=post)
+        context_dict = {
+            'post': youtubepost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    try:
+        articlepost = ArticlePost.objects.get(post=post)
+        context_dict = {
+            'post': articlepost,
+            'assignment_solution': assignment_solution,
+        }
+        return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
+                      context=context_dict)
+    except Exception as err:
+        pass
+
+    context_dict = {
+        'post': None,
+        'assignment_solution': None,
+    }
+    return render(request, template_name='college/student/classroom/college_student_submit_assignment.html',
                   context=context_dict)
 
 
@@ -1299,6 +1399,7 @@ def college_student_classroom_give_test(request, pk=None):
             return JsonResponse({'process': 'failed', 'msg': f'{err}'})
 
     classtestpost = ClassTestPost.objects.get(pk=pk)
+
     questions = [question for question in Question.objects.all() if question.class_test_post == classtestpost]
     choices = [choice for choice in Choice.objects.all() if choice.question in questions]
 

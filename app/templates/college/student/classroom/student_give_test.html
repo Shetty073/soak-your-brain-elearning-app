@@ -49,7 +49,7 @@
         </div>
         {% if classtestsolution %}
             <div class="alert alert-warning fade show" role="alert">
-                <strong id="alertmessage">You have already answered this test</strong>
+                <strong id="alertmessage">You have already answered this test @ {{ classtestsolution.date }}</strong>
             </div>
         {% else %}
             <button type="button" class="btn btn-warning" id="submit-test-btn">Submit</button>

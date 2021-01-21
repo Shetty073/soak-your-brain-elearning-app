@@ -1,0 +1,71 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% endblock title %}
+{% block student-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+        <div class="card posts {{ post.post.subject }}">
+                    <div class="card-header">
+                        <strong>Subject:</strong> {{ post.post.subject }}
+                        <span style="float: right;">
+                                <h5>&starf;</h5>
+                            <input type="hidden" value="{{ post.post.pk }}">
+                        </span>
+                    </div>
+                    <div class="card-body" style="padding-bottom: 0;">
+                        <h5 class="card-title">
+                            {{ post.post.title }}
+                        </h5>
+                        {% if post.body %}
+                            <p class="card-text">{{ post.body }}</p>
+                            {% if post.video_url %}
+                                <video class="post-media" width="320" height="240" controls>
+                                    <source src="{{ post.get_media_url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% elif post.document_url %}
+                                <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
+                            {% elif post.image_url %}
+                                <a href="{{ post.get_media_url }}" target="_blank">
+                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
+                                </a>
+                            {% else %}
+                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                            {% endif %}
+                        {% elif post.youtube_link %}
+                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                        {% elif post.article_link %}
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
+                        {% endif %}
+                        <br><br>
+                        {% if not assignment_solution %}
+                            <form method="post" action="{% url 'college_student_submit_assignment' pk=post.post.pk %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="custom-file-upload" for="file">Upload file</label>
+                                    <input type="file" class="form-control-file" id="file" name="assignment_file"
+                                    accept=".xls,.xlsx,.pdf,.doc,.csv,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required/>
+                                </div>
+                                <button class="btn btn-outline-warning" type="submit">Submit</button>
+                            </form>
+                        {% else %}
+                            <strong class="border-outline-text-chrome-yellow">
+                                You have already submitted this assignment on {{ assignment_solution.date }}
+                            </strong>
+                        {% endif %}
+                        <small style="display: block;margin-top: 15px;">
+                            Posted on: {{ post.post.date }}
+                        </small>
+                    </div>
+                </div>
+    </main>
+{% endblock student-content %}

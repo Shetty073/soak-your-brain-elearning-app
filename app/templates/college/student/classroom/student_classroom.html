@@ -65,21 +65,9 @@
                                     <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
                                 </a>
                             {% elif post.post.is_classtest %}
-                                {% if classtestsolutions %}
-                                    {% if post in classtestsolutions %}
-                                        <p class="border-outline-text-chrome-yellow">
-                                            You have already submitted the test
-                                        </p>
-                                    {% else %}
-                                        <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
-                                            View test
-                                        </a>
-                                    {% endif %}
-                                {% else %}
-                                    <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
-                                        View test
-                                    </a>
-                                {% endif %}
+                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
+                                    View test
+                                </a>
                             {% else %}
                                 <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
@@ -88,7 +76,9 @@
                         {% elif post.article_link %}
                             <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
                         {% endif %}
-
+                        {% if post.post.is_assignment %}
+                            <a class="btn btn-outline-warning" href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your Work</a>
+                        {% endif %}
                         <small style="display: block;margin-top: 15px;">
                             Posted on: {{ post.post.date }}
                         </small>

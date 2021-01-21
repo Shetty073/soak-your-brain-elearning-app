@@ -238,7 +238,12 @@ $(document).ready(function () {
     });
 });
 
-// For bootstrap tooltip
 $(document).ready(function () {
+    // For bootstrap tooltip
     $('[data-toggle="tooltip"]').tooltip();
+
+    // For displaying selected file's name
+    $('input[type=file]').change(function(e){
+        $(this).prev()[0].innerText = `Selected: ${$(this)[0].files[0].name}`;
+    });
 });

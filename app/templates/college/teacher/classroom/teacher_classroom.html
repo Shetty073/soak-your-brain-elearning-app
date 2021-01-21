@@ -11,11 +11,12 @@
         <br>
 
         {# Button to toggle the add post form modal #}
-        <div class="float-left">
+        <div class="float-left mob-btns">
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new
                 post
             </button>
         </div>
+
 
         {# Add post form modal #}
         <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -109,7 +110,7 @@
                                                   rows="4"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="videopostfile">Video file:</label>
+                                        <label class="custom-file-upload" for="videopostfile">Video file</label>
                                         <input type="file" class="form-control-file" id="videopostfile" name="videopostfile"
                                                accept="video/mp4, .flv">
                                     </div>
@@ -121,7 +122,7 @@
                                                   rows="4"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="documentpostfile">Document file:</label>
+                                        <label class="custom-file-upload" for="documentpostfile">Document file</label>
                                         <input type="file" class="form-control-file" id="documentpostfile" name="documentpostfile"
                                         accept="application/pdf, .csv, text/plain, .doc, .docx, .rtf, .xls, .ppt, .pptx, .html, .htm">
                                     </div>
@@ -133,7 +134,7 @@
                                                   rows="4"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="imagepostfile">Image file:</label>
+                                        <label class="custom-file-upload" for="imagepostfile">Image file</label>
                                         <input type="file" class="form-control-file" id="imagepostfile" name="imagepostfile"
                                         accept="image/jpeg, image/jpg, image/bmp, image/png, image/gif">
                                     </div>
@@ -210,9 +211,22 @@
                 {% endif %}
             </select>
         </div>
+
+        <div class="float-left mob-btns" style="margin-left: 5px;">
+            <a data-toggle="tooltip" title="Submitted tests" class="btn btn-warning"
+               href="{% url 'view_tests_submissions' class_pk=college_class.pk %}">Submitted tests
+            </a>
+        </div>
+
+        <div class="float-left mob-btns" style="margin-left: 5px;">
+            <a data-toggle="tooltip" title="Submitted assignments" class="btn btn-warning"
+               href="{% url 'view_assignments_submissions' class_pk=college_class.pk %}">Submitted assignments
+            </a>
+        </div>
+
         <br>
         <br>
-        <hr>
+        <hr id="teacher-feed-hr">
 
         <div class="container" id="teacher-feed">
             {% if messages %}

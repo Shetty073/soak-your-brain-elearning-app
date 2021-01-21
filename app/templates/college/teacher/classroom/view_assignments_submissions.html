@@ -1,0 +1,58 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+{% if request.user.student %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% elif request.user.teacher %}
+    Student: {{ request.user.teacher.college.college_name|slice:':20' }}
+{% endif %}
+{% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+    <div class="table-responsive-md">
+            <input type="text" class="search-box" id="assignments-list-search" placeholder="Search..">
+            <table class="table table-bordered" id="assignments-table">
+                <thead class="thead-dark bgcolorbluesapphire">
+                <tr>
+                    <th scope="col">Student Name</th>
+                    <th class="name-col" scope="col">Post Title</th>
+                    <th scope="col">Submitted On</th>
+                    <th scope="col">File</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for assignment_solution in assignment_solutions %}
+                    <tr>
+                        <td>{{ assignment_solution.student.name }}</td>
+                        <td>{{ assignment_solution.post.title }}</td>
+                        <td>{{ assignment_solution.date }}</td>
+                        <td>
+                            <a class="file-download" href="{{ assignment_solution.get_media_url }}" download>DOWNLOAD</a>
+                        </td>
+                        <td>
+                            <a class="mail-reply"
+                            href="mailto:{{ assignment_solution.student.email }}?subject=Regarding Assignment: {{ assignment_solution.post.title }}&body=Dear {{ assignment_solution.student.name }},">
+                                REPLY
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+{% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/teacher_view_submissions.js' %}"></script>
+{% endblock college-teacher-script %}

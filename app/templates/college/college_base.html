@@ -74,7 +74,12 @@
                 <li class="nav-item" id="home-link">
                     <a data-toggle="tooltip" title="College home page" class="nav-link"
                        href="{% url 'college_teacher' %}">Home <span
-                            class="sr-only">(current)</span></a>
+                            class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="view-students-link">
+                    <a data-toggle="tooltip" title="Add teachers" class="nav-link"
+                       href="{% url 'view_student_lists' %}">Students' lists</a>
                 </li>
                 <li class="nav-item" id="add-subjects-link">
                     <a data-toggle="tooltip" title="Add subjects" class="nav-link"
@@ -83,10 +88,6 @@
                 <li class="nav-item" id="add-students-link">
                     <a data-toggle="tooltip" title="Add students" class="nav-link"
                        href="{% url 'college_teacher_add_students' %}">Add students</a>
-                </li>
-                <li class="nav-item" id="view-students-link">
-                    <a data-toggle="tooltip" title="Add teachers" class="nav-link"
-                       href="{% url 'view_student_lists' %}">Students' lists</a>
                 </li>
 
             {% elif request.user.groups.all.0.name == 'student' %}
@@ -143,6 +144,7 @@
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
+
 {% block college-admin-script %}
 
 {% endblock college-admin-script %}

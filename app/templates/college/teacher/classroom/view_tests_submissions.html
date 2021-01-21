@@ -1,0 +1,26 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+{% if request.user.student %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% elif request.user.teacher %}
+    Student: {{ request.user.teacher.college.college_name|slice:':20' }}
+{% endif %}
+{% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+    </main>
+
+{% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/teacher_view_submissions.js' %}"></script>
+{% endblock college-teacher-script %}
