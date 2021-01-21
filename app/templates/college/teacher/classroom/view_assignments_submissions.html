@@ -26,7 +26,7 @@
                     <th class="name-col" scope="col">Post Title</th>
                     <th scope="col">Submitted On</th>
                     <th scope="col">File</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Mail Reply</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,7 @@
                         </td>
                         <td>
                             <a class="mail-reply"
-                            href="mailto:{{ assignment_solution.student.email }}?subject=Regarding Assignment: {{ assignment_solution.post.title }}&body=Dear {{ assignment_solution.student.name }},">
+                            href="mailto:{{ assignment_solution.student.email }}?subject=Regarding Assignment: [{{ assignment_solution.post.title }}&body=Dear {{ assignment_solution.student.name }}],">
                                 REPLY
                             </a>
                         </td>

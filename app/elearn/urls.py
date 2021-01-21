@@ -30,6 +30,7 @@ urlpatterns = [
     path('college/teacher/classroom/delete_test/<int:pk>', college_teacher_classroom_delete_test, name='college_teacher_classroom_delete_test'),
     path('college/teacher/classroom/view_tests_submissions/<int:class_pk>', view_tests_submissions, name='view_tests_submissions'),
     path('college/teacher/classroom/view_assignments_submissions/<int:class_pk>', view_assignments_submissions, name='view_assignments_submissions'),
+    path('college/teacher/classroom/view_test_performance/<int:pk>', view_test_performance, name='view_test_performance'),
     path('college/student', college_student, name='college_student'),
     path('college/student/classroom/college_student_assignments', college_student_assignments, name='college_student_assignments'),
     path('college/student/classroom/college_student_submit_assignment/<int:pk>', college_student_submit_assignment, name='college_student_submit_assignment'),

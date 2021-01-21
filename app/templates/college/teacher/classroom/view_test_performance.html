@@ -1,0 +1,70 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+{% if request.user.student %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% elif request.user.teacher %}
+    Student: {{ request.user.teacher.college.college_name|slice:':20' }}
+{% endif %}
+{% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md">
+        <div class="float-left">
+            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+                < Go back
+            </button>
+        </div>
+        <br><br>
+        <br><br>
+
+        <div class="card">
+            <div class="float-right">
+                <p>&#x272A; - Actual answer</p>
+                <p>&#x2297; - Student's choice</p>
+                <p>&#x2714; - Student's choice is correct</p>
+            </div>
+            <h5 class="card-header">
+                Test results for {{ classtestsolution.student.name }} of {{ classtestsolution.student.college_class.name }}
+                <small class="float-right">Submitted on: {{ classtestsolution.date }}</small>
+            </h5>
+
+            <div class="card-body">
+                <h6>
+                    <b>Topic: {{ classtestsolution.classtest.post.title }}</b>
+                    <b class="float-right" style="border: 1px solid var(--blue-sapphire); border-radius: 5px; padding: 6px 12px;">
+                        Score obtained: {{ classtestsolution.score }}/{{ classtestsolution.total_marks }}
+                    </b>
+                </h6>
+            <br>
+                {% for item in test_items %}
+                    <h5 class="card-title">Q.{{ forloop.counter }} {{ item.question }}</h5>
+                    {% for key, value in item.items %}
+                        {% if key == 'choices' %}
+                            <ol>
+                                {% for choice in value %}
+                                    {% if choice.is_correct and choice == item.selected_choice %}
+                                        <li>{{ choice.choice }} &#x2714;</li>
+                                    {% elif choice.is_correct %}
+                                        <li>{{ choice.choice }} &#x272A;</li>
+                                    {% elif choice == item.selected_choice %}
+                                        <li>{{ choice.choice }} &#x2297;</li>
+                                    {% else %}
+                                        <li>{{ choice.choice }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
+                        {% elif key == 'selected_choice' %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </main>
+
+{% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/teacher_view_submissions.js' %}"></script>
+{% endblock college-teacher-script %}

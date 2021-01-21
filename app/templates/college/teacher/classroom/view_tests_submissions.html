@@ -16,6 +16,45 @@
         </div>
         <br><br>
         <br><br>
+    <div class="table-responsive-md">
+            <input type="text" class="search-box" id="assignments-list-search" placeholder="Search..">
+            <table class="table table-bordered" id="assignments-table">
+                <thead class="thead-dark bgcolorbluesapphire">
+                <tr>
+                    <th scope="col">Student Name</th>
+                    <th class="name-col" scope="col">Post Title</th>
+                    <th scope="col">Submitted On</th>
+                    <th scope="col">Marks Obtained</th>
+                    <th scope="col">Total Marks</th>
+                    <th scope="col">View</th>
+                    <th scope="col">Mail</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for classtest_solution in classtest_solutions %}
+                    <tr>
+                        <td>{{ classtest_solution.student.name }}</td>
+                        <td>{{ classtest_solution.classtest.post.title }}</td>
+                        <td>{{ classtest_solution.date }}</td>
+                        <td>{{ classtest_solution.score }}</td>
+                        <td>{{ classtest_solution.total_marks }}</td>
+                        <td>
+                            <a class="mail-reply"
+                            href="{% url 'view_test_performance' pk=classtest_solution.pk %}">
+                                VIEW
+                            </a>
+                        </td>
+                        <td>
+                            <a class="mail-reply"
+                            href="mailto:{{ classtest_solution.student.email }}?subject=Regarding Classtest: [{{ classtest_solution.classtest.post.title }}&body=Dear {{ classtest_solution.student.name }}],">
+                                REPLY
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     </main>
 

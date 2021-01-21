@@ -1010,8 +1010,15 @@ def college_teacher_classroom_view_test(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['teacher'])
 def view_tests_submissions(request, class_pk=None):
+    college_class = CollegeClass.objects.get(pk=class_pk)
+    classworkposts = ClassWorkPost.objects.filter(college_class=college_class)
+    classtestposts = [post for post in classworkposts if post.is_classtest]
+    classtestposts = [post for post in ClassTestPost.objects.all() if post.post in classtestposts]
+    classtest_solutions = [post for post in ClassTestSolution.objects.all() if post.classtest in classtestposts]
 
-    context_dict = {}
+    context_dict = {
+        'classtest_solutions': classtest_solutions,
+    }
     return render(request, template_name='college/teacher/classroom/view_tests_submissions.html', context=context_dict)
 
 
@@ -1027,6 +1034,32 @@ def view_assignments_submissions(request, class_pk=None):
         'assignment_solutions': assignment_solutions,
     }
     return render(request, template_name='college/teacher/classroom/view_assignments_submissions.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['teacher'])
+def view_test_performance(request, pk=None):
+    classtestsolution = ClassTestSolution.objects.get(pk=pk)
+    student_choices = [choice for choice in StudentChoice.objects.all() if choice.classtestsolution == classtestsolution]
+
+    test_items = []
+
+    for choice in student_choices:
+        question = choice.question
+        choices = Choice.objects.filter(question=question)
+        selected_choice = choice.choice
+        test_items.append({
+            'question': question,
+            'choices': choices,
+            'selected_choice': selected_choice,
+        })
+
+    context_dict = {
+        'classtestsolution': classtestsolution,
+        'test_items': test_items,
+    }
+    return render(request, template_name='college/teacher/classroom/view_test_performance.html',
+                  context=context_dict)
 
 
 @login_required
