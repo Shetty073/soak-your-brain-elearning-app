@@ -774,13 +774,13 @@ def college_teacher_classroom(request, pk=None):
         return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
 
     posts = [post for post in ClassWorkPost.objects.all() if post.college_class == college_class]
-    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
-    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
-    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
-    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts]
-    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
-    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post in posts]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.college_class == college_class]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.college_class == college_class]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post.college_class == college_class]
+    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.college_class == college_class]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post.college_class == college_class]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post.college_class == college_class]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post.college_class == college_class]
 
     posts_display = []
 
@@ -807,11 +807,29 @@ def college_teacher_classroom(request, pk=None):
             if classtestpost.post == post:
                 posts_display.insert(0, classtestpost)
 
+    comments_and_replies = []
+
+    for comment in PostComment.objects.all():
+        for post in posts_display:
+            if comment.post == post.post:
+                try:
+                    replies = CommentReply.objects.filter(postcomment=comment)
+                    comments_and_replies.append({
+                        'comments': {
+                            'post_pk': post.post.pk,
+                            'comment': comment,
+                            'replies': replies,
+                        }
+                    })
+                except Exception as err:
+                    pass
+
     context_dict = {
         'college_class': college_class,
         'subjects': subjects,
         'students': students,
         'posts_display': posts_display,
+        'comments_and_replies': comments_and_replies,
     }
 
     return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
@@ -1091,16 +1109,17 @@ def college_student(request):
         return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
     posts = [post for post in ClassWorkPost.objects.all() if post.college_class == college_class]
-    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post in posts]
-    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post in posts]
-    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post in posts]
-    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts]
-    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post in posts]
-    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post in posts]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post in posts]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.college_class == college_class]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.college_class == college_class]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post.college_class == college_class]
+    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.college_class == college_class]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post.college_class == college_class]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post.college_class == college_class]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post.college_class == college_class]
 
     posts_display = []
 
+    # These loops are necessary to maintain the order of the posts (by datetime of post)
     for post in posts:
         for textpost in textposts:
             if textpost.post == post:
@@ -1124,10 +1143,28 @@ def college_student(request):
             if classtestpost.post == post:
                 posts_display.insert(0, classtestpost)
 
+    comments_and_replies = []
+
+    for comment in PostComment.objects.all():
+        for post in posts_display:
+            if comment.post == post.post:
+                try:
+                    replies = CommentReply.objects.filter(postcomment=comment)
+                    comments_and_replies.append({
+                        'comments': {
+                            'post_pk': post.post.pk,
+                            'comment': comment,
+                            'replies': replies,
+                        }
+                    })
+                except Exception as err:
+                    pass
+
     context_dict = {
         'college_class': college_class,
         'subjects': subjects,
         'posts_display': posts_display,
+        'comments_and_replies': comments_and_replies,
     }
 
     return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
@@ -1463,6 +1500,92 @@ def college_student_classroom_view_post(request, pk=None):
         'textpost': textpost,
     }
     return render(request, template_name='college/classroom_view_post.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def college_classroom_post_comment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        post_id = data['post_id']
+        comment = data['comment']
+
+        try:
+            is_teacher = True if request.user.teacher else False
+        except Exception as err:
+            is_teacher = False
+
+        try:
+            classworkpost = ClassWorkPost.objects.get(pk=post_id)
+            postcomment = PostComment.objects.create(
+                post=classworkpost,
+                comment=comment,
+                author=request.user,
+                is_teacher=is_teacher
+            )
+        except Exception as err:
+            return JsonResponse({
+                'process': 'failed',
+                'msg': f'{err}'
+            })
+
+        return JsonResponse({
+            'process': 'success',
+            'comment_id': postcomment.pk,
+            'author': f'{postcomment.author.first_name} {postcomment.author.last_name}',
+            'comment': f'{postcomment.comment}',
+            'is_teacher': f'{postcomment.is_teacher}',
+            'date': f'{postcomment.date}',
+            'msg': 'Comment successfully posted'
+        })
+
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method not supported'
+    })
+
+
+@login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def college_classroom_post_reply(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        comment_id = data['comment_id']
+        comment = data['comment']
+
+        try:
+            is_teacher = True if request.user.teacher else False
+        except Exception as err:
+            is_teacher = False
+
+        try:
+            comment = PostComment.objects.get(pk=comment_id)
+            commentreply = CommentReply.objects.create(
+                postcomment=comment,
+                comment=comment,
+                author=request.user,
+                is_teacher=is_teacher
+            )
+        except Exception as err:
+            return JsonResponse({
+                'process': 'failed',
+                'msg': f'{err}'
+            })
+
+        return JsonResponse({
+            'process': 'success',
+            'comment_id': commentreply.postcomment.pk,
+            'author': f'{commentreply.author.first_name} {commentreply.author.last_name}',
+            'comment': f'{commentreply.comment}',
+            'is_teacher': f'{commentreply.is_teacher}',
+            'date': f'{commentreply.date}',
+            'msg': 'Reply successfully posted'
+        })
+
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method not supported'
+    })
 
 
 def payment_failed(request):

@@ -320,3 +320,7 @@ $('#subjectfilter').on('change', function () {
         }
     }
 });
+
+
+// For comments feature
+

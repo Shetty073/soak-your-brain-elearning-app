@@ -242,7 +242,7 @@
 
             {# Posts #}
             {% for post in posts_display %}
-                <div class="card posts {{ post.post.subject }}">
+                <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
                     <div class="card-header">
                         <strong>Subject:</strong> {{ post.post.subject }}
                         <span style="float: right;">
@@ -285,9 +285,62 @@
                             <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
                         {% endif %}
 
-                        <small style="display: block;margin-top: 15px;">
+                        <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
                             Posted on: {{ post.post.date }}
                         </small>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn comment-btn">
+                            <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> COMMENTS
+                        </button>
+                        <br>
+                        <div class="comments-section">
+                            <div class="comments">
+                                {% for comment in comments_and_replies %}
+                                    {% if comment.comments.post_pk == post.post.pk %}
+                                        <div class="comment">
+                                            <span class="comment-header">
+                                                <b>
+                                                    {{ comment.comments.comment.author.first_name }} {{ comment.comments.comment.author.last_name }}
+                                                    {% if comment.comments.comment.is_teacher %}
+                                                        <span class="teacher-tick">&#x2713;</span>
+                                                    {% endif %}
+                                                </b> on <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
+                                            </span>
+                                            <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
+                                                <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                            </button>
+                                            <div class="replies">
+                                                {% for reply in comment.comments.replies %}
+                                                    <div class="reply">
+                                                        <span class="comment-header">
+                                                            <b>
+                                                                {{ reply.author.first_name }} {{ reply.author.last_name }}
+                                                                {% if reply.is_teacher %}
+                                                                    <span class="teacher-tick">&#x2713;</span>
+                                                                {% endif %}
+                                                            </b> on <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                        </span>
+                                                        <div class="comment-body">{{ reply.comment }}</div>
+                                                        <button class="btn reply-reply-btn" id="{{ comment.comments.comment.pk }}">
+                                                            <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                                        </button>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="add-comment">
+                                <hr>
+                                <label for="{{ post.pk }}">Add a new comment:</label>
+                                <textarea class="form-control comment-content" id="{{ post.pk }}" rows="3"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-outline-warning add-comment-btn" id="{{ post.post.pk }}">COMMENT</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
@@ -303,4 +356,5 @@
 
 {% block college-teacher-script %}
     <script type="text/javascript" src="{% static 'js/teacher_create_post.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
 {% endblock college-teacher-script %}

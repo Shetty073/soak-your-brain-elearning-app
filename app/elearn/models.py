@@ -228,6 +228,9 @@ class ArticlePost(models.Model):
 class PostComment(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     comment = models.CharField(max_length=500)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    is_teacher = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.post.title
@@ -236,6 +239,9 @@ class PostComment(models.Model):
 class CommentReply(models.Model):
     postcomment = models.ForeignKey(PostComment, on_delete=models.CASCADE)
     comment = models.CharField(max_length=500)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    is_teacher = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.postcomment.post.title

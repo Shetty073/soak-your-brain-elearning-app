@@ -22,3 +22,4 @@ $('#subjectfilter').on('change', function () {
 setInterval(function() {
     window.location.reload();
 }, 5*60000);
+
