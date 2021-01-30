@@ -8,6 +8,7 @@ from django.contrib.messages import get_messages
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.html import escape
 
 from .decorators import unauthenticated_user, allowed_users
 from .models import *
@@ -1551,7 +1552,12 @@ def college_classroom_post_reply(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         comment_id = data['comment_id']
-        comment = data['comment']
+        replied_to = data['replied_to']
+
+        # This escaping is must because it is marked safe in templates for <b>reply_to_username</b> to display
+        # without escaping.
+        comment = escape(data["comment"])
+        comment = f'{replied_to} {comment}'
 
         try:
             is_teacher = True if request.user.teacher else False
@@ -1559,9 +1565,9 @@ def college_classroom_post_reply(request):
             is_teacher = False
 
         try:
-            comment = PostComment.objects.get(pk=comment_id)
+            postcomment = PostComment.objects.get(pk=comment_id)
             commentreply = CommentReply.objects.create(
-                postcomment=comment,
+                postcomment=postcomment,
                 comment=comment,
                 author=request.user,
                 is_teacher=is_teacher
@@ -1581,6 +1587,22 @@ def college_classroom_post_reply(request):
             'date': f'{commentreply.date}',
             'msg': 'Reply successfully posted'
         })
+
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method not supported'
+    })
+
+
+@login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def delete_comment_or_reply(request, pk=None):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        comment_id = data['comment_id']
+        reply_id = data['reply_id']
+
+        print(comment_id, reply_id)
 
     return JsonResponse({
         'process': 'failed',

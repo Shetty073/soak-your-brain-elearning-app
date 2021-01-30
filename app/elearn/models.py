@@ -23,6 +23,7 @@ class SybAdmin(models.Model):
 
 class Plan(models.Model):
     name = models.CharField(max_length=256)
+    allotted_storage_space = models.DecimalField(max_digits=10, decimal_places=2)
     price_per_month = models.DecimalField(max_digits=6, decimal_places=2)
     price_per_year = models.DecimalField(max_digits=6, decimal_places=2)
     upcoming_price_per_month = models.FloatField(null=True, blank=True)
@@ -42,6 +43,7 @@ class College(models.Model):
     phone_no = models.CharField(max_length=13)
     card_info = models.CharField(max_length=16)
     signup_date = models.DateTimeField(auto_now_add=True)
+    storage_amount_used = models.DecimalField(max_digits=10, decimal_places=2)
 
     @property
     def name(self):

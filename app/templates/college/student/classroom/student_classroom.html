@@ -62,22 +62,26 @@
                                 <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
                             {% elif post.image_url %}
                                 <a href="{{ post.get_media_url }}" target="_blank">
-                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
+                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}"/>
                                 </a>
                             {% elif post.post.is_classtest %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
                                     View test
                                 </a>
                             {% else %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
                             <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
                         {% elif post.article_link %}
-                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                                article</a>
                         {% endif %}
                         {% if post.post.is_assignment %}
-                            <a class="btn btn-outline-warning" href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your Work</a>
+                            <a class="btn btn-outline-warning"
+                               href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your Work</a>
                         {% endif %}
                         <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
                             Posted on: {{ post.post.date }}
@@ -99,11 +103,15 @@
                                                     {% if comment.comments.comment.is_teacher %}
                                                         <span class="teacher-tick">&#x2713;</span>
                                                     {% endif %}
-                                                </b> on <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
+                                                </b>
+                                                on
+                                                <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
                                             </span>
                                             <div class="comment-body">{{ comment.comments.comment.comment }}</div>
-                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
-                                                <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                            <button class="btn comment-reply-btn"
+                                                    id="{{ comment.comments.comment.pk }}">
+                                                <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon">
+                                                <small>REPLY</small>
                                             </button>
                                             <div class="replies">
                                                 {% for reply in comment.comments.replies %}
@@ -114,11 +122,15 @@
                                                                 {% if reply.is_teacher %}
                                                                     <span class="teacher-tick">&#x2713;</span>
                                                                 {% endif %}
-                                                            </b> on <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                            </b>
+                                                            on
+                                                            <span class="comment-time-stamp">{{ reply.date }}</span>
                                                         </span>
-                                                        <div class="comment-body">{{ reply.comment }}</div>
-                                                        <button class="btn reply-reply-btn" id="{{ comment.comments.comment.pk }}">
-                                                            <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                                        <div class="comment-body">{{ reply.comment|safe  }}</div>
+                                                        <button class="btn reply-reply-btn"
+                                                                id="{{ comment.comments.comment.pk }}">
+                                                            <img src="{% static 'icons/comment_black.svg' %}"
+                                                                 alt="comment icon"> <small>REPLY</small>
                                                         </button>
                                                     </div>
                                                 {% endfor %}
@@ -132,7 +144,9 @@
                                 <label for="{{ post.pk }}">Add a new comment:</label>
                                 <textarea class="form-control comment-content" id="{{ post.pk }}" rows="3"></textarea>
                                 <br>
-                                <button type="submit" class="btn btn-outline-warning add-comment-btn" id="{{ post.post.pk }}">COMMENT</button>
+                                <button type="submit" class="btn btn-outline-warning add-comment-btn"
+                                        id="{{ post.post.pk }}">COMMENT
+                                </button>
                             </div>
                         </div>
                     </div>

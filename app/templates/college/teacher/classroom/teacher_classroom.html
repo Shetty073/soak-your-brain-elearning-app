@@ -49,7 +49,7 @@
                                 <div class="form-group">
                                     <label for="students">Select students (default is all students):</label>
                                     <select multiple class="form-control form-control-sm" id="students"
-                                        name="students" required>
+                                            name="students" required>
                                         <option value="all" selected>All</option>
                                         {% for student in students %}
                                             <option value="{{ student.pk }}">{{ student.name }}</option>
@@ -111,7 +111,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="custom-file-upload" for="videopostfile">Video file</label>
-                                        <input type="file" class="form-control-file" id="videopostfile" name="videopostfile"
+                                        <input type="file" class="form-control-file" id="videopostfile"
+                                               name="videopostfile"
                                                accept="video/mp4, .flv">
                                     </div>
                                 </div>
@@ -123,8 +124,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="custom-file-upload" for="documentpostfile">Document file</label>
-                                        <input type="file" class="form-control-file" id="documentpostfile" name="documentpostfile"
-                                        accept="application/pdf, .csv, text/plain, .doc, .docx, .rtf, .xls, .ppt, .pptx, .html, .htm">
+                                        <input type="file" class="form-control-file" id="documentpostfile"
+                                               name="documentpostfile"
+                                               accept="application/pdf, .csv, text/plain, .doc, .docx, .rtf, .xls, .ppt, .pptx, .html, .htm">
                                     </div>
                                 </div>
                                 <div class="imagepostbody hidepost">
@@ -135,40 +137,47 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="custom-file-upload" for="imagepostfile">Image file</label>
-                                        <input type="file" class="form-control-file" id="imagepostfile" name="imagepostfile"
-                                        accept="image/jpeg, image/jpg, image/bmp, image/png, image/gif">
+                                        <input type="file" class="form-control-file" id="imagepostfile"
+                                               name="imagepostfile"
+                                               accept="image/jpeg, image/jpg, image/bmp, image/png, image/gif">
                                     </div>
                                 </div>
                                 <div class="form-group youtubepostbody hidepost">
                                     <label for="youtubepostbody">Youtube video URL:</label>
                                     <input type="text" class="form-control form-control-sm" id="youtubepostbody"
-                                    name="youtubepostbody" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                           name="youtubepostbody"
+                                           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                                 </div>
                                 <div class="form-group articlepostbody hidepost">
                                     <label for="articlepostbody">Article URL:</label>
-                                    <input type="text" class="form-control form-control-sm" id="articlepostbody" name="articlepostbody"
-                                    placeholder="https://medium.com/flutter-community/flutter-web-and-wasm-49217497b0ed">
+                                    <input type="text" class="form-control form-control-sm" id="articlepostbody"
+                                           name="articlepostbody"
+                                           placeholder="https://medium.com/flutter-community/flutter-web-and-wasm-49217497b0ed">
                                 </div>
                                 <div class="classtestpostbody hidepost">
                                     <div class="form-group">
                                         <label for="classtestpostbody">Description of classtest:</label>
-                                        <textarea class="form-control classtestpostbodyinput" id="classtestpostbody" name="classtestpostbody"
-                                        rows="4"></textarea>
+                                        <textarea class="form-control classtestpostbodyinput" id="classtestpostbody"
+                                                  name="classtestpostbody"
+                                                  rows="4"></textarea>
                                     </div>
                                     <div class="classtestqna" id="classtestqna">
                                         <div class="form-group">
                                             <label for="q1">Question 1:</label>
-                                            <input type="text" class="form-control form-control-sm classtestpostbodyinput" name="q1"
-                                            id="q1" placeholder="What is the capital of India?">
+                                            <input type="text"
+                                                   class="form-control form-control-sm classtestpostbodyinput" name="q1"
+                                                   id="q1" placeholder="What is the capital of India?">
                                         </div>
                                         <div class="form-group row opt">
                                             <label for="q1o1" class="col-1 opt-label">1.</label>
-                                            <input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
+                                            <input type="text"
+                                                   class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
                                                    name="q1o1" id="q1o1" placeholder="Option 1">
                                         </div>
                                         <div class="form-group row opt">
                                             <label for="q1o2" class="col-1 opt-label">2.</label>
-                                            <input type="text" class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
+                                            <input type="text"
+                                                   class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
                                                    name="q1o2" id="q1o2" placeholder="Option 2">
                                         </div>
                                         <button type="button" class="btn btn-secondary" id="addoptionbtn">
@@ -176,7 +185,8 @@
                                         </button>
                                         <div class="input-group-prepend float-right">
                                             <label for="ans1">Answer:&nbsp;</label>
-                                            <select class="form-control btn-secondary classtestpostbodyinput" id="ans1" name="ans1">
+                                            <select class="form-control btn-secondary classtestpostbodyinput" id="ans1"
+                                                    name="ans1">
                                                 <option value="q1o1">1</option>
                                                 <option value="q1o2">2</option>
                                             </select>
@@ -186,13 +196,13 @@
                                     <button type="button" class="btn btn-secondary" id="addquestionbtn">
                                         + question
                                     </button>
-                                    <input type="hidden" id="totalnoofquestions" name="totalnoofquestions" value="1" />
+                                    <input type="hidden" id="totalnoofquestions" name="totalnoofquestions" value="1"/>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <input type="submit" class="btn btn-warning" value="Create post" />
+                            <input type="submit" class="btn btn-warning" value="Create post"/>
                         </div>
                     </div>
                 </form>
@@ -231,7 +241,8 @@
         <div class="container" id="teacher-feed">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert" style="display: block;">
+                    <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert"
+                         style="display: block;">
                         <strong class="alertmessage">{{ message }}</strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             &times;
@@ -272,17 +283,20 @@
                                 <a class="btn btn-outline-warning" href={{ post.get_media_url }}>Open document</a>
                             {% elif post.image_url %}
                                 <a href="{{ post.get_media_url }}" target="_blank">
-                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
+                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}"/>
                                 </a>
                             {% elif post.post.is_classtest %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
                             {% else %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
                             <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
                         {% elif post.article_link %}
-                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                                article</a>
                         {% endif %}
 
                         <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
@@ -305,11 +319,15 @@
                                                     {% if comment.comments.comment.is_teacher %}
                                                         <span class="teacher-tick">&#x2713;</span>
                                                     {% endif %}
-                                                </b> on <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
+                                                </b>
+                                                on
+                                                <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
                                             </span>
                                             <div class="comment-body">{{ comment.comments.comment.comment }}</div>
-                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
-                                                <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                            <button class="btn comment-reply-btn"
+                                                    id="{{ comment.comments.comment.pk }}">
+                                                <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon">
+                                                <small>REPLY</small>
                                             </button>
                                             <div class="replies">
                                                 {% for reply in comment.comments.replies %}
@@ -320,11 +338,15 @@
                                                                 {% if reply.is_teacher %}
                                                                     <span class="teacher-tick">&#x2713;</span>
                                                                 {% endif %}
-                                                            </b> on <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                            </b>
+                                                            on
+                                                            <span class="comment-time-stamp">{{ reply.date }}</span>
                                                         </span>
-                                                        <div class="comment-body">{{ reply.comment }}</div>
-                                                        <button class="btn reply-reply-btn" id="{{ comment.comments.comment.pk }}">
-                                                            <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon"> <small>REPLY</small>
+                                                        <div class="comment-body">{{ reply.comment|safe }}</div>
+                                                        <button class="btn reply-reply-btn"
+                                                                id="{{ comment.comments.comment.pk }}">
+                                                            <img src="{% static 'icons/comment_black.svg' %}"
+                                                                 alt="comment icon"> <small>REPLY</small>
                                                         </button>
                                                     </div>
                                                 {% endfor %}
@@ -338,7 +360,9 @@
                                 <label for="{{ post.pk }}">Add a new comment:</label>
                                 <textarea class="form-control comment-content" id="{{ post.pk }}" rows="3"></textarea>
                                 <br>
-                                <button type="submit" class="btn btn-outline-warning add-comment-btn" id="{{ post.post.pk }}">COMMENT</button>
+                                <button type="submit" class="btn btn-outline-warning add-comment-btn"
+                                        id="{{ post.post.pk }}">COMMENT
+                                </button>
                             </div>
                         </div>
                     </div>

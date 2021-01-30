@@ -8,6 +8,7 @@ $(document).ready(function () {
 
     let appendTo = null;
     let afterTo = null;
+    let replyTo = null;
 
     let commentId = null;
 
@@ -69,6 +70,8 @@ $(document).ready(function () {
 
         } else {
             // Post the reply
+            let replied_to = `<b>@${replyTo.trim()}</b>`;
+
             fetch(replyUrl, {
                 method: 'POST',
                 headers: {
@@ -77,6 +80,7 @@ $(document).ready(function () {
                 },
                 body: JSON.stringify({
                     'comment_id': commentId,
+                    'replied_to': replied_to,
                     'comment': comment,
                 })
             }).then((response) => {
@@ -124,7 +128,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.comment-reply-btn', function () {
         commentId = $(this).prop('id');
-        let replyTo = $(this).siblings(':first').children(':first').text();
+        replyTo = $(this).siblings(':first').children(':first').text().trim();
         let label = $(this).parent().parent().siblings(':last').children(':nth-child(2)');
         appendTo = $(this).siblings(':nth-child(4)');
         label.text(`Reply to ${replyTo}:`);
@@ -132,7 +136,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.reply-reply-btn', function () {
         commentId = $(this).prop('id');
-        let replyTo = $(this).siblings(':first').children(':first').text();
+        replyTo = $(this).siblings(':first').children(':first').text().trim();
         let label = $(this).parent().parent().parent().parent().siblings(':last').children(':nth-child(2)');
         afterTo = $(this).parent().siblings(':last');
         label.text(`Reply to ${replyTo}:`);

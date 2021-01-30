@@ -41,4 +41,5 @@ urlpatterns = [
     path('college/classroom/view_post/<int:pk>', college_student_classroom_view_post, name='college_student_classroom_view_post'),
     path('college/classroom/comment', college_classroom_post_comment, name='college_classroom_post_comment'),
     path('college/classroom/reply', college_classroom_post_reply, name='college_classroom_post_reply'),
+    path('college/classroom/delete_comment_or_reply/<int:pk>', delete_comment_or_reply, name='delete_comment_or_reply'),
 ]
