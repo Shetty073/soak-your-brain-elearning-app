@@ -5,6 +5,8 @@ they are represented by their respective tables (College and Customer table if t
 if that User is a teacher).
 This is the most simple way to work with the django's built-in authentication system.
 """
+import decimal
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -23,7 +25,7 @@ class SybAdmin(models.Model):
 
 class Plan(models.Model):
     name = models.CharField(max_length=256)
-    allotted_storage_space = models.DecimalField(max_digits=10, decimal_places=2)
+    allotted_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     price_per_month = models.DecimalField(max_digits=6, decimal_places=2)
     price_per_year = models.DecimalField(max_digits=6, decimal_places=2)
     upcoming_price_per_month = models.FloatField(null=True, blank=True)
@@ -43,7 +45,7 @@ class College(models.Model):
     phone_no = models.CharField(max_length=13)
     card_info = models.CharField(max_length=16)
     signup_date = models.DateTimeField(auto_now_add=True)
-    storage_amount_used = models.DecimalField(max_digits=10, decimal_places=2)
+    used_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     @property
     def name(self):
@@ -163,7 +165,7 @@ def video_directory_path(instance, filename):
 class VideoPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    video_url = models.FileField(upload_to=video_directory_path)
+    video_url = models.FileField(upload_to=video_directory_path, blank=True, null=True)
 
     def __str__(self):
         return self.post.title
@@ -171,6 +173,14 @@ class VideoPost(models.Model):
     @property
     def get_media_url(self):
         return f'{settings.MEDIA_URL}{self.video_url}'
+
+    def uploadable(self, file_tobe_uploaded):
+        allotted_storage_space = self.post.college_class.college.plan_subscribed.allotted_storage_space
+        used_storage_space = self.post.college_class.college.used_storage_space
+        print('NO')
+        if decimal.Decimal(file_tobe_uploaded.size / (1024 * 1024 * 1024)) + used_storage_space > allotted_storage_space:
+            return False
+        return True
 
 
 def document_directory_path(instance, filename):
@@ -182,7 +192,7 @@ def document_directory_path(instance, filename):
 class DocumentPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    document_url = models.FileField(upload_to=document_directory_path)
+    document_url = models.FileField(upload_to=document_directory_path, blank=True, null=True)
 
     def __str__(self):
         return self.post.title
@@ -190,6 +200,14 @@ class DocumentPost(models.Model):
     @property
     def get_media_url(self):
         return f'{settings.MEDIA_URL}{self.document_url}'
+
+    def uploadable(self, file_tobe_uploaded):
+        allotted_storage_space = self.post.college_class.college.plan_subscribed.allotted_storage_space
+        used_storage_space = self.post.college_class.college.used_storage_space
+        print('NO')
+        if decimal.Decimal(file_tobe_uploaded.size / (1024 * 1024 * 1024)) + used_storage_space > allotted_storage_space:
+            return False
+        return True
 
 
 def image_directory_path(instance, filename):
@@ -201,7 +219,7 @@ def image_directory_path(instance, filename):
 class ImagePost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
     body = models.CharField(max_length=500, null=True, blank=True)
-    image_url = models.ImageField(upload_to=image_directory_path)
+    image_url = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
 
     def __str__(self):
         return self.post.title
@@ -209,6 +227,14 @@ class ImagePost(models.Model):
     @property
     def get_media_url(self):
         return f'{settings.MEDIA_URL}{self.image_url}'
+
+    def uploadable(self, file_tobe_uploaded):
+        allotted_storage_space = self.post.college_class.college.plan_subscribed.allotted_storage_space
+        used_storage_space = self.post.college_class.college.used_storage_space
+        print('NO')
+        if decimal.Decimal(file_tobe_uploaded.size / (1024 * 1024 * 1024)) + used_storage_space > allotted_storage_space:
+            return False
+        return True
 
 
 class YouTubePost(models.Model):
@@ -308,7 +334,7 @@ def file_directory_path(instance, filename):
 class AssignmentSolution(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
-    file_url = models.ImageField(upload_to=file_directory_path)
+    file_url = models.FileField(upload_to=file_directory_path, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -317,3 +343,11 @@ class AssignmentSolution(models.Model):
     @property
     def get_media_url(self):
         return f'{settings.MEDIA_URL}{self.file_url}'
+
+    def uploadable(self, file_tobe_uploaded):
+        allotted_storage_space = self.post.college_class.college.plan_subscribed.allotted_storage_space
+        used_storage_space = self.post.college_class.college.used_storage_space
+        print('NO')
+        if decimal.Decimal(file_tobe_uploaded.size / (1024 * 1024 * 1024)) + used_storage_space > allotted_storage_space:
+            return False
+        return True

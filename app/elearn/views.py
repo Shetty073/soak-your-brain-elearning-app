@@ -1,3 +1,4 @@
+import decimal
 import json
 
 from django.contrib import messages
@@ -840,6 +841,7 @@ def college_teacher_classroom(request, pk=None):
 @allowed_users(allowed_roles=['teacher'])
 def college_teacher_classroom_add_post(request, pk=None):
     if request.method == 'POST':
+        college = College.objects.get(pk=request.user.teacher.college.pk)
         college_class_pk = pk
         try:
             # Get the data from the form
@@ -888,27 +890,57 @@ def college_teacher_classroom_add_post(request, pk=None):
                 elif post_category == 'videopost':
                     videopostbody = request.POST.get('videopostbody')
                     videopostfile = request.FILES['videopostfile']
-                    VideoPost.objects.create(
+                    video_post = VideoPost.objects.create(
                         post=classworkpost,
                         body=videopostbody,
-                        video_url=videopostfile
                     )
+                    if not video_post.uploadable(file_tobe_uploaded=videopostfile):
+                        video_post.delete()
+                        classworkpost.delete()
+                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
+                                                 'You can no longer upload any files. ' \
+                                                 'Please contact your college administrator regarding this'
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    video_post.video_url = videopostfile
+                    video_post.save()
+                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(video_post.video_url.size) / (1024 * 1024 * 1024))
+                    college.save()
                 elif post_category == 'documentpost':
                     documentpostbody = request.POST.get('documentpostbody')
                     documentpostfile = request.FILES['documentpostfile']
-                    DocumentPost.objects.create(
+                    document_post = DocumentPost.objects.create(
                         post=classworkpost,
                         body=documentpostbody,
-                        document_url=documentpostfile
                     )
+                    if not document_post.uploadable(file_tobe_uploaded=documentpostfile):
+                        document_post.delete()
+                        classworkpost.delete()
+                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
+                                                 'You can no longer upload any files. ' \
+                                                 'Please contact your college administrator regarding this'
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    document_post.document_url = documentpostfile
+                    document_post.save()
+                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(document_post.document_url.size) / (1024 * 1024 * 1024))
+                    college.save()
                 elif post_category == 'imagepost':
                     imagepostbody = request.POST.get('imagepostbody')
                     imagepostfile = request.FILES['imagepostfile']
-                    ImagePost.objects.create(
+                    image_post = ImagePost.objects.create(
                         post=classworkpost,
                         body=imagepostbody,
-                        image_url=imagepostfile
                     )
+                    if not image_post.uploadable(file_tobe_uploaded=imagepostfile):
+                        image_post.delete()
+                        classworkpost.delete()
+                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
+                                                 'You can no longer upload any files. ' \
+                                                 'Please contact your college administrator regarding this'
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    image_post.image_url = imagepostfile
+                    image_post.save()
+                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(image_post.image_url.size) / (1024 * 1024 * 1024))
+                    college.save()
                 elif post_category == 'youtubepost':
                     youtube_link = request.POST.get('youtubepostbody')
                     if youtube_link.count('watch?v=') != 0:
@@ -1084,13 +1116,42 @@ def view_test_performance(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['teacher'])
 def college_teacher_classroom_delete_test(request, pk=None):
+    college = College.objects.get(pk=request.user.teacher.college.pk)
+    post = None
     if request.method == 'POST':
         try:
             post = ClassWorkPost.objects.get(pk=pk)
-            post.delete()
         except Exception as err:
             return JsonResponse({'process': 'failed', 'msg': f'{err}'})
 
+        try:
+            videopost = VideoPost.objects.get(post=post)
+            if videopost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(videopost.video_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        try:
+            documentpost = DocumentPost.objects.get(post=post)
+            if documentpost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(documentpost.document_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        try:
+            imagepost = ImagePost.objects.get(post=post)
+            if imagepost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(imagepost.image_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        post.delete()
         return JsonResponse({'process': 'success', 'msg': 'Post successfully deleted'})
 
     return JsonResponse({'process': 'failed', 'msg': 'GET not supported by this endpoint'})
@@ -1229,6 +1290,7 @@ def college_student_assignments(request):
 @allowed_users(allowed_roles=['student'])
 def college_student_submit_assignment(request, pk=None):
     post = ClassWorkPost.objects.get(pk=pk)
+    college = College.objects.get(pk=request.user.student.college.pk)
     assignment_solution = None
     try:
         assignment_solution = AssignmentSolution.objects.get(post=post, student=request.user.student)
@@ -1236,11 +1298,23 @@ def college_student_submit_assignment(request, pk=None):
         pass
 
     if request.method == 'POST':
-        AssignmentSolution.objects.create(
+        assignment_solution = AssignmentSolution.objects.create(
             student=request.user.student,
             post=post,
-            file_url=request.FILES['assignment_file']
         )
+        if assignment_solution.uploadable(file_tobe_uploaded=request.FILES['assignment_file']):
+            assignment_solution.file_url = request.FILES['assignment_file']
+            assignment_solution.save()
+            college.used_storage_space += (assignment_solution.file_url.size / (1024 * 1024 * 1024))
+            college.save()
+            return redirect(college_student)
+
+        assignment_solution.delete()
+
+        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
+                                 'You can no longer upload any files. ' \
+                                 'Please contact your college administrator regarding this'
+
         return redirect(college_student)
 
     try:
@@ -1603,6 +1677,7 @@ def delete_comment_or_reply(request, pk=None):
         reply_id = data['reply_id']
 
         print(comment_id, reply_id)
+        # TODO: Complete this
 
     return JsonResponse({
         'process': 'failed',

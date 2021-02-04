@@ -10,6 +10,22 @@
         </div>
         <br>
 
+        <div id="formerror" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <span id="alertmessage">{{ request.session.msg }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </div>
+
+        {% if request.session.msg %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
+                <span>{{ request.session.msg }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+        {% endif %}
+
         {# Button to toggle the add post form modal #}
         <div class="float-left mob-btns">
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new

@@ -10,6 +10,15 @@
         </div>
         <br>
 
+        {% if request.session.msg %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
+                <span id="alertmessage">{{ request.session.msg }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+        {% endif %}
+
         <div class="float-left">
             <small><strong>&#9737;</strong> - Classtests</small> <br>
             <small><strong>&starf;</strong> - Assignments</small>

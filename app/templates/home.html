@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load mathfilters %}
 {% block title %}SoakYourBrain - e-learning management platform{% endblock title %}
 {% block content %}
     <main role="main" class="container-md">
@@ -63,9 +64,13 @@
                 </tr>
                 <tr>
                     <td class="row-desc">Storage</td>
-                    <td>100 GB</td>
-                    <td>400 GB</td>
-                    <td>1 TB</td>
+                    {% for plan in plans %}
+                        {% if plan.allotted_storage_space > 999 %}
+                            <td>{{ plan.allotted_storage_space|div:1000|floatformat }} TB</td>
+                        {% else %}
+                            <td>{{ plan.allotted_storage_space|floatformat }} GB</td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
                 <tr>
                     <td colspan="4">

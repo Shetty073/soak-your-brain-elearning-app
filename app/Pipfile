@@ -11,6 +11,7 @@ pillow = "*"
 pymysql = "*"
 mysql-connector-python = "*"
 cryptography = "*"
+django-mathfilters = "*"
 
 [requires]
 python_version = "3.8"

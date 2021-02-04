@@ -4,6 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Basic",
+            "allotted_storage_space": 100.00,
             "price_per_month": 130.00,
             "price_per_year": 1560.00,
             "upcoming_price_per_month": null,
@@ -15,6 +16,7 @@
         "pk": 2,
         "fields": {
             "name": "Standard",
+            "allotted_storage_space": 400.00,
             "price_per_month": 300.00,
             "price_per_year": 3600.00,
             "upcoming_price_per_month": null,
@@ -26,6 +28,7 @@
         "pk": 3,
         "fields": {
             "name": "Pro",
+            "allotted_storage_space": 1000.00,
             "price_per_month": 650.00,
             "price_per_year": 7800.00,
             "upcoming_price_per_month": null,

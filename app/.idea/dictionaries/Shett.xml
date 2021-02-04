@@ -61,6 +61,7 @@
       <w>lastname</w>
       <w>linkpost</w>
       <w>linkpostbody</w>
+      <w>mathfilters</w>
       <w>mins</w>
       <w>postcategory</w>
       <w>postcomment</w>
@@ -85,6 +86,7 @@
       <w>textpostbody</w>
       <w>textposts</w>
       <w>totalnoofquestions</w>
+      <w>uploadable</w>
       <w>videopost</w>
       <w>videopostbody</w>
       <w>videopostfile</w>

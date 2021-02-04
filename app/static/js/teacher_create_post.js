@@ -296,6 +296,7 @@ $('.post-delete-btn').on('click', function () {
             window.location.reload();
         } else {
             // The request failed. Display the appropriate error message sent back in response.
+            $('#formerror').show();
             displayFormErrorMessage(false, data['msg'], 'alertmessage');
         }
     });
