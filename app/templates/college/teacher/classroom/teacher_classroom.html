@@ -17,15 +17,6 @@
             </button>
         </div>
 
-        {% if request.session.msg %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
-                <span>{{ request.session.msg }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    &times;
-                </button>
-            </div>
-        {% endif %}
-
         {# Button to toggle the add post form modal #}
         <div class="float-left mob-btns">
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new
@@ -257,7 +248,9 @@
         <div class="container" id="teacher-feed">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert"
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
                          style="display: block;">
                         <strong class="alertmessage">{{ message }}</strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -279,8 +272,8 @@
                                 <h5 style="display: inline;">&starf;&nbsp;</h5>
                             {% endif %}
                             {% if post.post.teacher == request.user.teacher %}
-                                <button type="button" class="btn btn-outline-warning post-delete-btn">
-                                    &times;
+                                <button type="button" class="btn btn-outline-danger post-delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             {% endif %}
                             <input type="hidden" value="{{ post.post.pk }}">
@@ -325,8 +318,10 @@
                         </button>
                         <br>
                         <div class="comments-section">
+
                             <div class="comments">
                                 {% for comment in comments_and_replies %}
+
                                     {% if comment.comments.post_pk == post.post.pk %}
                                         <div class="comment">
                                             <div class="comment-header">
@@ -337,29 +332,29 @@
                                                     {% endif %}
                                                 </b>
                                                 on
-                                                {% if comment.comments.comment.marked_as_deleted %}
-                                                    <div class="comment-body">
-                                                        <b>[This comment was deleted by the author.]</b>
-                                                    </div>
-                                                {% else %}
-                                                    <div class="comment-body">{{ comment.comments.comment.comment }}</div>
-                                                {% endif %}
+                                                <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
                                                 {% if comment.comments.comment.author == request.user %}
                                                     <span class="float-right">
                                                         <button id="{{ comment.comments.comment.pk }}" type="button" class="btn btn-outline-danger delete-comment-btn">
-                                                            x
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </span>
                                                 {% endif %}
                                             </div>
-                                            <div class="comment-body">{{ comment.comments.comment.comment }}</div>
-                                            <button class="btn comment-reply-btn"
-                                                    id="{{ comment.comments.comment.pk }}">
+                                            {% if comment.comments.comment.marked_as_deleted %}
+                                                <div class="comment-body">
+                                                    <b>[This comment was deleted by the author.]</b>
+                                                </div>
+                                            {% else %}
+                                                <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                            {% endif %}
+                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
                                                 <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon">
                                                 <small>REPLY</small>
                                             </button>
                                             <hr>
                                             <div class="replies">
+
                                                 {% for reply in comment.comments.replies %}
                                                     <div class="reply">
                                                         <span class="comment-header">
@@ -374,7 +369,7 @@
                                                             {% if reply.author == request.user %}
                                                                 <span class="float-right">
                                                                     <button id="{{ reply.pk }}" type="button" class="btn btn-outline-danger delete-reply-btn">
-                                                                        x
+                                                                        <i class="fas fa-trash-alt"></i>
                                                                     </button>
                                                                 </span>
                                                             {% endif %}
@@ -394,11 +389,14 @@
                                                     </div>
                                                     <hr style="max-width: 150px; margin-right: 85%;">
                                                 {% endfor %}
+
                                             </div>
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+
                             </div>
+
                             <div class="add-comment">
                                 <hr>
                                 <label for="{{ post.pk }}">Add a new comment:</label>

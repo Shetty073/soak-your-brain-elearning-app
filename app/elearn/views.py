@@ -1,11 +1,11 @@
-import decimal
 import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import Group
-from django.contrib.messages import get_messages
+from django.core.validators import validate_email
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -155,6 +155,126 @@ def sign_out(request):
 def checkout_page(request):
     context_dict = {}
     return render(request, template_name='checkout/checkbout.html', context=context_dict)
+
+
+@login_required
+def user_password_reset(request):
+    """
+        This is for resetting password of users
+        :param request:
+        :return:
+    """
+    if request.method == 'POST':
+        go_back_path = request.POST.get('full_path')
+        current_password_entered = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        user = User.objects.get(pk=request.user.pk)
+
+        if check_password(current_password_entered, user.password):
+            if new_password == confirm_new_password:
+                if 8 <= len(new_password) <= 16:
+                    user.set_password(new_password)
+                    user.save()
+                    msg = 'Password changed successfully'
+                    messages.success(request, f'{msg}')
+                    return redirect(go_back_path)
+                else:
+                    err = 'Password must be 8 to 16 characters long'
+                    messages.error(request, f'{err}')
+                    return redirect(go_back_path)
+            else:
+                err = 'Passwords do not match'
+                messages.error(request, f'{err}')
+                return redirect(go_back_path)
+        else:
+            err = 'Current password entered is incorrect'
+            messages.error(request, f'{err}')
+            return redirect(go_back_path)
+
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method not supported'
+    })
+
+
+@login_required
+def user_info_change(request):
+    """
+        This is for updating email, first_name and last_name of users
+        :param request:
+        :return:
+    """
+    if request.method == 'POST':
+        go_back_path = request.POST.get('full_path')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+
+        user = request.user
+        teacher = None
+        student = None
+        college = None
+
+        try:
+            teacher = request.user.teacher
+        except Exception as err:
+            teacher = None
+
+        try:
+            student = request.user.student
+        except Exception as err:
+            student = None
+
+        try:
+            college = request.user.college
+        except Exception as err:
+            college = None
+
+        try:
+            validate_email(email)
+        except Exception as err:
+            messages.error(request, f'{err}')
+            return redirect(go_back_path)
+
+        if first_name.isalpha():
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.username = email
+            user.save()
+
+            if teacher is not None:
+                teacher.email = email
+                teacher.first_name = first_name
+                teacher.last_name = last_name
+                teacher.save()
+
+            if student is not None:
+                student.email = email
+                student.first_name = first_name
+                student.last_name = last_name
+                student.save()
+
+            if college is not None:
+                college.email = email
+                college.first_name = first_name
+                college.last_name = last_name
+                college.save()
+
+            msg = 'Your details had been changed successfully'
+            messages.success(request, f'{msg}')
+            return redirect(go_back_path)
+        else:
+            err = 'Name cannot contain numbers in it'
+            messages.error(request, f'{err}')
+            return redirect(go_back_path)
+
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method not supported'
+    })
 
 
 @login_required
@@ -505,6 +625,12 @@ def college_del_classes(request, pk=None):
 
 
 @login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def college_admin_account(request):
+    return render(request, template_name='college/admin/college_admin_account.html')
+
+
+@login_required
 @allowed_users(allowed_roles=['teacher'])
 def college_teacher(request):
     try:
@@ -778,11 +904,15 @@ def college_teacher_classroom(request, pk=None):
     posts = [post for post in ClassWorkPost.objects.all() if post.college_class == college_class]
     textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.college_class == college_class]
     videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.college_class == college_class]
-    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post.college_class == college_class]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if
+                     documentpost.post.college_class == college_class]
     imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.college_class == college_class]
-    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post.college_class == college_class]
-    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post.college_class == college_class]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post.college_class == college_class]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if
+                    youtubepost.post.college_class == college_class]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if
+                    articlepost.post.college_class == college_class]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if
+                      classtestpost.post.college_class == college_class]
 
     posts_display = []
 
@@ -897,13 +1027,15 @@ def college_teacher_classroom_add_post(request, pk=None):
                     if not video_post.uploadable(file_tobe_uploaded=videopostfile):
                         video_post.delete()
                         classworkpost.delete()
-                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
-                                                 'You can no longer upload any files. ' \
-                                                 'Please contact your college administrator regarding this'
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
                         return redirect(college_teacher_classroom, pk=college_class_pk)
                     video_post.video_url = videopostfile
                     video_post.save()
-                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(video_post.video_url.size) / (1024 * 1024 * 1024))
+                    college.used_storage_space = college.used_storage_space + (
+                            decimal.Decimal(video_post.video_url.size) / (1024 * 1024 * 1024))
                     college.save()
                 elif post_category == 'documentpost':
                     documentpostbody = request.POST.get('documentpostbody')
@@ -915,13 +1047,15 @@ def college_teacher_classroom_add_post(request, pk=None):
                     if not document_post.uploadable(file_tobe_uploaded=documentpostfile):
                         document_post.delete()
                         classworkpost.delete()
-                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
-                                                 'You can no longer upload any files. ' \
-                                                 'Please contact your college administrator regarding this'
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
                         return redirect(college_teacher_classroom, pk=college_class_pk)
                     document_post.document_url = documentpostfile
                     document_post.save()
-                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(document_post.document_url.size) / (1024 * 1024 * 1024))
+                    college.used_storage_space = college.used_storage_space + (
+                            decimal.Decimal(document_post.document_url.size) / (1024 * 1024 * 1024))
                     college.save()
                 elif post_category == 'imagepost':
                     imagepostbody = request.POST.get('imagepostbody')
@@ -933,13 +1067,15 @@ def college_teacher_classroom_add_post(request, pk=None):
                     if not image_post.uploadable(file_tobe_uploaded=imagepostfile):
                         image_post.delete()
                         classworkpost.delete()
-                        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
-                                                 'You can no longer upload any files. ' \
-                                                 'Please contact your college administrator regarding this'
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
                         return redirect(college_teacher_classroom, pk=college_class_pk)
                     image_post.image_url = imagepostfile
                     image_post.save()
-                    college.used_storage_space = college.used_storage_space + (decimal.Decimal(image_post.image_url.size) / (1024 * 1024 * 1024))
+                    college.used_storage_space = college.used_storage_space + (
+                            decimal.Decimal(image_post.image_url.size) / (1024 * 1024 * 1024))
                     college.save()
                 elif post_category == 'youtubepost':
                     youtube_link = request.POST.get('youtubepostbody')
@@ -1084,14 +1220,16 @@ def view_assignments_submissions(request, class_pk=None):
     context_dict = {
         'assignment_solutions': assignment_solutions,
     }
-    return render(request, template_name='college/teacher/classroom/view_assignments_submissions.html', context=context_dict)
+    return render(request, template_name='college/teacher/classroom/view_assignments_submissions.html',
+                  context=context_dict)
 
 
 @login_required
 @allowed_users(allowed_roles=['teacher'])
 def view_test_performance(request, pk=None):
     classtestsolution = ClassTestSolution.objects.get(pk=pk)
-    student_choices = [choice for choice in StudentChoice.objects.all() if choice.classtestsolution == classtestsolution]
+    student_choices = [choice for choice in StudentChoice.objects.all() if
+                       choice.classtestsolution == classtestsolution]
 
     test_items = []
 
@@ -1173,11 +1311,15 @@ def college_student(request):
     posts = [post for post in ClassWorkPost.objects.all() if post.college_class == college_class]
     textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.college_class == college_class]
     videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.college_class == college_class]
-    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if documentpost.post.college_class == college_class]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if
+                     documentpost.post.college_class == college_class]
     imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.college_class == college_class]
-    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if youtubepost.post.college_class == college_class]
-    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if articlepost.post.college_class == college_class]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if classtestpost.post.college_class == college_class]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if
+                    youtubepost.post.college_class == college_class]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if
+                    articlepost.post.college_class == college_class]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if
+                      classtestpost.post.college_class == college_class]
 
     posts_display = []
 
@@ -1311,10 +1453,10 @@ def college_student_submit_assignment(request, pk=None):
 
         assignment_solution.delete()
 
-        request.session['msg'] = 'Your college has passed its total upload space limit. ' \
-                                 'You can no longer upload any files. ' \
-                                 'Please contact your college administrator regarding this'
-
+        err = 'Your college has passed its total upload space limit. ' \
+              'You can no longer upload any files. ' \
+              'Please contact your college administrator regarding this'
+        messages.error(request, f'{err}')
         return redirect(college_student)
 
     try:
@@ -1564,6 +1706,12 @@ def college_student_classroom_give_test(request, pk=None):
         context_dict['classtestsolution'] = None
 
     return render(request, template_name='college/student/classroom/student_give_test.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['student', 'teacher'])
+def college_teacher_student_account(request):
+    return render(request, template_name='college/teacher_student_account.html')
 
 
 @login_required

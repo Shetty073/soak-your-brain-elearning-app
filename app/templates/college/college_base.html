@@ -116,7 +116,18 @@
             {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">&nbsp;&nbsp;
-            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign
+            {% if request.user.groups.all.0.name == 'student' or request.user.groups.all.0.name == 'teacher' %}
+                <a class="btn btn-outline-warning" href="{% url 'college_teacher_student_account' %}" style="margin-right: 10px;">
+                    <i class="far fa-user-circle fa-lg"></i>
+                    {{ request.user.first_name }}
+                </a>
+            {% elif request.user.groups.all.0.name == 'collegeadmin' %}
+                <a class="btn btn-outline-warning" href="{% url 'college_admin_account' %}" style="margin-right: 10px;">
+                    <i class="far fa-user-circle fa-lg"></i>
+                    {{ request.user.first_name }}
+                </a>
+            {% endif %}
+            <a class="btn btn-danger my-2 my-sm-0" href="{% url 'signout' %}">Sign
                 out</a>
         </form>
     </div>
@@ -144,6 +155,8 @@
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
+<script type="text/javascript" src="{% static 'fa/all.min.js' %}"></script>
+<noscript>This application requires JavaScript to function. Please enable JavaScript in your browser.</noscript>
 
 {% block college-admin-script %}
 

@@ -1,0 +1,237 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}
+{% if request.user.student %}
+    Student: {{ request.user.student.college.college_name|slice:':20' }}
+{% else %}
+    Teacher: {{ request.user.teacher.college.college_name|slice:':20' }}
+{% endif %}
+{% endblock title %}
+
+{# Visible to students #}
+{% block student-content %}
+
+    <main role="main" class="container-md">
+
+        <div class="card" style="margin-bottom: 35px;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ request.user.student.name }}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {{ request.user.student.college_class.name }} | {{ request.user.student.college.college_name }}
+                </h6>
+                <br>
+                <div class="card-text">
+                    <form method="POST" action="{% url 'user_info_change' %}">
+                        {% csrf_token %}
+                        <input name="full_path" type="hidden" value="{{ request.get_full_path }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" name="email" class="form-control" id="email"
+                                   placeholder="name@example.com"
+                                   value="{{ request.user.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First name</label>
+                            <input type="text" name="first_name" class="form-control" id="first_name" placeholder="John"
+                                   value="{{ request.user.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last name</label>
+                            <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Doe"
+                                   value="{{ request.user.last_name }}" required>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                                    {% else %} alert-warning {% endif %}
+                                    alert-dismissible fade show" id="formerror" role="alert"
+                                     style="display: block;">
+                                    <strong class="alertmessage">{{ message }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success" id="details-update-btn">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Re-set your password
+                </h6>
+                <br>
+                <div class="card-text">
+                    <form method="POST" action="{% url 'user_password_reset' %}">
+                        {% csrf_token %}
+                        <input name="full_path" type="hidden" value="{{ request.get_full_path }}">
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current password</label>
+                            <input type="password" name="current_password" class="form-control" id="current_password"
+                                   placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        <br>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New password</label>
+                            <input type="password" name="new_password" class="form-control" id="new_password"
+                                   placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_new_password" class="form-label">Confirm new password</label>
+                            <input type="password" class="form-control" id="confirm_new_password"
+                                   name="confirm_new_password" placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                                    {% else %} alert-warning {% endif %}
+                                    alert-dismissible fade show" id="formerror" role="alert"
+                                     style="display: block;">
+                                    <strong class="alertmessage">{{ message }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+{% endblock student-content %}
+
+{# Visible to teachers #}
+{% block teacher-content %}
+
+    <main role="main" class="container-md">
+        <div class="card" style="margin-bottom: 35px;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ request.user.teacher.name }}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% for class in request.user.teacher.college_classes.all %}
+                        {{ class.name }}
+                    {% endfor %}
+                    | {{ request.user.teacher.college.college_name }}
+                </h6>
+                <br>
+                <div class="card-text">
+                    <form method="POST" action="{% url 'user_info_change' %}">
+                        {% csrf_token %}
+                        <input name="full_path" type="hidden" value="{{ request.get_full_path }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" name="email" class="form-control" id="email"
+                                   placeholder="name@example.com"
+                                   value="{{ request.user.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First name</label>
+                            <input type="text" name="first_name" class="form-control" id="first_name" placeholder="John"
+                                   value="{{ request.user.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last name</label>
+                            <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Doe"
+                                   value="{{ request.user.last_name }}" required>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                                    {% else %} alert-warning {% endif %}
+                                    alert-dismissible fade show" id="formerror" role="alert"
+                                     style="display: block;">
+                                    <strong class="alertmessage">{{ message }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success" id="details-update-btn">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Re-set your password
+                </h6>
+                <br>
+                <div class="card-text">
+                    <form method="POST" action="{% url 'user_password_reset' %}">
+                        {% csrf_token %}
+                        <input name="full_path" type="hidden" value="{{ request.get_full_path }}">
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current password</label>
+                            <input type="password" name="current_password" class="form-control" id="current_password"
+                                   placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        <br>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New password</label>
+                            <input type="password" name="new_password" class="form-control" id="new_password"
+                                   placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_new_password" class="form-label">Confirm new password</label>
+                            <input type="password" class="form-control" id="confirm_new_password"
+                                   name="confirm_new_password" placeholder="**********" autocomplete="off"
+                                   required>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                                    {% else %} alert-warning {% endif %}
+                                    alert-dismissible fade show" id="formerror" role="alert"
+                                     style="display: block;">
+                                    <strong class="alertmessage">{{ message }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        &times;
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+{% endblock teacher-content %}
+
+{% block college-student-script %}
+    <script type="text/javascript" src="{% static 'js/user_account.js' %}"></script>
+{% endblock college-student-script %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/user_account.js' %}"></script>
+{% endblock college-teacher-script %}

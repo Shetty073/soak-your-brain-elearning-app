@@ -31,6 +31,19 @@
                         </button>
                     </div>
                 {% endif %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                            {% else %} alert-warning {% endif %}
+                            alert-dismissible fade show" id="formerror" role="alert"
+                             style="display: block;">
+                            <strong class="alertmessage">{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                &times;
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <button type="submit" class="btn btn-success">Sign In</button>
             </form>
         </div>

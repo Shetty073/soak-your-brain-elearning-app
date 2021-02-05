@@ -17,15 +17,6 @@
             </button>
         </div>
 
-        {% if request.session.msg %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
-                <span id="alertmessage">{{ request.session.msg }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    &times;
-                </button>
-            </div>
-        {% endif %}
-
         <div class="float-left">
             <small><strong>&#9737;</strong> - Classtests</small> <br>
             <small><strong>&starf;</strong> - Assignments</small>
@@ -48,7 +39,19 @@
         <hr>
 
         <div class="container" id="teacher-feed">
-
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                         style="display: block;">
+                        <strong class="alertmessage">{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            &times;
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
             {# Posts #}
             {% for post in posts_display %}
                 <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
@@ -109,8 +112,10 @@
                         </button>
                         <br>
                         <div class="comments-section">
+
                             <div class="comments">
                                 {% for comment in comments_and_replies %}
+
                                     {% if comment.comments.post_pk == post.post.pk %}
                                         <div class="comment">
                                             <div class="comment-header">
@@ -125,7 +130,7 @@
                                                 {% if comment.comments.comment.author == request.user %}
                                                     <span class="float-right">
                                                         <button id="{{ comment.comments.comment.pk }}" type="button" class="btn btn-outline-danger delete-comment-btn">
-                                                            x
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </span>
                                                 {% endif %}
@@ -144,6 +149,7 @@
                                             </button>
                                             <hr>
                                             <div class="replies">
+
                                                 {% for reply in comment.comments.replies %}
                                                     <div class="reply">
                                                         <span class="comment-header">
@@ -158,7 +164,7 @@
                                                             {% if reply.author == request.user %}
                                                                 <span class="float-right">
                                                                     <button id="{{ reply.pk }}" type="button" class="btn btn-outline-danger delete-reply-btn">
-                                                                        x
+                                                                        <i class="fas fa-trash-alt"></i>
                                                                     </button>
                                                                 </span>
                                                             {% endif %}
@@ -178,11 +184,14 @@
                                                     </div>
                                                     <hr style="max-width: 150px; margin-right: 85%;">
                                                 {% endfor %}
+
                                             </div>
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+
                             </div>
+
                             <div class="add-comment">
                                 <hr>
                                 <label for="{{ post.pk }}">Add a new comment:</label>
