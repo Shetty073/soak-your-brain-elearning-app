@@ -259,6 +259,7 @@ class PostComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     is_teacher = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
+    marked_as_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.post.title
@@ -270,6 +271,7 @@ class CommentReply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     is_teacher = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
+    marked_as_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.postcomment.post.title

@@ -1676,8 +1676,36 @@ def delete_comment_or_reply(request, pk=None):
         comment_id = data['comment_id']
         reply_id = data['reply_id']
 
-        print(comment_id, reply_id)
-        # TODO: Complete this
+        if reply_id is None:
+            # This request is for deleting a comment
+            try:
+                comment = PostComment.objects.get(pk=comment_id)
+                comment.marked_as_deleted = True
+                comment.save()
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': 'Comment deleted successfully'
+                })
+            except Exception as err:
+                return JsonResponse({
+                    'process': 'failed',
+                    'msg': f'{err}'
+                })
+        else:
+            # This request is for deleting a reply
+            try:
+                reply = CommentReply.objects.get(pk=reply_id)
+                reply.marked_as_deleted = True
+                reply.save()
+                return JsonResponse({
+                    'process': 'success',
+                    'msg': 'Reply deleted successfully'
+                })
+            except Exception as err:
+                return JsonResponse({
+                    'process': 'failed',
+                    'msg': f'{err}'
+                })
 
     return JsonResponse({
         'process': 'failed',

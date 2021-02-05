@@ -46,8 +46,6 @@ $(document).ready(function () {
 
                     let teacherMark = '<span class="teacher-tick">&#x2713;</span>';
 
-                    console.log(is_teacher);
-
                     if(is_teacher === 'False') {
                         teacherMark = '';
                     }
@@ -61,10 +59,11 @@ $(document).ready(function () {
                         '<img src="/static/icons/comment_black.svg" alt="comment icon"> <small>REPLY</small>' +
                         '</button>' +
                         '</div>';
-                    $(this).parent().siblings().append(newReply)
+                    $(this).parent().siblings().append(newReply);
+                    location.reload();
                 } else {
                     // The request failed. Display the appropriate error message sent back in response.
-                    // displayFormErrorMessage(false, data['msg'], 'alertmessage');
+                    displayFormErrorMessage(false, data['msg'], 'alertmessage');
                 }
             });
 
@@ -116,9 +115,11 @@ $(document).ready(function () {
                     } else if (afterTo !== null) {
                         afterTo.after(newReply);
                     }
+
+                    location.reload();
                 } else {
                     // The request failed. Display the appropriate error message sent back in response.
-                    // displayFormErrorMessage(false, data['msg'], 'alertmessage');
+                    displayFormErrorMessage(false, data['msg'], 'alertmessage');
                 }
             });
         }
@@ -141,4 +142,58 @@ $(document).ready(function () {
         afterTo = $(this).parent().siblings(':last');
         label.text(`Reply to ${replyTo}:`);
     });
+
+
+    // Delete comments
+    let baseDeleteUrl = '/college/classroom/delete_comment_or_reply/';
+    $(document).on('click', '.delete-comment-btn', function () {
+        let commentId = parseInt($(this).attr('id'));
+
+        fetch(baseDeleteUrl + commentId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'comment_id': commentId,
+                'reply_id': null,
+            })
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if(data['process'] === 'success') {
+                location.reload();
+            } else {
+                displayFormErrorMessage(false, data['msg'], 'alertmessage');
+            }
+        });
+
+    });
+
+    // Delete replies
+    $(document).on('click', '.delete-reply-btn', function () {
+        let replyId = parseInt($(this).attr('id'));
+
+        fetch(baseDeleteUrl + replyId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'comment_id': null,
+                'reply_id': replyId,
+            })
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if(data['process'] === 'success') {
+                location.reload();
+            } else {
+                displayFormErrorMessage(false, data['msg'], 'alertmessage');
+            }
+        });
+    });
+
 });

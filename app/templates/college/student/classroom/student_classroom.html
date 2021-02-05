@@ -10,6 +10,13 @@
         </div>
         <br>
 
+        <div id="formerror" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <span id="alertmessage">{{ request.session.msg }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </div>
+
         {% if request.session.msg %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: block;">
                 <span id="alertmessage">{{ request.session.msg }}</span>
@@ -106,7 +113,7 @@
                                 {% for comment in comments_and_replies %}
                                     {% if comment.comments.post_pk == post.post.pk %}
                                         <div class="comment">
-                                            <span class="comment-header">
+                                            <div class="comment-header">
                                                 <b>
                                                     {{ comment.comments.comment.author.first_name }} {{ comment.comments.comment.author.last_name }}
                                                     {% if comment.comments.comment.is_teacher %}
@@ -115,13 +122,27 @@
                                                 </b>
                                                 on
                                                 <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
-                                            </span>
-                                            <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                                {% if comment.comments.comment.author == request.user %}
+                                                    <span class="float-right">
+                                                        <button id="{{ comment.comments.comment.pk }}" type="button" class="btn btn-outline-danger delete-comment-btn">
+                                                            x
+                                                        </button>
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            {% if comment.comments.comment.marked_as_deleted %}
+                                                <div class="comment-body">
+                                                    <b>[This comment was deleted by the author.]</b>
+                                                </div>
+                                            {% else %}
+                                                <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                            {% endif %}
                                             <button class="btn comment-reply-btn"
                                                     id="{{ comment.comments.comment.pk }}">
                                                 <img src="{% static 'icons/comment_black.svg' %}" alt="comment icon">
                                                 <small>REPLY</small>
                                             </button>
+                                            <hr>
                                             <div class="replies">
                                                 {% for reply in comment.comments.replies %}
                                                     <div class="reply">
@@ -134,14 +155,28 @@
                                                             </b>
                                                             on
                                                             <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                            {% if reply.author == request.user %}
+                                                                <span class="float-right">
+                                                                    <button id="{{ reply.pk }}" type="button" class="btn btn-outline-danger delete-reply-btn">
+                                                                        x
+                                                                    </button>
+                                                                </span>
+                                                            {% endif %}
                                                         </span>
-                                                        <div class="comment-body">{{ reply.comment|safe  }}</div>
+                                                        {% if reply.marked_as_deleted %}
+                                                            <div class="comment-body">
+                                                                <b>[This comment was deleted by the author.]</b>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="comment-body">{{ reply.comment|safe }}</div>
+                                                        {% endif %}
                                                         <button class="btn reply-reply-btn"
                                                                 id="{{ comment.comments.comment.pk }}">
                                                             <img src="{% static 'icons/comment_black.svg' %}"
                                                                  alt="comment icon"> <small>REPLY</small>
                                                         </button>
                                                     </div>
+                                                    <hr style="max-width: 150px; margin-right: 85%;">
                                                 {% endfor %}
                                             </div>
                                         </div>
