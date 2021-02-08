@@ -7,8 +7,6 @@
 
 {# Visible to college admins #}
 {% block admin-content %}
-    {# TODO: Display storage space used and left #}
-    {# TODO: Display plan renew or upgrade button #}
 
     <main role="main" class="container-md">
         <div class="card" style="margin-bottom: 35px;">
@@ -58,6 +56,54 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 35px;">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Subscription details
+                </h6>
+                <br>
+                <div class="card-text">
+                    {# TODO: Display plan renew or upgrade button #}
+                    <div class="row">
+                        <div class="col-3" style="font-weight: 500;">Storage space used</div>
+                        <div class="col-9{% if percent_space_used > 90 %} text-danger {% else %} text-success {% endif %}"
+                             style="font-weight: 700;">
+                            {{ used_storage_space }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3" style="font-weight: 500;">Storage space left</div>
+                        <div class="col-9" style="font-weight: 500;">{{ storage_space_left }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3" style="font-weight: 500;">Total allotted storage space</div>
+                        <div class="col-9" style="font-weight: 500;">{{ allotted_storage_space }}</div>
+                    </div>
+                    {% if renewable %}
+                        <div class="row">
+                            <div class="col-6">
+                                <b class="text-danger">{{ days_left }} days left</b> for your subscription to end. Please renew.
+                            </div>
+                        </div>
+                    {% endif %}
+                    <br>
+                    {# TODO: complete the plan upgrade and renew functionality #}
+                    <div class="row">
+                        <div class="col-3">
+                            <a class="btn btn-outline-success" href="#">Upgrade Plan</a>
+                        </div>
+                        {% if renewable %}
+                            <div class="col-3">
+                                <a class="btn btn-success" href="#">Renew Plan</a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
             </div>
         </div>
 

@@ -41,12 +41,12 @@
                 <div class="form-group">
                     <label for="password1">Password</label>
                     <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
-                           required>
+                           autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="password2">Re-enter password</label>
                     <input type="password" class="form-control" id="password2" name="password2"
-                           placeholder="Re-enter password" required>
+                           autocomplete="off" placeholder="Re-enter password" required>
                 </div>
                 <div class="form-group">
                     <label for="phoneno">Phone no.</label>
@@ -70,15 +70,17 @@
                                maxlength="4"
                                placeholder="CVV" required>
                     </div>
-                    <small id="cardHelp" class="form-text text-muted"><strong>You card will be automatically charged for
-                        renewal
-                        at the end of every month. You can cancel your subscription at any time before 24 hours
-                        of the last date.</strong></small>
+                    <small id="cardHelp" class="form-text text-muted">
+                        <strong>
+                            You card will be automatically charged for renewal at the end of every month.
+                            You can cancel your subscription at any time before 24 hours of the last date.
+                        </strong>
+                    </small>
                 </div>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <span id="alertmessage">{{ msg }}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        &times;
+                <div class="alert alert-warning alert-dismissible fade show" id="formerror" role="alert">
+                    <span id="alertmessage"></span>
+                    <button id="alertclose" type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <button type="button" class="btn btn-success" onclick="validateAndSubmit()">Pay and signup</button>

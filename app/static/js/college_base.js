@@ -167,10 +167,8 @@ function validateAndAddTeacher(addMore) {
 }
 
 function checkNameInvalid(departmentName) {
-    if (departmentName.split(' ').join('').match(/\W/g)) {
-        return true;
-    }
-    return false;
+    return !!departmentName.split(' ').join('').match(/\W/g);
+
 }
 
 function hasNumber(myString) {

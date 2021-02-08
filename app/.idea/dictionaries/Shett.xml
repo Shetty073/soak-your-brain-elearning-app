@@ -16,6 +16,7 @@
       <w>btns</w>
       <w>cardcvv</w>
       <w>cardnumber</w>
+      <w>checkbout</w>
       <w>classdropdown</w>
       <w>classtest</w>
       <w>classtestpost</w>
@@ -39,6 +40,7 @@
       <w>clssubjectalertmessage</w>
       <w>clssubjectformerror</w>
       <w>collegeadmin</w>
+      <w>collegename</w>
       <w>colorbluesapphire</w>
       <w>commentreply</w>
       <w>createpostbtn</w>
@@ -63,6 +65,7 @@
       <w>linkpostbody</w>
       <w>mathfilters</w>
       <w>mins</w>
+      <w>phoneno</w>
       <w>postcategory</w>
       <w>postcomment</w>
       <w>posttype</w>

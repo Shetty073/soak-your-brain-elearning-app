@@ -6,6 +6,8 @@ if that User is a teacher).
 This is the most simple way to work with the django's built-in authentication system.
 """
 import decimal
+from datetime import datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -13,9 +15,6 @@ from django.db import models
 
 
 # Project models
-from django.utils import timezone
-
-
 class SybAdmin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=256)
@@ -38,6 +37,8 @@ class Plan(models.Model):
 class College(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     plan_subscribed = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    subscription_start_date = models.DateField(blank=True, null=True)
+    subscription_end_date = models.DateField(blank=True, null=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     college_name = models.CharField(max_length=500)
@@ -54,26 +55,45 @@ class College(models.Model):
     def __str__(self):
         return self.college_name
 
+    def set_initial_subscription_dates(self):
+        self.subscription_start_date = datetime.now().date()
+        self.subscription_end_date = self.subscription_start_date + timedelta(days=365)
 
-class Customer(models.Model):
-    """
-    This is a copy of the College table but this table will exist even if College (customer) deletes his/her account
-    """
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    def days_left(self):
+        delta = self.subscription_end_date - datetime.now().date()
+        return delta.days
+
+    def set_renewed_subscription_dates(self):
+        # Only renew if days left is 15 or less
+        if self.days_left() <= 15:
+            self.subscription_start_date = datetime.now().date()
+            self.subscription_end_date = self.subscription_start_date + timedelta(days=365)
+
+    def plan_upgrade(self, new_plan):
+        self.plan_subscribed = new_plan
+
+
+class Invoice(models.Model):
+    college = models.ForeignKey(College, on_delete=models.SET_NULL, null=True, blank=True)
     plan_subscribed = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
-    college_name = models.CharField(max_length=500)
-    email = models.EmailField(max_length=256, unique=True)
-    phone_no = models.CharField(max_length=13)
-    signup_date = models.DateTimeField(auto_now_add=True)
-
-    @property
-    def name(self):
-        return f'{self.first_name} {self.last_name}'
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.college_name
+        return self.college.college_name
+
+    @property
+    def customer_name(self):
+        return f'{self.college.first_name} {self.college.last_name}'
+
+    @property
+    def college_name(self):
+        return self.college.college_name
+
+    def pay(self):
+        self.total_amount = self.plan_subscribed.price_per_year
+        self.amount_paid = self.plan_subscribed.price_per_year
 
 
 class Department(models.Model):

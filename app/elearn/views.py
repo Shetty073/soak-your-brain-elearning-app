@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -75,28 +76,24 @@ def sign_up(request, plan_subscribed=''):
                 phone_no=phone_no,
                 card_info=card_no,
             )
+            college.set_initial_subscription_dates()
             college.save()
 
-            # now at last the College as Customer
-            customer = Customer.objects.create(
-                user=new_user,
+            # generate the invoice for this payment
+            invoice = Invoice.objects.create(
+                college=college,
                 plan_subscribed=plan,
-                first_name=first_name,
-                last_name=last_name,
-                college_name=college_name,
-                email=email_id,
-                phone_no=phone_no,
             )
-            customer.save()
+            invoice.pay()
+            invoice.save()
 
             # Now log the user in
             auth_user = authenticate(request, username=email_id, password=password1)
             if auth_user is not None:
                 login(request, auth_user)
-                # TODO: redirect() is not working after login() for some reason, need to look it up and fix it
-                return redirect(college_page)
+                return JsonResponse({'process': 'success'})
             else:
-                return JsonResponse({'process': 'failed', 'msg': 'User authentication system failed'})
+                return JsonResponse({'process': 'failed', 'msg': 'User authentication system failed! Please sign in'})
         except IntegrityError:
             return JsonResponse({'process': 'failed', 'msg': 'User already exists'})
         except Exception as err:
@@ -113,7 +110,7 @@ def sign_up(request, plan_subscribed=''):
 @unauthenticated_user
 def sign_in(request):
     if request.method == 'POST':
-        username = request.POST.get('email')  # username and email are one and the same
+        username = request.POST.get('email')  # username and email are one and the same for the context of this app
         password = request.POST.get('password')
         try:
             # Log the user in
@@ -280,6 +277,7 @@ def user_info_change(request):
 @login_required
 @allowed_users(allowed_roles=['sybadmin'])
 def syb_admin_page(request):
+    # TODO: Complete SYB admin dashboard section
     context_dict = {}
     return render(request, template_name='sybadmin/dashboard/dashboard.html', context=context_dict)
 
@@ -627,7 +625,27 @@ def college_del_classes(request, pk=None):
 @login_required
 @allowed_users(allowed_roles=['collegeadmin'])
 def college_admin_account(request):
-    return render(request, template_name='college/admin/college_admin_account.html')
+    plan = request.user.college.plan_subscribed
+    allotted_sp = plan.allotted_storage_space / 1000 if plan.allotted_storage_space > 999 else plan.allotted_storage_space
+    allotted_storage_space = f'{plan.allotted_storage_space / 1000} TB' if plan.allotted_storage_space > 999 else f'{plan.allotted_storage_space} GB'
+    used_storage_space = request.user.college.used_storage_space
+    storage_space_left = (plan.allotted_storage_space / 1000) - used_storage_space if plan.allotted_storage_space > 999 else plan.allotted_storage_space - used_storage_space
+
+    percent_space_used = (used_storage_space / allotted_sp) * 100
+
+    days_left = request.user.college.days_left()
+
+    renewable = True if request.user.college.days_left() <= 15 else False
+
+    context_dict = {
+        'allotted_storage_space': allotted_storage_space,
+        'used_storage_space': f'{used_storage_space} GB',
+        'storage_space_left': f'{storage_space_left} GB',
+        'percent_space_used': percent_space_used,
+        'renewable': renewable,
+        'days_left': days_left,
+    }
+    return render(request, template_name='college/admin/college_admin_account.html', context=context_dict)
 
 
 @login_required
