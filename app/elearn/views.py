@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -294,6 +293,59 @@ def college_page(request):
         'classes': classes,
     }
     return render(request, template_name='college/admin/college_admin.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def renew_plan(request):
+    if request.method == 'POST':
+        plan_selected = request.POST.get('plan_selected')
+        cardnumber = request.POST.get('cardnumber')
+        cardnumber = cardnumber.replace(' ', '')
+        cardcvv = request.POST.get('cardcvv')
+        plan = None
+
+        try:
+            plan = Plan.objects.get(pk=plan_selected)
+        except Exception as err:
+            messages.error(request, f'{err}')
+            return redirect(renew_plan)
+
+        college = request.user.college
+        college.renew(plan=plan, card_info=cardnumber)
+        college.save()
+
+        invoice = Invoice.objects.create(
+            college=request.user.college,
+            plan_subscribed=plan,
+        )
+        invoice.pay()
+        invoice.save()
+
+        return redirect(college_admin_account)
+
+    if request.user.college.days_left() > 15:
+        return redirect(college_admin_account)
+
+    plans = Plan.objects.all()
+    context_dict = {
+        'plans': plans,
+    }
+    return render(request, template_name='college/admin/renew_plan.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['collegeadmin'])
+def cancel_plan(request):
+    if request.method == 'POST':
+        # TODO: Complete this by calling the college's cancel_plan() method
+        pass
+
+    context_dict = {}
+    return JsonResponse({
+        'process': 'failed',
+        'msg': 'GET method is not supported by this endpoint',
+    })
 
 
 @login_required
@@ -629,7 +681,8 @@ def college_admin_account(request):
     allotted_sp = plan.allotted_storage_space / 1000 if plan.allotted_storage_space > 999 else plan.allotted_storage_space
     allotted_storage_space = f'{plan.allotted_storage_space / 1000} TB' if plan.allotted_storage_space > 999 else f'{plan.allotted_storage_space} GB'
     used_storage_space = request.user.college.used_storage_space
-    storage_space_left = (plan.allotted_storage_space / 1000) - used_storage_space if plan.allotted_storage_space > 999 else plan.allotted_storage_space - used_storage_space
+    storage_space_left = (
+                                     plan.allotted_storage_space / 1000) - used_storage_space if plan.allotted_storage_space > 999 else plan.allotted_storage_space - used_storage_space
 
     percent_space_used = (used_storage_space / allotted_sp) * 100
 

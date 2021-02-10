@@ -1,0 +1,84 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+
+{% block title %}
+    Renew Subscription: {{ request.user.college.college_name|slice:':20' }}
+{% endblock title %}
+
+{# Visible to college admins #}
+{% block admin-content %}
+
+    <main role="main" class="container-md">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: 500;">
+                    Manually Renew Subscription
+                </h5>
+
+                <p class="card-text">
+
+                </p>
+
+                {% for plan in plans %}
+                    <input type="hidden" id="{{ plan.pk }}" value="{{ plan.price_per_year }}">
+                {% endfor %}
+
+                <form method="POST" action="{% url 'renew_plan' %}">
+                    {% csrf_token %}
+                    <div class="row" style="margin-bottom: 25px;">
+                        <select id="plan-selector" class="form-control col-sm-3" aria-label="Select plan for renewal"
+                                name="plan_selected" aria-describedby="renew-plan-help">
+                            {% for plan in plans %}
+                                <option value="{{ plan.pk }}">{{ plan.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row" style="font-size: 18px; margin-bottom: 20px;">
+                        Price you will be paying:&nbsp;
+                        <span id="plan-price" style="font-weight: 600;"></span>
+                    </div>
+                    <div class="row" style="margin-bottom: 7px;">
+                        <label for="cardnumber">Enter credit card no.</label>
+                        <div class="form-group col-12">
+                            <div class="row" style="margin-bottom: 7px;">
+                                <input type="text" class="form-control col-sm-3" id="cardnumber" name="cardnumber"
+                                       aria-describedby="cardHelp" maxlength="19" placeholder="XXXX XXXX XXXX XXXX"
+                                       value="{{ request.user.college.card_info }}" required>
+                            </div>
+                            <div class="row">
+                                <input type="number" class="form-control col-sm-1" id="cardcvv" name="cardcvv"
+                                       aria-describedby="cardHelp" maxlength="4" placeholder="CVV" required>
+                            </div>
+                            <small id="cardHelp" class="form-text text-muted">
+                                <strong>
+                                    You card will be automatically charged for renewal at the end of every month.<br>
+                                    You can cancel your subscription at any time before 24 hours of the last date.
+                                </strong>
+                            </small>
+                        </div>
+                    </div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                                 style="display: block;">
+                                <strong class="alertmessage">{{ message }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    &times;
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <button type="submit" class="card-link btn btn-success">Renew Plan</button>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+{% endblock admin-content %}
+
+{% block college-admin-script %}
+    <script type="text/javascript" src="{% static 'js/renew_plan.js' %}"></script>
+{% endblock college-admin-script %}

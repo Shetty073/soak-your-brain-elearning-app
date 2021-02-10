@@ -29,4 +29,27 @@ $(document).ready(function () {
         }
     });
 
+
+    // Cancel plan
+    $(document).on('click', '#cancel-plan-btn', function () {
+        let cancelUrl = '/college/cancel_plan';
+        let college_id = $('#college').val();
+
+        fetch(cancelUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'college_id': college_id,
+            }),
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            console.log(data);
+        });
+
+    });
+
 });

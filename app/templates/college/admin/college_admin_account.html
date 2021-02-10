@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    College Admin: {{ request.user.college.college_name|slice:':20' }}
+    My Account: {{ request.user.college.college_name|slice:':20' }}
 {% endblock title %}
 
 {# Visible to college admins #}
@@ -66,7 +66,7 @@
                 </h6>
                 <br>
                 <div class="card-text">
-                    {# TODO: Display plan renew or upgrade button #}
+
                     <div class="row">
                         <div class="col-3" style="font-weight: 500;">Storage space used</div>
                         <div class="col-9{% if percent_space_used > 90 %} text-danger {% else %} text-success {% endif %}"
@@ -82,26 +82,28 @@
                         <div class="col-3" style="font-weight: 500;">Total allotted storage space</div>
                         <div class="col-9" style="font-weight: 500;">{{ allotted_storage_space }}</div>
                     </div>
+                    <div class="row" style="margin-top: 15px; margin-bottom: 2px;">
+                        <div class="col-6">
+                            <b style="color: var(--blue-sapphire); font-size: 1.5em;">
+                                Your subscription ends at: {{ request.user.college.subscription_end_date }}
+                            </b>
+                        </div>
+                    </div>
                     {% if renewable %}
                         <div class="row">
                             <div class="col-6">
-                                <b class="text-danger">{{ days_left }} days left</b> for your subscription to end. Please renew.
+                                <b class="text-danger">{{ days_left }} days left</b> for your subscription to end.
                             </div>
                         </div>
                     {% endif %}
                     <br>
-                    {# TODO: complete the plan upgrade and renew functionality #}
-                    <div class="row">
-                        <div class="col-3">
-                            <a class="btn btn-outline-success" href="#">Upgrade Plan</a>
-                        </div>
-                        {% if renewable %}
-                            <div class="col-3">
-                                <a class="btn btn-success" href="#">Renew Plan</a>
-                            </div>
-                        {% endif %}
-                    </div>
 
+                    {% if renewable %}
+                        <a class="card-link btn btn-success" href="{% url 'renew_plan' %}">Manually Renew Plan</a>
+                    {% endif %}
+
+                    <input type="hidden" id="college" value="{{ request.user.college.pk }}">
+                    <button id="cancel-plan-btn" class="card-link btn btn-danger">Cancel Plan</button>
                 </div>
 
             </div>
