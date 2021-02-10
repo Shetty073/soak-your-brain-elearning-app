@@ -338,8 +338,23 @@ def renew_plan(request):
 @allowed_users(allowed_roles=['collegeadmin'])
 def cancel_plan(request):
     if request.method == 'POST':
-        # TODO: Complete this by calling the college's cancel_plan() method
-        pass
+        data = json.loads(request.body)
+        college_id = data['college_id']
+        college = College.objects.get(pk=college_id)
+
+        if college.subscription_end_date < datetime.now().date():
+            return JsonResponse({
+                'process': 'failed',
+                'msg': 'Your plan is not active. Please renew your plan in order to continue using our product.',
+            })
+
+        college.cancel_plan()
+
+        return JsonResponse({
+            'process': 'success',
+            'msg': 'Your plan/subscription has been deactivated. '
+                   'Please renew your plan in order to continue using our product.',
+        })
 
     context_dict = {}
     return JsonResponse({

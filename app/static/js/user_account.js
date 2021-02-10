@@ -47,7 +47,9 @@ $(document).ready(function () {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data);
+            if(data['process'] === 'success') {
+                // TODO: let the user know that their subscription is deactivated
+            }
         });
 
     });

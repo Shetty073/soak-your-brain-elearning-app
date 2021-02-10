@@ -102,7 +102,7 @@
                         <a class="card-link btn btn-success" href="{% url 'renew_plan' %}">Manually Renew Plan</a>
                     {% endif %}
 
-                    <input type="hidden" id="college" value="{{ request.user.college.pk }}">
+                    <input type="hidden" id="college" value="{{ request.user.college.pk }}">&nbsp;
                     <button id="cancel-plan-btn" class="card-link btn btn-danger">Cancel Plan</button>
                 </div>
 
@@ -163,6 +163,6 @@
 
 {% endblock admin-content %}
 
-{% block college-college-script %}
+{% block college-admin-script %}
     <script type="text/javascript" src="{% static 'js/user_account.js' %}"></script>
-{% endblock college-college-script %}
+{% endblock college-admin-script %}
