@@ -48,6 +48,7 @@ class College(models.Model):
     signup_date = models.DateTimeField(auto_now_add=True)
     used_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     subscription_active = models.BooleanField(default=True)
+    plan_cancelled_on = models.DateTimeField(blank=True, null=True)
 
     @property
     def name(self):
@@ -66,19 +67,22 @@ class College(models.Model):
 
     def renew(self, plan, card_info):
         # Only renew if days left is 15 or less
-        if self.days_left() <= 15:
+        if self.days_left() <= 15 or not self.subscription_active:
             self.plan_subscribed = plan
             self.card_info = card_info
             self.subscription_start_date = datetime.now().date()
             self.subscription_end_date = self.subscription_start_date + timedelta(days=365 + self.days_left())
+            self.subscription_active = True
+            self.plan_cancelled_on = None
 
     def plan_upgrade(self, new_plan):
         self.plan_subscribed = new_plan
 
     def cancel_plan(self):
         self.subscription_start_date = None
-        self.subscription_end_date = None
+        self.subscription_end_date = datetime.now().date()
         self.subscription_active = False
+        self.plan_cancelled_on = datetime.now()
 
 
 class Invoice(models.Model):

@@ -13,6 +13,7 @@ urlpatterns = [
     path('college/', college_page, name='college_page'),
     path('college/renew_plan', renew_plan, name='renew_plan'),
     path('college/cancel_plan', cancel_plan, name='cancel_plan'),
+    path('college/plan_cancelled', plan_cancelled, name='plan_cancelled'),
     path('college/user_password_reset', user_password_reset, name='user_password_reset'),
     path('college/user_info_change', user_info_change, name='user_info_change'),
     path('college/add_teachers', college_add_teachers, name='college_add_teachers'),

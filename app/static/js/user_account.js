@@ -48,7 +48,9 @@ $(document).ready(function () {
             return response.json();
         }).then((data) => {
             if(data['process'] === 'success') {
-                // TODO: let the user know that their subscription is deactivated
+                location.replace('/college/plan_cancelled');
+            } else {
+                displayFormErrorMessage(false, data['msg'], 'alertmessage');
             }
         });
 

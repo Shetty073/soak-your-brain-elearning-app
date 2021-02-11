@@ -9,6 +9,12 @@
 {% block admin-content %}
 
     <main role="main" class="container-md">
+        <div id="formerror" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <span id="alertmessage">{{ request.session.msg }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </div>
         <div class="card" style="margin-bottom: 35px;">
             <div class="card-body">
                 <h5 class="card-title">
@@ -104,6 +110,7 @@
 
                     <input type="hidden" id="college" value="{{ request.user.college.pk }}">&nbsp;
                     <button id="cancel-plan-btn" class="card-link btn btn-danger">Cancel Plan</button>
+
                 </div>
 
             </div>

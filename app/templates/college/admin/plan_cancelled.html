@@ -1,0 +1,58 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+
+{% block title %}
+    Plan Inactive: SYB E-learning System
+{% endblock title %}
+
+{# Visible to college admins #}
+{% block admin-content %}
+
+    <main role="main" class="container-md">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Please click on the renew button below to renew your subscription
+                </h6>
+                <p class="card-text">
+                    You can select any of the available plans during renewal process.
+                </p>
+                <a class="card-link btn btn-success" href="{% url 'renew_plan' %}">Renew Plan</a>
+            </div>
+        </div>
+    </main>
+
+{% endblock admin-content %}
+
+{% block teacher-content %}
+
+    <main role="main" class="container-md">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your college's subscription has ended!</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">
+                    Please contact your college administrator regarding this,
+                    only they can take further action.
+                </p>
+            </div>
+        </div>
+    </main>
+
+{% endblock teacher-content %}
+
+{% block student-content %}
+
+    <main role="main" class="container-md">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your college's subscription has ended!</h5>
+                <p class="card-text">
+                    No further action is required from you.
+                </p>
+            </div>
+        </div>
+    </main>
+
+{% endblock student-content %}

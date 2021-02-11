@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import Group
 from django.core.validators import validate_email
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.html import escape
 
@@ -78,7 +78,8 @@ def sign_up(request, plan_subscribed=''):
             college.set_initial_subscription_dates()
             college.save()
 
-            # generate the invoice for this payment
+            # NOTE: Here you can add backend payment processing
+            # process the payment here and generate invoice for it
             invoice = Invoice.objects.create(
                 college=college,
                 plan_subscribed=plan,
@@ -296,42 +297,49 @@ def college_page(request):
 
 
 @login_required
-@allowed_users(allowed_roles=['collegeadmin'])
 def renew_plan(request):
-    if request.method == 'POST':
-        plan_selected = request.POST.get('plan_selected')
-        cardnumber = request.POST.get('cardnumber')
-        cardnumber = cardnumber.replace(' ', '')
-        cardcvv = request.POST.get('cardcvv')
-        plan = None
+    # We cannot use allowed_users decorator for this view because
+    # using that decorator will force the user to plan_cancelled
+    # view and refrain him/her from renewing the subscription plan.
+    if request.user.groups.all()[0].name == 'collegeadmin':
+        if request.method == 'POST':
+            plan_selected = request.POST.get('plan_selected')
+            cardnumber = request.POST.get('cardnumber')
+            cardnumber = cardnumber.replace(' ', '')
+            cardcvv = request.POST.get('cardcvv')
+            plan = None
 
-        try:
-            plan = Plan.objects.get(pk=plan_selected)
-        except Exception as err:
-            messages.error(request, f'{err}')
-            return redirect(renew_plan)
+            try:
+                plan = Plan.objects.get(pk=plan_selected)
+            except Exception as err:
+                messages.error(request, f'{err}')
+                return redirect(renew_plan)
 
-        college = request.user.college
-        college.renew(plan=plan, card_info=cardnumber)
-        college.save()
+            college = request.user.college
+            college.renew(plan=plan, card_info=cardnumber)
+            college.save()
 
-        invoice = Invoice.objects.create(
-            college=request.user.college,
-            plan_subscribed=plan,
-        )
-        invoice.pay()
-        invoice.save()
+            # NOTE: Here you can add backend payment processing
+            # process payments here and generate invoice
+            invoice = Invoice.objects.create(
+                college=request.user.college,
+                plan_subscribed=plan,
+            )
+            invoice.pay()
+            invoice.save()
 
-        return redirect(college_admin_account)
+            return redirect(college_admin_account)
 
-    if request.user.college.days_left() > 15:
-        return redirect(college_admin_account)
+        if request.user.college.days_left() > 15 and request.user.college.subscription_active:
+            return redirect(college_admin_account)
 
-    plans = Plan.objects.all()
-    context_dict = {
-        'plans': plans,
-    }
-    return render(request, template_name='college/admin/renew_plan.html', context=context_dict)
+        plans = Plan.objects.all()
+        context_dict = {
+            'plans': plans,
+        }
+        return render(request, template_name='college/admin/renew_plan.html', context=context_dict)
+    else:
+        return HttpResponse('You are not authorized to view this page')
 
 
 @login_required
@@ -349,6 +357,7 @@ def cancel_plan(request):
             })
 
         college.cancel_plan()
+        college.save()
 
         return JsonResponse({
             'process': 'success',
@@ -361,6 +370,30 @@ def cancel_plan(request):
         'process': 'failed',
         'msg': 'GET method is not supported by this endpoint',
     })
+
+
+@login_required
+def plan_cancelled(request):
+    # We cannot use allowed_users decorator for this view because
+    # using that will generate a redirection infinite loop and we
+    # will get the error of 'too many redirects'.
+    if request.user.groups.all()[0].name == 'collegeadmin':
+        if not request.user.college.subscription_active:
+            return render(request, template_name='college/admin/plan_cancelled.html')
+        else:
+            return redirect(college_admin_account)
+    elif request.user.groups.all()[0].name == 'teacher':
+        if not request.user.teacher.college.subscription_active:
+            return render(request, template_name='college/admin/plan_cancelled.html')
+        else:
+            return redirect(college_teacher_student_account)
+    elif request.user.groups.all()[0].name == 'student':
+        if not request.user.student.college.subscription_active:
+            return render(request, template_name='college/admin/plan_cancelled.html')
+        else:
+            return redirect(college_teacher_student_account)
+    else:
+        return HttpResponse('You are not authorized to view this page')
 
 
 @login_required

@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 
 
+
 def unauthenticated_user(view_func):
     """
     This decorator is there to prevent an authenticated user from visiting the sign in page again.
@@ -43,12 +44,31 @@ def allowed_users(allowed_roles=None):
 
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
+            flag = True
             group = None
             if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
+
+            # Check if user belongs to the required group
             if group in allowed_roles:
-                return view_func(request, *args, **kwargs)
+                # Check if the college's subscription is active
+                if group == 'collegeadmin':
+                    if not request.user.college.subscription_active or request.user.college.days_left() < 1:
+                        flag = False
+                elif group == 'teacher':
+                    if not request.user.teacher.college.subscription_active or request.user.teacher.college.days_left() < 1:
+                        flag = False
+                elif group == 'student':
+                    if not request.user.student.college.subscription_active or request.user.student.college.days_left() < 1:
+                        flag = False
+
+                if flag:
+                    return view_func(request, *args, **kwargs)
+                else:
+                    return redirect('/college/plan_cancelled')
+
             else:
+                # User does not belong to the required group
                 return HttpResponse('You are not authorized to view this page')  # TODO: make a standalone page for this
 
         return wrapper_func
