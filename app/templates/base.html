@@ -1,4 +1,5 @@
-{# This is the base template which will contain the elemnts which are common to all pages. #}
+{# This is the base template which will contain the elemnts which are common to #}
+{# all pages that does not require signin. #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +27,6 @@
             }
             return cookieValue;
         }
-
         const csrftoken = getToken('csrftoken');
     </script>
 </head>
@@ -75,7 +75,10 @@
         <form class="form-inline my-2 my-lg-0">
             {% block signinup %}
                 {% if request.user.is_authenticated %}
-                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign out</a>
+                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">
+                        Sign out
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
                 {% else %}
                     <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
                 {% endif %}
@@ -105,7 +108,9 @@
 
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'fa/all.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+<noscript>JavaScript is required for this site to run!</noscript>
 </body>
 </html>

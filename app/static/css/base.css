@@ -69,6 +69,16 @@ main {
     color: var(--blue-sapphire) !important;
 }
 
+.btn-danger {
+    color: white;
+    background-color: var(--red-munsell) !important;
+    border-color: var(--red-munsell) !important;
+}
+
+.btn-danger:hover {
+    background-color: #ca0337 !important;
+}
+
 .headline {
     text-align: center;
 }

@@ -288,10 +288,23 @@ def college_page(request):
     teachers = Teacher.objects.filter(college=request.user.college)
     departments = Department.objects.filter(college=request.user.college)
     classes = CollegeClass.objects.filter(college=request.user.college)
+    students = Student.objects.filter(college=request.user.college)
+
+    class_assignments = [assignment for assignment in ClassWorkPost.objects.filter(is_assignment=True) if assignment.college_class in classes]
+    total_number_of_assignments = len(class_assignments)
+
+    submitted_assignments = [solution for solution in AssignmentSolution.objects.all() if solution.student in students]
+    number_of_submitted_assignments = len(submitted_assignments)
+
     context_dict = {
         'teachers': teachers,
         'departments': departments,
         'classes': classes,
+        'students': students,
+        'total_number_of_assignments': total_number_of_assignments,
+        'number_of_submitted_assignments': number_of_submitted_assignments,
+        'number_of_students': len(students),
+        'number_of_teachers': len(teachers),
     }
     return render(request, template_name='college/admin/college_admin.html', context=context_dict)
 
@@ -365,7 +378,6 @@ def cancel_plan(request):
                    'Please renew your plan in order to continue using our product.',
         })
 
-    context_dict = {}
     return JsonResponse({
         'process': 'failed',
         'msg': 'GET method is not supported by this endpoint',

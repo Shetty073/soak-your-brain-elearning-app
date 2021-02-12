@@ -31,9 +31,11 @@
         const csrftoken = getToken('csrftoken');
     </script>
 </head>
+
 <body>
 {# Navigation bar #}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
     {% if request.user.groups.all.0.name == 'collegeadmin' %}
         {# If the user is a college admin #}
         <a data-toggle="tooltip" title="College home page" class="navbar-brand"
@@ -54,6 +56,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+
             {% if request.user.groups.all.0.name == 'collegeadmin' %}
                 {# If the user is a college admin #}
                 <li class="nav-item" id="home-link">
@@ -114,10 +117,14 @@
                        href="{% url 'college_student_articles' %}">Articles</a>
                 </li>
             {% endif %}
+
         </ul>
+
         <form class="form-inline my-2 my-lg-0">&nbsp;&nbsp;
+
             {% if request.user.groups.all.0.name == 'student' or request.user.groups.all.0.name == 'teacher' %}
-                <a class="btn btn-outline-warning" href="{% url 'college_teacher_student_account' %}" style="margin-right: 10px;">
+                <a class="btn btn-outline-warning" href="{% url 'college_teacher_student_account' %}"
+                   style="margin-right: 10px;">
                     <i class="far fa-user-circle fa-lg"></i>
                     {{ request.user.first_name }}
                 </a>
@@ -127,8 +134,11 @@
                     {{ request.user.first_name }}
                 </a>
             {% endif %}
-            <a class="btn btn-danger my-2 my-sm-0" href="{% url 'signout' %}">Sign
-                out</a>
+            <a class="btn btn-danger my-2 my-sm-0" href="{% url 'signout' %}">
+                Sign out
+                <i class="fas fa-sign-out-alt fa-lg"></i>
+            </a>
+
         </form>
     </div>
 </nav>
@@ -139,24 +149,35 @@
     {% block admin-content %}
 
     {% endblock admin-content %}
+
 {% elif request.user.groups.all.0.name == 'teacher' %}
     {# If the user is a teacher #}
     {% block teacher-content %}
 
     {% endblock teacher-content %}
+
 {% elif request.user.groups.all.0.name == 'student' %}
     {# If the user is a student #}
     {% block student-content %}
 
     {% endblock student-content %}
+
 {% endif %}
 
 
+{# Scripts #}
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
+<script type="text/javascript" src="{% static 'chart/Chart.min.js' %}"></script>
+
+{% block user-chart-js %} {% endblock user-chart-js %}
+
 <script type="text/javascript" src="{% static 'fa/all.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
+
 <noscript>This application requires JavaScript to function. Please enable JavaScript in your browser.</noscript>
+
+
 
 {% block college-admin-script %}
 

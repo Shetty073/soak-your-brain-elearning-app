@@ -21,11 +21,47 @@
             </div>
             <hr>
         </div>
+
+
         <div class="content" id="content-dashboard">
-            <h1 class="colorbluesapphire">Dashboard</h1>
-            <!-- TODO: Add dashboard content here-->
+            <h1 class="colorbluesapphire" style="margin-bottom: 10px;">Dashboard</h1>
+
+            <input type="hidden" id="total_number_of_assignments" value="{{ total_number_of_assignments }}">
+            <input type="hidden" id="number_of_submitted_assignments" value="{{ number_of_submitted_assignments }}">
+            <input type="hidden" id="number_of_students" value="{{ number_of_students }}">
+            <input type="hidden" id="used_storage_space" value="{{ request.user.college.used_storage_space }}">
+            <input type="hidden" id="allotted_storage_space"
+                   value="{{ request.user.college.plan_subscribed.allotted_storage_space }}">
+
+            <div class="row textual-card-container">
+                <div class="col-sm-4 card textual-card-mobile-padding">
+                    <h5 class="float-left">
+                        Total number of <span class="colorbluesapphire" style="font-weight: 600;">students</span> in your college:
+                    </h5>
+                    <span class="count colorbluesapphire float-right">{{ number_of_students }}</span>
+                </div>
+                <div class="col-sm-4 card textual-card-left-margin textual-card-mobile-padding">
+                    <h5>
+                        Total number of <span class="colorbluesapphire" style="font-weight: 600;">teachers</span> in your college:
+                    </h5>
+                    <span class="count colorbluesapphire">{{ number_of_teachers }}</span>
+                </div>
+            </div>
+
+            <div class="row charts-container-row">
+                <div class="col-sm-4 charts-container" id="storage-charts-container">
+                    <canvas id="storage-chart-area"></canvas>
+                </div>
+
+                <div class="col-sm-4 charts-container">
+                    <canvas id="assignments-chart-area"></canvas>
+                </div>
+
+            </div>
 
         </div>
+
+
         <div class="content hidden" id="content-classes">
             <div class="float-lg-left">
                 <h1 class="colorbluesapphire">Classes List</h1>
@@ -242,12 +278,30 @@
 
 {% block college-admin-script %}
     <script>
-        // Note: This JavaScript code should NOT be put in a separate .js file
+        {# Note: This JavaScript code should NOT be put in a separate .js file #}
+        {# Animated number counter #}
+        $('.count').each(function () {
+            let $this = $(this);
+            jQuery({Counter: 0}).animate({Counter: $this.text()}, {
+                duration: 1000,
+                easing: 'swing',
+                step: function () {
+                    $this.text(Math.ceil(this.Counter));
+                }
+            });
+        });
+        
+        $('#storage-charts-container').on('click', function () {
+            location.href = '/college/college_admin_account';
+        });
+        
+
+        {# button based tab navigation #}
         if (!document.getElementById("home-link").classList.contains('active')) {
             document.getElementById("home-link").classList.add('active');
         }
 
-        {# Get the content blocks#}
+        {# Get the content blocks #}
         let dashboardContent = document.getElementById("content-dashboard");
         let classesContent = document.getElementById("content-classes");
         let teachersContent = document.getElementById("content-teachers");
@@ -748,3 +802,6 @@
 
     </script>
 {% endblock college-admin-script %}
+{% block user-chart-js %}
+    <script type="text/javascript" src="{% static 'js/college_admin_charts.js' %}"></script>
+{% endblock user-chart-js %}
