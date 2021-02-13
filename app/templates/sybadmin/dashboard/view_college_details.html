@@ -1,0 +1,19 @@
+{% extends 'sybadmin/sybadmin_base.html' %}
+{% load static %}
+{% block title %}SYB - Admin dashboard {% endblock title %}
+{% block home-url %}{% url 'syb_admin_page' %}{% endblock home-url %}
+{% block content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">View and update college details</h1>
+        {% if college %}
+            {# TODO: Complete this #}
+            {# NOTE: edit/update college data #}
+            {# NOTE: if sybadmin is superuser the he/she can create other non-superuser sybadmin users #}
+
+
+        {% else %}
+            <div>Invalid request parameter</div>
+        {% endif %}
+    </main>
+
+{% endblock content %}

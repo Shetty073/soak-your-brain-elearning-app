@@ -43,12 +43,15 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" id="home-link">
-                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% block home-url %}{% url 'home' %}{% endblock home-url %}">Home <span class="sr-only">(current)</span></a>
             </li>
             {# Can add more links here #}
         </ul>
         <form class="form-inline my-2 my-lg-0">&nbsp;&nbsp;
-            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">Sign out</a>
+            <a class="btn btn-danger my-2 my-sm-0" href="{% url 'signout' %}">
+                Sign out
+                <i class="fas fa-sign-out-alt fa-lg"></i>
+            </a>
         </form>
     </div>
 </nav>
@@ -61,6 +64,9 @@
 
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'chart/Chart.min.js' %}"></script>#}
+{#{% block user-chart-js %} {% endblock user-chart-js %}#}
+<script type="text/javascript" src="{% static 'fa/all.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/sybadmin_base.js' %}"></script>
 </body>

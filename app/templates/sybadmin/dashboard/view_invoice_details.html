@@ -1,0 +1,75 @@
+{% extends 'sybadmin/sybadmin_base.html' %}
+{% load static %}
+{% block title %}SYB - Admin dashboard {% endblock title %}
+{% block home-url %}{% url 'syb_admin_page' %}{% endblock home-url %}
+{% block content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">View invoice details</h1>
+        {% if invoice %}
+            <div class="row" id="invoice-details-card">
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    College name:
+                                </div>
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    College admin:
+                                </div>
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    Plan subscribed:
+                                </div>
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    Total amount:
+                                </div>
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    Amount paid:
+                                </div>
+                                <div class="row" style="font-weight: 600; margin: 5px;">
+                                    Payment date:
+                                </div>
+
+                            </div>
+                            <div class="col-8">
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.college.college_name }}
+                                </div>
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.college.name }}
+                                </div>
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.plan_subscribed }}
+                                </div>
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.total_amount }}
+                                </div>
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.amount_paid }}
+                                </div>
+                                <div class="row colorbluesapphire" style="font-weight: 600; margin: 5px;">
+                                    {{ invoice.date }}
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-4">
+                                <button type="button" class="btn btn-outline-warning" id="print-invoice-btn">
+                                    <i class="fas fa-print fa-lg"></i> Print Invoice
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div>Invalid request parameter</div>
+        {% endif %}
+    </main>
+
+{% endblock content %}

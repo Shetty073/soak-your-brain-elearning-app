@@ -277,9 +277,61 @@ def user_info_change(request):
 @login_required
 @allowed_users(allowed_roles=['sybadmin'])
 def syb_admin_page(request):
-    # TODO: Complete SYB admin dashboard section
-    context_dict = {}
+    plans = Plan.objects.all()
+    colleges = College.objects.all()
+    invoices = Invoice.objects.all()
+
+    total_amount_paid_till_date = 0.0
+
+    for invoice in invoices:
+        total_amount_paid_till_date += float(invoice.amount_paid)
+
+    total_no_plans = Plan.objects.count()
+    total_no_colleges = College.objects.count()
+    total_no_students = Student.objects.count()
+    total_no_teachers = Teacher.objects.count()
+
+    context_dict = {
+        'plans': plans,
+        'colleges': colleges,
+        'invoices': invoices,
+        'total_amount_paid_till_date': total_amount_paid_till_date,
+        'total_no_plans': total_no_plans,
+        'total_no_colleges': total_no_colleges,
+        'total_no_students': total_no_students,
+        'total_no_teachers': total_no_teachers,
+    }
     return render(request, template_name='sybadmin/dashboard/dashboard.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['sybadmin'])
+def view_update_college_details(request, pk=None):
+    college = None
+    try:
+        college = College.objects.get(pk=pk)
+    except Exception as err:
+        college = None
+
+    context_dict = {
+        'college': college,
+    }
+    return render(request, template_name='sybadmin/dashboard/view_college_details.html', context=context_dict)
+
+
+@login_required
+@allowed_users(allowed_roles=['sybadmin'])
+def view_invoice_details(request, pk=None):
+    invoice = None
+    try:
+        invoice = Invoice.objects.get(pk=pk)
+    except Exception as err:
+        invoice = None
+
+    context_dict = {
+        'invoice': invoice,
+    }
+    return render(request, template_name='sybadmin/dashboard/view_invoice_details.html', context=context_dict)
 
 
 @login_required

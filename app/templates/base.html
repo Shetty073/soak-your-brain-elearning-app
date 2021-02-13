@@ -75,12 +75,12 @@
         <form class="form-inline my-2 my-lg-0">
             {% block signinup %}
                 {% if request.user.is_authenticated %}
-                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signout' %}">
+                    <a class="btn btn-danger my-2 my-sm-0" href="{% url 'signout' %}">
                         Sign out
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 {% else %}
-                    <a class="btn btn-warning my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
+                    <a class="btn btn-success my-2 my-sm-0" href="{% url 'signin' %}">Sign in</a>
                 {% endif %}
             {% endblock signinup %}
         </form>

@@ -1,3 +1,41 @@
 main {
     padding-top: 40px;
 }
+
+.admin-dashboard-card-green {
+    background: var(--dark-pastel-green) !important;
+    color: aliceblue !important;
+    font-size: 25px;
+}
+
+.admin-dashboard-card-red {
+    background: var(--red-munsell) !important;
+    color: aliceblue !important;
+    font-size: 25px;
+}
+
+.admin-dashboard-card-yellow {
+    background: var(--chrome-yellow) !important;
+    color: aliceblue !important;
+    font-size: 25px;
+}
+
+th {
+    color: aliceblue;
+}
+
+
+/* For mobile devices */
+@media screen and (max-width: 600px) {
+    .admin-dashboard-card-green {
+        margin-bottom: 20px;
+    }
+
+    .admin-dashboard-card-red {
+        margin-bottom: 20px;
+    }
+
+    .admin-dashboard-card-yellow {
+        margin-bottom: 20px;
+    }
+}

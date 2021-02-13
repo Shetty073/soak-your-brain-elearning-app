@@ -1,9 +1,183 @@
 {% extends 'sybadmin/sybadmin_base.html' %}
 {% load static %}
 {% block title %}SYB - Admin dashboard {% endblock title %}
+{% block home-url %}{% url 'syb_admin_page' %}{% endblock home-url %}
 {% block content %}
     <main role="main" class="container-md">
-        <h1>Dashboard</h1>
+        <h1 class="colorbluesapphire">Dashboard</h1>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-6">
+                <div class="card admin-dashboard-card-green">
+                    <div class="row">
+                        <div class="col-6">
+                            <span style="font-size: 15px; font-weight: 600;">Total amount earned till date: </span>
+                        </div>
+                        <div class="col-6">
+                            <i class="fas fa-rupee-sign fa-lg"></i>
+                            <span style="font-size: 30px; font-weight: 600;" class="count">
+                                {{ total_amount_paid_till_date }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card admin-dashboard-card-red">
+                    <div class="row">
+                        <div class="col-6">
+                            <span style="font-size: 15px; font-weight: 600;">Total number of colleges: </span>
+                        </div>
+                        <div class="col-6">
+                            <span style="font-size: 30px; font-weight: 600;" class="count">
+                                {{ total_no_colleges }}
+                            </span>
+                            <i class="fas fa-university fa-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card admin-dashboard-card-red">
+                    <div class="row">
+                        <div class="col-6">
+                            <span style="font-size: 15px; font-weight: 600;">Total teachers: </span>
+                        </div>
+                        <div class="col-6">
+                            <span style="font-size: 30px; font-weight: 600;" class="count">
+                                {{ total_no_teachers }}
+                            </span>
+                            <i class="fas fa-chalkboard-teacher fa-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card admin-dashboard-card-green">
+                    <div class="row">
+                        <div class="col-6">
+                            <span style="font-size: 15px; font-weight: 600;">Total students: </span>
+                        </div>
+                        <div class="col-6">
+                            <span style="font-size: 30px; font-weight: 600;" class="count">
+                                {{ total_no_students }}
+                            </span>
+                            <i class="fas fa-user-graduate fa-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card admin-dashboard-card-yellow">
+                    <div class="row">
+                        <div class="col-6">
+                            <span style="font-size: 15px; font-weight: 600;">Total plans: </span>
+                        </div>
+                        <div class="col-6">
+                            <span style="font-size: 30px; font-weight: 600;" class="count">
+                                {{ total_no_plans }}
+                            </span>
+                            <i class="fas fa-bars fa-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br><br><br><br>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                   aria-selected="true">Colleges list</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false">Invoices</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <h2 class="colorbluesapphire">Colleges list</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchbar">
+                </div>
+                <div class="row">
+                    <table class="table" id="college-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">College name</th>
+                            <th scope="col">College admin</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for college in colleges %}
+                            <tr>
+                                <td>{{ college.pk }}</td>
+                                <td>{{ college.college_name }}</td>
+                                <td>{{ college.name }}</td>
+                                <td>
+                                    <a class="btn btn-outline-success" href="{% url 'view_update_college_details' pk=college.pk %}">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <h2 class="colorbluesapphire">Invoices list</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="invoice-searchbar">
+                </div>
+                <div class="row">
+                    <table class="table" id="invoice-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">College name</th>
+                            <th scope="col">Amount paid</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for invoice in invoices %}
+                            <tr>
+                                <td>{{ invoice.pk }}</td>
+                                <td>{{ invoice.college.college_name }}</td>
+                                <td>
+                                    <i class="fas fa-rupee-sign"></i>
+                                    {{ invoice.amount_paid }}
+                                </td>
+                                <td>{{ invoice.date }}</td>
+                                <td>
+                                    <a class="btn btn-outline-success" href="{% url 'view_invoice_details' pk=invoice.pk %}">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
 
     </main>
     <script type="text/javascript">
