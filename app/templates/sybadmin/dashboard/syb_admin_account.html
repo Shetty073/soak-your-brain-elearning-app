@@ -1,0 +1,62 @@
+{% extends 'sybadmin/sybadmin_base.html' %}
+{% load static %}
+{% block title %}SYB - Admin dashboard {% endblock title %}
+{% block home-url %}{% url 'syb_admin_page' %}{% endblock home-url %}
+{% block content %}
+    <main role="main" class="container-md">
+        <div class="card">
+            <h1 class="colorbluesapphire">Edit your details</h1>
+            <br>
+            <form method="post" action="{% url 'syb_admin_account' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">First name</label>
+                    <input type="text" class="form-control" name="first_name" id="first_name"
+                           value="{{ request.user.first_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last name</label>
+                    <input type="text" class="form-control" name="last_name" id="last_name"
+                           value="{{ request.user.last_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" id="email"
+                           value="{{ request.user.email }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="current_password">Current password</label>
+                    <input type="password" class="form-control" name="current_password" id="current_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">New password</label>
+                    <input type="password" class="form-control" name="new_password" id="new_password">
+                </div>
+                <div class="form-group">
+                    <label for="confirm_new_password">Confirm new password</label>
+                    <input type="password" class="form-control" name="confirm_new_password" id="confirm_new_password">
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                             style="display: block;">
+                            <strong class="alertmessage">{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                &times;
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+
+        </div>
+
+
+    </main>
+
+{% endblock content %}

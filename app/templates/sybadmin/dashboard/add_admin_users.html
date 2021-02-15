@@ -1,0 +1,62 @@
+{% extends 'sybadmin/sybadmin_base.html' %}
+{% load static %}
+{% block title %}SYB - Admin dashboard {% endblock title %}
+{% block home-url %}{% url 'syb_admin_page' %}{% endblock home-url %}
+{% block content %}
+    <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Add sybadmin user</h1>
+        <div class="card">
+            <form method="post" action="{% url 'add_admin_users' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">First name</label>
+                    <input type="text" class="form-control" name="first_name" id="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last name</label>
+                    <input type="text" class="form-control" name="last_name" id="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm password</label>
+                    <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
+                </div>
+                <div class="form-group" style="padding-left: 20px;">
+                    <input type="checkbox" class="form-check-input" id="is_superuser" name="is_superuser">
+                    <label for="is_superuser">is superuser?</label>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                             style="display: block;">
+                            <strong class="alertmessage">{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                &times;
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+
+        </div>
+
+
+    </main>
+
+    <script type="text/javascript">
+        if (!document.getElementById("add-admin-users-link").classList.contains('active')) {
+            document.getElementById("add-admin-users-link").classList.add('active');
+        }
+    </script>
+{% endblock content %}

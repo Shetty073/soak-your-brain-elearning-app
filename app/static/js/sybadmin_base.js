@@ -15,7 +15,7 @@ $('.count').each(function () {
     });
 });
 
-// for college table searchbar
+// for colleges table searchbar
 $("#searchbar").on("keyup", function () {
     let term = $(this).val().toLowerCase();
     $("#college-table tbody tr").filter(function () {
@@ -23,10 +23,18 @@ $("#searchbar").on("keyup", function () {
     });
 });
 
-// for college table searchbar
+// for invoices table searchbar
 $("#invoice-searchbar").on("keyup", function () {
     let term = $(this).val().toLowerCase();
     $("#invoice-table tbody tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
+    });
+});
+
+// for syb admins table searchbar
+$("#syb-admins-searchbar").on("keyup", function () {
+    let term = $(this).val().toLowerCase();
+    $("#syb-admins-table tbody tr").filter(function () {
         $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
     });
 });

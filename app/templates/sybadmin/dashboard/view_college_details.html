@@ -6,9 +6,64 @@
     <main role="main" class="container-md">
         <h1 class="colorbluesapphire">View and update college details</h1>
         {% if college %}
-            {# TODO: Complete this #}
-            {# NOTE: edit/update college data #}
-            {# NOTE: if sybadmin is superuser the he/she can create other non-superuser sybadmin users #}
+            <div class="card">
+                <form method="post" action="{% url 'view_update_college_details' pk=college.pk %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="first_name">First name</label>
+                        <input type="text" class="form-control" name="first_name" id="first_name"
+                               value="{{ college.first_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label>
+                        <input type="text" class="form-control" name="last_name" id="last_name"
+                               value="{{ college.last_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="college_name">College name</label>
+                        <input type="text" class="form-control" name="college_name" id="college_name"
+                               value="{{ college.college_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" name="email" id="email"
+                               value="{{ college.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_no">Phone no.</label>
+                        <input type="tel" class="form-control" name="phone_no" id="phone_no"
+                               value="{{ college.phone_no }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan_subscribed">Plan subscribed</label>
+                        <select class="form-control" name="plan_subscribed" id="plan_subscribed">
+                            {% for plan in plans %}
+                                <option value="{{ plan.pk }}" {% if college.plan_subscribed == plan %} selected {% endif %}>
+                                    {{ plan.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subscription_start_date">Subscription start date</label>
+                        <input type="date" class="form-control" name="subscription_start_date" id="subscription_start_date"
+                               value="{{ college.subscription_start_date|date:"Y-m-d" }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subscription_end_date">Subscription end date</label>
+                        <input type="date" class="form-control" name="subscription_end_date" id="subscription_end_date"
+                               value="{{ college.subscription_end_date|date:"Y-m-d" }}" required>
+                    </div>
+                    <div class="form-group" style="padding-left: 20px;">
+                        <input type="checkbox" class="form-check-input" id="subscription_active" name="subscription_active"
+                               {% if college.subscription_active %} checked {% endif %} >
+                        <label for="subscription_active">is subscription active?</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
 
 
         {% else %}
