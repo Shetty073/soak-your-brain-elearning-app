@@ -93,7 +93,10 @@ class Invoice(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.college.college_name} - {self.date}'
+        if self.college is not None:
+            return f'{self.college.college_name} - {self.date}'
+        else:
+            return str(self.date)
 
     @property
     def customer_name(self):
