@@ -932,7 +932,7 @@ def college_admin_account(request):
     allotted_sp = plan.allotted_storage_space / 1000 if plan.allotted_storage_space > 999 else plan.allotted_storage_space
     allotted_storage_space = f'{plan.allotted_storage_space / 1000} TB' if plan.allotted_storage_space > 999 else f'{plan.allotted_storage_space} GB'
     used_storage_space = request.user.college.used_storage_space
-    storage_space_left = (plan.allotted_storage_space / 1000) - used_storage_space if plan.allotted_storage_space > 999 else plan.allotted_storage_space - used_storage_space
+    storage_space_left = plan.allotted_storage_space - used_storage_space
 
     percent_space_used = (used_storage_space / allotted_sp) * 100
 
@@ -1768,7 +1768,7 @@ def college_student_submit_assignment(request, pk=None):
         if assignment_solution.uploadable(file_tobe_uploaded=request.FILES['assignment_file']):
             assignment_solution.file_url = request.FILES['assignment_file']
             assignment_solution.save()
-            college.used_storage_space += (assignment_solution.file_url.size / (1024 * 1024 * 1024))
+            college.used_storage_space += decimal.Decimal((assignment_solution.file_url.size / (1024 * 1024 * 1024)))
             college.save()
             return redirect(college_student)
 

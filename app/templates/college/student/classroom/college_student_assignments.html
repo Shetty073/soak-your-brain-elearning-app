@@ -30,49 +30,51 @@
 
             {# Posts #}
             {% for post in posts_display %}
-                <div class="card posts {{ post.post.subject }}">
-                    <div class="card-header">
-                        <strong>Subject:</strong> {{ post.post.subject }}
-                        <span style="float: right;">
-                            {% if post.post.is_classtest %}
-                                <h5>&#9737;</h5>
-                            {% elif post.post.is_assignment %}
-                                <h5>&starf;</h5>
-                            {% endif %}
-                            <input type="hidden" value="{{ post.post.pk }}">
-                        </span>
-                    </div>
-                    <div class="card-body" style="padding-bottom: 0;">
-                        <h5 class="card-title">{{ post.post.title }}</h5>
-                        {% if post.body %}
-                            <p class="card-text">{{ post.body }}</p>
-                            {% if post.video_url %}
-                                <video class="post-media" width="320" height="240" controls>
-                                    <source src="{{ post.get_media_url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% elif post.document_url %}
-                                <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
-                            {% elif post.image_url %}
-                                <a href="{{ post.get_media_url }}" target="_blank">
-                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
-                                </a>
-                            {% elif post.post.is_classtest %}
+                {% if request.user.student in post.post.students.all %}
+                    <div class="card posts {{ post.post.subject }}">
+                        <div class="card-header">
+                            <strong>Subject:</strong> {{ post.post.subject }}
+                            <span style="float: right;">
+                                {% if post.post.is_classtest %}
+                                    <h5>&#9737;</h5>
+                                {% elif post.post.is_assignment %}
+                                    <h5>&starf;</h5>
+                                {% endif %}
+                                <input type="hidden" value="{{ post.post.pk }}">
+                            </span>
+                        </div>
+                        <div class="card-body" style="padding-bottom: 0;">
+                            <h5 class="card-title">{{ post.post.title }}</h5>
+                            {% if post.body %}
+                                <p class="card-text">{{ post.body }}</p>
+                                {% if post.video_url %}
+                                    <video class="post-media" width="320" height="240" controls>
+                                        <source src="{{ post.get_media_url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% elif post.document_url %}
+                                    <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
+                                {% elif post.image_url %}
+                                    <a href="{{ post.get_media_url }}" target="_blank">
+                                        <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}" />
+                                    </a>
+                                {% elif post.post.is_classtest %}
 
-                            {% else %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                {% else %}
+                                    <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                {% endif %}
+                            {% elif post.youtube_link %}
+                                <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                            {% elif post.article_link %}
+                                <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
                             {% endif %}
-                        {% elif post.youtube_link %}
-                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
-                        {% elif post.article_link %}
-                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
-                        {% endif %}
-                        <a class="btn btn-outline-warning" href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your Work</a>
-                        <small style="display: block;margin-top: 15px;">
-                            Posted on: {{ post.post.date }}
-                        </small>
+                            <a class="btn btn-outline-warning" href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your Work</a>
+                            <small style="display: block;margin-top: 15px;">
+                                Posted on: {{ post.post.date }}
+                            </small>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         </div>
     </main>
