@@ -9,17 +9,20 @@ An e-learning management platform (like Google Classroom) built in Django (pytho
 ![teacher screens](/screenshots/gifs/teacher.gif)
 ![student screens](/screenshots/gifs/student.gif)
 
-### ABout this project
+### About this project
 
 I made this project for my college degree's final year project work. This is an e-learning management system just like Google's Classroom but opensource.
 My initial plan was to develop a SaaS platform but this can be used for local deployments too (with minor tweaks required). I believe that there is a lot of potential in this project.
 I will continue to work on this in my free time and make this production ready.
 
+### Database
+
+-   I am using MySql server
+
 ### Note:
 
 -   ALways create the required Groups according to the screenshots provided after all migrations are completed but before deploying/running the app
 -   `<script></script>` tags in `base.html` are not available for `college_base.html` and vice versa.
-
 -   Please ignore the `project_report` folder
 
 ### Use these templates as reference for creating issues:
