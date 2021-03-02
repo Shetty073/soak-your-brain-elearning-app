@@ -62,7 +62,6 @@ def sign_up(request, plan_subscribed=''):
 
             # get the plan_subscribed object
             plan = Plan.objects.get(name=plan_subscribed)
-            plan.save()
 
             # register the User as College
             college = College.objects.create(
@@ -101,7 +100,7 @@ def sign_up(request, plan_subscribed=''):
 
     plans = Plan.objects.all().values_list('name', flat=True)
     if plan_subscribed not in plans:
-        return render(request, template_name='home.html')
+        return redirect(home)
     cost_of_selected_plan = Plan.objects.get(name=plan_subscribed).price_per_year
     context_dict = {'plan_selected': plan_subscribed, 'plan_cost': f'₹{int(cost_of_selected_plan)} / year'}
     return render(request, template_name='sign_up.html', context=context_dict)
