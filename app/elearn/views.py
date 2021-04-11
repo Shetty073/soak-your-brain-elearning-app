@@ -989,8 +989,6 @@ def college_teacher_add_subjects(request, pk=None):
         else:
             # This request is for assigning subjects to a class whose id is pk
             try:
-                for subject_id in data['selected_subjects']:
-                    print(subject_id)
                 selected_subjects = [int(subject_id) for subject_id in data['selected_subjects']]
 
                 cls = CollegeClass.objects.get(pk=pk)
