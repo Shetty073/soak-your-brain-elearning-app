@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
+
 from elearn.models import College, Plan, Invoice
 
 

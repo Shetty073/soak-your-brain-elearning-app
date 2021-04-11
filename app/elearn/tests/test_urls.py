@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase, Client
 from django.urls import reverse, resolve
+
 from elearn.views import sign_up, sign_in
 
 
