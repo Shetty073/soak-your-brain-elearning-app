@@ -983,12 +983,14 @@ def college_teacher_add_subjects(request, pk=None):
                     return JsonResponse({'process': 'failed', 'msg': f'Subject {subject_name} already exists'})
 
                 return JsonResponse({'process': 'success', 'msg': f'Successfully added {subject.name} subject',
-                                     'subject_name': subject.name})
+                                     'subject_name': subject.name, 'subject_id': subject.pk})
             except Exception as err:
                 return JsonResponse({'process': 'failed', 'msg': f'{err}'})
         else:
             # This request is for assigning subjects to a class whose id is pk
             try:
+                for subject_id in data['selected_subjects']:
+                    print(subject_id)
                 selected_subjects = [int(subject_id) for subject_id in data['selected_subjects']]
 
                 cls = CollegeClass.objects.get(pk=pk)

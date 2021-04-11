@@ -180,7 +180,7 @@
                         displayFormErrorMessage(true, data['msg'], 'subjectalertmessage');
 
                         // update the options list in the 'assignsubjects' form
-                        $('#selectsubjects').append(new Option(data['subject_name'], data['subject_name']));
+                        $('#selectsubjects').append(new Option(data['subject_name'], data['subject_id']));
 
                         if (addMore === false) {
                             // Go to home page
