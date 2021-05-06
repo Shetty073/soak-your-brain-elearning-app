@@ -2,6 +2,11 @@
 
 An e-learning management platform (like Google Classroom) built in Django (python)
 
+### Do you wish to contribute?
+* Head over to the issues and select a issue of your liking.
+* If you have any doubts or need explanation of any issue then post question in the respective issue thread.
+* Please don't create new issues for asking questions about already open issue, use that particular issue's thread for asking questions or head over to discussions.
+
 ### Screens
 
 ![sybadmin screens](/screenshots/gifs/sybadmin.gif)
