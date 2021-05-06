@@ -2,11 +2,6 @@
 
 An e-learning management platform (like Google Classroom) built in Django (python)
 
-### Do you wish to contribute?
-* Head over to the issues and select a issue of your liking.
-* If you have any doubts or need explanation of any issue then post question in the respective issue thread.
-* Please don't create new issues for asking questions about already open issue, use that particular issue's thread for asking questions or head over to discussions.
-
 ### Screens
 
 ![sybadmin screens](/screenshots/gifs/sybadmin.gif)
@@ -26,11 +21,17 @@ I will continue to work on this in my free time and make this production ready.
 
 ### Note:
 
--   ALways create the required Groups according to the screenshots provided after all migrations are completed but before deploying/running the app
+-   ~~ALways create the required Groups according to the screenshots provided after all migrations are completed but before deploying/running the app~~ Groups are now included in the migrations.
 -   `<script></script>` tags in `base.html` are not available for `college_base.html` and vice versa.
 -   Please ignore the `project_report` folder
 
-### Use these templates as reference for creating issues:
+### Do you wish to contribute?
+* Head over to the issues and select a issue of your liking.
+* If you have any doubts or need explanation of any issue then post question in the respective issue thread.
+* Please don't create new issues for asking questions about already open issue, use that particular issue's thread for asking questions or head over to discussions.
+
+
+### Found a bug? Use these templates as reference for creating issues:
 
 -   [Bug Reports](https://github.com/Shetty073/soak-your-brain-elearning-app/blob/master/.github/ISSUE_TEMPLATE/bug_report.md)
 
