@@ -243,6 +243,7 @@ $('body').on('click', '#addoptionbtn', function () {
 
 // add another question on button click
 $('#addquestionbtn').on('click', function () {
+    $('#addoptionbtn').remove();
     optionNo = 3;
     let questionHtml = '<br><br><div class="classtestqna">' +
         '<div class="form-group">' +
