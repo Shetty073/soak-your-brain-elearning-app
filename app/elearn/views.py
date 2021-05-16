@@ -757,6 +757,7 @@ def college_del_teachers(request, pk=None):
     if request.method == 'POST':
         try:
             teacher = Teacher.objects.get(pk=pk, college=request.user.college)
+            teacher.user.delete()
             teacher.delete()
             return JsonResponse({'process': 'success'})
         except Exception as err:
@@ -899,6 +900,7 @@ def college_del_classes(request, pk=None):
         if form_type == 'class':
             try:
                 college = CollegeClass.objects.get(pk=pk, college=request.user.college)
+                college.user.delete()
                 college.delete()
                 return JsonResponse({'process': 'success'})
             except Exception as err:
@@ -1171,6 +1173,7 @@ def college_teacher_update_students(request, pk=None):
             student_id = data['student_id']
             try:
                 student = Student.objects.get(pk=student_id)
+                student.user.delete()
                 student.delete()
                 return JsonResponse({'process': 'success', 'msg': 'Student details successfully updated!'})
             except Exception as err:
