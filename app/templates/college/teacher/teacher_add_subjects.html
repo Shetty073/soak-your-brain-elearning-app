@@ -3,6 +3,33 @@
 {% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md">
+        <h1 class="colorbluesapphire">Add new subjects</h1>
+        <div class="card">
+            <form name="addclass" id="addclassform" class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="subjectname">Subject name</label>
+                    <input type="text" class="form-control" id="subjectname" name="subjectname"
+                           aria-describedby="subjectnameHelp"
+                           placeholder="Subject name eg. OS, SE, Applied Math,..etc" required>
+                    <small id="nameHelp" class="form-text text-muted">Please enter the subject name</small>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" id="subjectformerror" role="alert">
+                    <strong id="subjectalertmessage"></strong>
+                    <button type="button" class="close" id="subjectalertclose" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="validateAndAddSubject(true)">Save and add more
+                </button>
+                <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
+                        onclick="validateAndAddSubject(false)">Save and go back
+                </button>
+            </form>
+        </div>
+
+        <br><br>
+        
         <h1 class="colorbluesapphire">Assign subjects to classes</h1>
         <div class="card">
             <form name="assignsubjects" id="assignsubjectsform" class="card-body">
@@ -36,31 +63,6 @@
                 </button>
                 <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
                         onclick="validateAndAssignSubject(false)">Save and go back
-                </button>
-            </form>
-        </div>
-        <br><br>
-        <h1 class="colorbluesapphire">Add new subjects</h1>
-        <div class="card">
-            <form name="addclass" id="addclassform" class="card-body">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="subjectname">Subject name</label>
-                    <input type="text" class="form-control" id="subjectname" name="subjectname"
-                           aria-describedby="subjectnameHelp"
-                           placeholder="Subject name eg. OS, SE, Applied Math,..etc" required>
-                    <small id="nameHelp" class="form-text text-muted">Please enter the subject name</small>
-                </div>
-                <div class="alert alert-warning alert-dismissible fade show" id="subjectformerror" role="alert">
-                    <strong id="subjectalertmessage"></strong>
-                    <button type="button" class="close" id="subjectalertclose" aria-label="Close">
-                        &times;
-                    </button>
-                </div>
-                <button type="button" class="btn btn-warning" onclick="validateAndAddSubject(true)">Save and add more
-                </button>
-                <button type="button" class="btn btn-outline-warning btn-margin-top-sm"
-                        onclick="validateAndAddSubject(false)">Save and go back
                 </button>
             </form>
         </div>
