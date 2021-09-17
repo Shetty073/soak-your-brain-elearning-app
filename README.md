@@ -21,9 +21,7 @@ I will continue to work on this in my free time and make this production ready.
 
 ### Note:
 
--   ~~ALways create the required Groups according to the screenshots provided after all migrations are completed but before deploying/running the app~~ Groups are now included in the migrations.
 -   `<script></script>` tags in `base.html` are not available for `college_base.html` and vice versa.
--   Please ignore the `project_report` folder
 
 ### Do you wish to contribute?
 * Head over to the issues and select a issue of your liking.
