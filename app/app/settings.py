@@ -87,6 +87,8 @@ DATABASES = {
     }
 }
 
+SILENCED_SYSTEM_CHECKS = ['mysql.W003']
+
 # Configure DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
