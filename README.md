@@ -23,6 +23,15 @@ I will continue to work on this in my free time and make this production ready.
 
 -   `<script></script>` tags in `base.html` are not available for `college_base.html` and vice versa.
 
+### How to run?
+
+1. do `pipenv install` and then `pipenv shell`
+2. migrate using `python manage.py migrate`
+3. load data from fixtures `python manage.py loaddata plans`
+4. Create superuser `python manage.py createsuperuser`
+5. Go and edit superuser from django's admin panel - assign this superuser to `sybadmin` group
+6. You are all done
+
 ### Do you wish to contribute?
 * Head over to the issues and select a issue of your liking.
 * If you have any doubts or need explanation of any issue then post question in the respective issue thread.
