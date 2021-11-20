@@ -49,7 +49,7 @@
                    href="{% url 'home' %}#pricing">Pricing</a>
             </li>
             {% if request.user.is_authenticated %}
-                {% if user.groups.all.0.name == 'sybadmin' %}
+                {% if request.user.groups.all.0.name == 'sybadmin' %}
                     <li class="nav-item">
                         <a data-toggle="tooltip" title="Go to SYB admin dashboard" class="nav-link"
                            href="{% url 'syb_admin_page' %}">Admin</a>
