@@ -156,8 +156,8 @@ def college_teacher_add_students(request, pk=None):
                 new_user.save()
 
                 # Add this user to the student group
-                collegeadmin_group = Group.objects.get(name='student')
-                collegeadmin_group.user_set.add(new_user)
+                student_group = Group.objects.get(name='student')
+                student_group.user_set.add(new_user)
 
                 # get the class object from the id provided
                 college_class = CollegeClass.objects.get(pk=class_assigned)

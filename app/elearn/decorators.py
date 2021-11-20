@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 
 def unauthenticated_user(view_func):
     """
-    This decorator is there to prevent an authenticated user from visiting the sign in page again.
+    This decorator is there to prevent an authenticated user from visiting the sign in/sign up page again.
     If any authenticated user tried to visit the signin page then he/she will be redirected to their
     respective home page.
     :param view_func:
